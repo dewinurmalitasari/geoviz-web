@@ -10,12 +10,42 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UserIndexRouteImport } from './routes/user/index'
+import { Route as PracticeIndexRouteImport } from './routes/practice/index'
+import { Route as MaterialIndexRouteImport } from './routes/material/index'
+import { Route as PracticePracticeTypeRouteImport } from './routes/practice/$practiceType'
+import { Route as MaterialMaterialTypeRouteImport } from './routes/material/$materialType'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserIndexRoute = UserIndexRouteImport.update({
+  id: '/user/',
+  path: '/user/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeIndexRoute = PracticeIndexRouteImport.update({
+  id: '/practice/',
+  path: '/practice/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaterialIndexRoute = MaterialIndexRouteImport.update({
+  id: '/material/',
+  path: '/material/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticePracticeTypeRoute = PracticePracticeTypeRouteImport.update({
+  id: '/practice/$practiceType',
+  path: '/practice/$practiceType',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaterialMaterialTypeRoute = MaterialMaterialTypeRouteImport.update({
+  id: '/material/$materialType',
+  path: '/material/$materialType',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authRegisterRoute = authRegisterRouteImport.update({
@@ -33,30 +63,75 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/material/$materialType': typeof MaterialMaterialTypeRoute
+  '/practice/$practiceType': typeof PracticePracticeTypeRoute
+  '/material': typeof MaterialIndexRoute
+  '/practice': typeof PracticeIndexRoute
+  '/user': typeof UserIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/material/$materialType': typeof MaterialMaterialTypeRoute
+  '/practice/$practiceType': typeof PracticePracticeTypeRoute
+  '/material': typeof MaterialIndexRoute
+  '/practice': typeof PracticeIndexRoute
+  '/user': typeof UserIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
+  '/material/$materialType': typeof MaterialMaterialTypeRoute
+  '/practice/$practiceType': typeof PracticePracticeTypeRoute
+  '/material/': typeof MaterialIndexRoute
+  '/practice/': typeof PracticeIndexRoute
+  '/user/': typeof UserIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/material/$materialType'
+    | '/practice/$practiceType'
+    | '/material'
+    | '/practice'
+    | '/user'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
-  id: '__root__' | '/' | '/(auth)/login' | '/(auth)/register'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/material/$materialType'
+    | '/practice/$practiceType'
+    | '/material'
+    | '/practice'
+    | '/user'
+  id:
+    | '__root__'
+    | '/'
+    | '/(auth)/login'
+    | '/(auth)/register'
+    | '/material/$materialType'
+    | '/practice/$practiceType'
+    | '/material/'
+    | '/practice/'
+    | '/user/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
+  MaterialMaterialTypeRoute: typeof MaterialMaterialTypeRoute
+  PracticePracticeTypeRoute: typeof PracticePracticeTypeRoute
+  MaterialIndexRoute: typeof MaterialIndexRoute
+  PracticeIndexRoute: typeof PracticeIndexRoute
+  UserIndexRoute: typeof UserIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +141,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/': {
+      id: '/user/'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice/': {
+      id: '/practice/'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/material/': {
+      id: '/material/'
+      path: '/material'
+      fullPath: '/material'
+      preLoaderRoute: typeof MaterialIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice/$practiceType': {
+      id: '/practice/$practiceType'
+      path: '/practice/$practiceType'
+      fullPath: '/practice/$practiceType'
+      preLoaderRoute: typeof PracticePracticeTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/material/$materialType': {
+      id: '/material/$materialType'
+      path: '/material/$materialType'
+      fullPath: '/material/$materialType'
+      preLoaderRoute: typeof MaterialMaterialTypeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/register': {
@@ -89,6 +199,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
+  MaterialMaterialTypeRoute: MaterialMaterialTypeRoute,
+  PracticePracticeTypeRoute: PracticePracticeTypeRoute,
+  MaterialIndexRoute: MaterialIndexRoute,
+  PracticeIndexRoute: PracticeIndexRoute,
+  UserIndexRoute: UserIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
