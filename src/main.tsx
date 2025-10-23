@@ -8,10 +8,19 @@ import {routeTree} from './routeTree.gen'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
+interface userContext {
+    username: string,
+    role: 'admin' | 'student' | 'teacher',
+    token: string,
+    // TODO: add more fields as needed
+}
+
 // Create a new router instance
 const router = createRouter({
     routeTree,
-    context: {},
+    context: {
+        user: null as userContext | null,
+    },
     defaultPreload: 'intent',
     scrollRestoration: true,
     defaultStructuralSharing: true,
