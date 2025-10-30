@@ -1,15 +1,37 @@
 @import "tailwindcss";
 
+@theme {
+    --color-geo-purple-50: #faf5ff;
+    --color-geo-purple-100: #f3e8ff;
+    --color-geo-purple-200: #e9d5ff;
+    --color-geo-purple-300: #d8b4fe;
+    --color-geo-purple-400: #c084fc;
+    --color-geo-purple-500: #a855f7;
+    --color-geo-purple-600: #9333ea;
+    --color-geo-purple-700: #7e22ce;
+    --color-geo-purple-800: #6b21a8;
+
+    --color-deep-purple-50: #faf5ff;
+    --color-deep-purple-100: #e0aaff;
+    --color-deep-purple-200: #c77dff;
+    --color-deep-purple-300: #9d4edd;
+    --color-deep-purple-400: #7b2cbf;
+    --color-deep-purple-500: #5a189a;
+    --color-deep-purple-600: #3c096c;
+    --color-deep-purple-700: #240046;
+    --color-deep-purple-800: #10002b;
+}
+
 body {
-  @apply m-0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    @apply m-0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

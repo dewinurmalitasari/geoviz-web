@@ -1,67 +1,42 @@
-import {Link} from '@tanstack/react-router'
+interface HeaderProps {
+    username: string | null;
+}
 
-import {useState} from 'react'
-import {Home, Menu, X} from 'lucide-react'
 
-export default function Header() {
-    const [isOpen, setIsOpen] = useState(false)
-
+export default function Header({ username }: HeaderProps) {
     return (
-        <>
-            <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg">
-                <button
-                    onClick={() => setIsOpen(true)}
-                    className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                    aria-label="Open menu"
-                >
-                    <Menu size={24}/>
-                </button>
-                <h1 className="ml-4 text-xl font-semibold">
-                    <Link to="/">
-                        <img
-                            src="/tanstack-word-logo-white.svg"
-                            alt="TanStack Logo"
-                            className="h-10"
-                        />
-                    </Link>
-                </h1>
-            </header>
-
-            <aside
-                className={`fixed top-0 left-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-                    isOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
-            >
-                <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                    <h2 className="text-xl font-bold">Navigation</h2>
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                        aria-label="Close menu"
-                    >
-                        <X size={24}/>
-                    </button>
+        <header className="py-4 px-4 md:py-6 md:px-8">
+            <div className="container mx-auto flex items-center justify-between gap-4">
+                {/* Logo and Title */}
+                <div className="flex items-center gap-3 min-w-0">
+                    <div
+                        className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
+                        <img src="favicon.svg" alt="Logo" className="w-6 h-6 md:w-7 md:h-7" />
+                    </div>
+                    <div className="min-w-0">
+                        <h1 className="text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
+                            GeoViz
+                        </h1>
+                        <p className="text-gray-600 text-xs md:text-sm truncate hidden lg:block">
+                            Aplikasi Pembelajaran Transformasi Geometri
+                        </p>
+                    </div>
                 </div>
 
-                <nav className="flex-1 p-4 overflow-y-auto">
-                    <Link
-                        to="/"
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-                        activeProps={{
-                            className:
-                                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
-                        }}
-                    >
-                        <Home size={20}/>
-                        <span className="font-medium">Home</span>
-                    </Link>
-
-                    {/* Demo Links Start */}
-
-                    {/* Demo Links End */}
-                </nav>
-            </aside>
-        </>
-    )
+                {/* User Profile */}
+                <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                    <div className="text-right">
+                        <p className="text-gray-500 text-xs md:text-sm">Halo,</p>
+                        <p className="font-semibold text-deep-purple-700 text-sm md:text-base">
+                            {username? username : 'Pengguna'}
+                        </p>
+                    </div>
+                    <div
+                        className="hidden sm:block w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-deep-purple-400 to-deep-purple-600 items-center justify-center text-white shadow-md">
+                        <i className="fas fa-user text-sm"/>
+                    </div>
+                </div>
+            </div>
+        </header>
+    );
 }
