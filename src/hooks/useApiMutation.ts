@@ -40,7 +40,7 @@ export function useApiMutation<TData = any, TVariables = any>(
             const isJson = contentType?.includes('application/json');
 
             if (!response.ok) {
-                let errorMessage = 'Request failed';
+                let errorMessage = 'Request gagal';
 
                 if (isJson) {
                     try {
@@ -58,7 +58,7 @@ export function useApiMutation<TData = any, TVariables = any>(
                 try {
                     return await response.json() as TData;
                 } catch (error) {
-                    throw new Error('Failed to parse JSON response');
+                    throw new Error('Gagal mengurai respons JSON');
                 }
             }
 

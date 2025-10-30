@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Eye, EyeOff, KeyRound, LogIn, User} from 'lucide-react';
 import GeoCard from "@/components/GeoCard.tsx";
 import GeoButton from "@/components/GeoButton.tsx";
-import {Field, FieldDescription, FieldLabel,} from "@/components/ui/field"
+import {Field, FieldLabel,} from "@/components/ui/field"
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput,} from "@/components/ui/input-group"
 
 interface LoginProps {
@@ -35,7 +35,6 @@ export function Login({username, setUsername, password, setPassword, onLoginClic
                                 <User/>
                             </InputGroupAddon>
                         </InputGroup>
-                        <FieldDescription></FieldDescription>
                     </Field>
 
 
@@ -55,7 +54,6 @@ export function Login({username, setUsername, password, setPassword, onLoginClic
                                 {showPassword ? <EyeOff/> : <Eye/>}
                             </InputGroupButton>
                         </InputGroup>
-                        <FieldDescription>This is for error.</FieldDescription>
                     </Field>
                 </div>
             }

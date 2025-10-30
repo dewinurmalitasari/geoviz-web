@@ -1,41 +1,47 @@
-import {createFileRoute} from '@tanstack/react-router'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {Login} from "@/components/auth/Login.tsx";
 import {useState} from "react";
 import {toast} from "sonner";
 import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
 import {useApiMutation} from "@/hooks/useApiMutation.ts";
+import {setAuthentication} from "@/util/auth.ts";
 
 export const Route = createFileRoute('/(auth)/login')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    // TODO: Maybe make the error better?
     const loginMutation = useApiMutation<LoginResponse, LoginPayload>({
         endpoint: API_ENDPOINTS.auth.login,
         method: 'POST',
         onSuccess: (data) => {
-            toast.success(`Welcome! ${data.user.username}`);
+            toast.success(`Selamat Datang! ${data.user.username}`);
 
-            console.log(data); // TODO: Remove this
+            setAuthentication(
+                data.user._id,
+                data.user.username,
+                data.user.role,
+                data.token
+            );
+            navigate({to: '/'});
 
-            // setAuthentication(
-            //     data.user._id,
-            //     data.user.username,
-            //     data.user.role,
-            //     data.token
-            // );
-            // throw redirect({to: '/'})
+            // TODO: Send visit tracking event
         },
         onError: (error) => {
-            toast.error(`Login failed: ${error.message}`);
+            toast.error(`Gagal Masuk: ${error.message}`);
         },
     });
 
     const onLoginClick = () => {
+        if (!username || !password) {
+            toast.error("Username dan password harus terisi!");
+            return;
+        }
+
         loginMutation.mutate({username, password});
     };
 

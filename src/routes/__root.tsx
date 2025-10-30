@@ -5,7 +5,6 @@ import Header from "@/components/Header.tsx";
 import Footer from "@/components/Footer.tsx";
 import Background from "@/components/Background.tsx";
 import {getAuthentication} from "@/util/auth.ts";
-import type {Auth} from "@/type.ts";
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
@@ -15,15 +14,21 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+    beforeLoad: () => {
+        const auth = getAuthentication();
+        return {
+            auth
+        }
+    },
     component: () => {
-        const auth: Auth | null = getAuthentication();
+        const {auth} = Route.useRouteContext();
 
         return (
             <div className="relative min-h-screen flex flex-col font-sans">
                 <Background/>
 
                 {auth &&
-                    <Header username={auth?.user.username}/>
+                    <Header username={auth.user.username} role={auth.user.role}/>
                 }
 
                 <div className="flex-grow">

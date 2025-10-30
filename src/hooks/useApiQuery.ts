@@ -25,7 +25,7 @@ export function useApiQuery<TData = any>(options: ApiQueryOptions) {
             const isJson = contentType?.includes('application/json');
 
             if (!response.ok) {
-                let errorMessage = 'Request failed';
+                let errorMessage = 'Request gagal';
 
                 if (isJson) {
                     try {
@@ -43,7 +43,7 @@ export function useApiQuery<TData = any>(options: ApiQueryOptions) {
                 try {
                     return await response.json() as TData;
                 } catch (error) {
-                    throw new Error('Failed to parse JSON response');
+                    throw new Error('Gagal mengurai respons JSON');
                 }
             }
 

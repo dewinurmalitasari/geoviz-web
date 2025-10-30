@@ -1,4 +1,4 @@
-import type {Auth, User} from "@/type.ts";
+import {type Auth, type User} from "@/type.ts";
 
 export function setAuthentication(_id: string, username: string, role: string, token: string): void {
     const user: User = {
