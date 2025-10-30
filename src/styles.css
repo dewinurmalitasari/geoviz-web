@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
     --color-geo-purple-50: #faf5ff;
@@ -34,4 +37,120 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+@theme inline {
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --radius: 0.625rem;
+    --background: #ffffff;
+    --foreground: #10002b; /* Using deep-purple-800 for foreground */
+    --card: #ffffff;
+    --card-foreground: #10002b; /* deep-purple-800 */
+    --popover: #ffffff;
+    --popover-foreground: #10002b; /* deep-purple-800 */
+    --primary: #5a189a; /* deep-purple-500 as primary */
+    --primary-foreground: #faf5ff; /* geo-purple-50 as primary foreground */
+    --secondary: #f3e8ff; /* geo-purple-100 as secondary */
+    --secondary-foreground: #5a189a; /* deep-purple-500 as secondary foreground */
+    --muted: #f3e8ff; /* geo-purple-100 as muted */
+    --muted-foreground: #7b2cbf; /* deep-purple-400 as muted foreground */
+    --accent: #e9d5ff; /* geo-purple-200 as accent */
+    --accent-foreground: #5a189a; /* deep-purple-500 as accent foreground */
+    --destructive: #dc2626; /* Keeping red for destructive actions */
+    --border: #e9d5ff; /* geo-purple-200 as border */
+    --input: #e9d5ff; /* geo-purple-200 as input */
+    --ring: #9d4edd; /* deep-purple-300 as ring */
+    --chart-1: #a855f7; /* geo-purple-500 */
+    --chart-2: #7b2cbf; /* deep-purple-400 */
+    --chart-3: #9d4edd; /* deep-purple-300 */
+    --chart-4: #c084fc; /* geo-purple-400 */
+    --chart-5: #e0aaff; /* deep-purple-100 */
+    --sidebar: #faf5ff; /* geo-purple-50 as sidebar */
+    --sidebar-foreground: #10002b; /* deep-purple-800 as sidebar foreground */
+    --sidebar-primary: #5a189a; /* deep-purple-500 as sidebar primary */
+    --sidebar-primary-foreground: #faf5ff; /* geo-purple-50 as sidebar primary foreground */
+    --sidebar-accent: #e9d5ff; /* geo-purple-200 as sidebar accent */
+    --sidebar-accent-foreground: #5a189a; /* deep-purple-500 as sidebar accent foreground */
+    --sidebar-border: #e9d5ff; /* geo-purple-200 as sidebar border */
+    --sidebar-ring: #9d4edd; /* deep-purple-300 as sidebar ring */
+}
+
+.dark {
+    --background: #10002b; /* deep-purple-800 as dark background */
+    --foreground: #faf5ff; /* geo-purple-50 as dark foreground */
+    --card: #240046; /* deep-purple-700 as dark card */
+    --card-foreground: #faf5ff; /* geo-purple-50 as dark card foreground */
+    --popover: #240046; /* deep-purple-700 as dark popover */
+    --popover-foreground: #faf5ff; /* geo-purple-50 as dark popover foreground */
+    --primary: #c77dff; /* deep-purple-200 as dark primary */
+    --primary-foreground: #10002b; /* deep-purple-800 as dark primary foreground */
+    --secondary: #3c096c; /* deep-purple-600 as dark secondary */
+    --secondary-foreground: #faf5ff; /* geo-purple-50 as dark secondary foreground */
+    --muted: #3c096c; /* deep-purple-600 as dark muted */
+    --muted-foreground: #e0aaff; /* deep-purple-100 as dark muted foreground */
+    --accent: #5a189a; /* deep-purple-500 as dark accent */
+    --accent-foreground: #faf5ff; /* geo-purple-50 as dark accent foreground */
+    --destructive: #ef4444; /* Keeping red for destructive actions in dark mode */
+    --border: #3c096c; /* deep-purple-600 as dark border */
+    --input: #3c096c; /* deep-purple-600 as dark input */
+    --ring: #c77dff; /* deep-purple-200 as dark ring */
+    --chart-1: #c77dff; /* deep-purple-200 */
+    --chart-2: #9d4edd; /* deep-purple-300 */
+    --chart-3: #7b2cbf; /* deep-purple-400 */
+    --chart-4: #5a189a; /* deep-purple-500 */
+    --chart-5: #3c096c; /* deep-purple-600 */
+    --sidebar: #240046; /* deep-purple-700 as dark sidebar */
+    --sidebar-foreground: #faf5ff; /* geo-purple-50 as dark sidebar foreground */
+    --sidebar-primary: #c77dff; /* deep-purple-200 as dark sidebar primary */
+    --sidebar-primary-foreground: #10002b; /* deep-purple-800 as dark sidebar primary foreground */
+    --sidebar-accent: #5a189a; /* deep-purple-500 as dark sidebar accent */
+    --sidebar-accent-foreground: #faf5ff; /* geo-purple-50 as dark sidebar accent foreground */
+    --sidebar-border: #3c096c; /* deep-purple-600 as dark sidebar border */
+    --sidebar-ring: #c77dff; /* deep-purple-200 as dark sidebar ring */
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
