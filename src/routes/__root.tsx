@@ -6,10 +6,9 @@ import Footer from "@/components/Footer.tsx";
 import Background from "@/components/Background.tsx";
 import {getAuthentication} from "@/util/auth.ts";
 import type {Auth} from "@/type.ts";
-
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
 import type {QueryClient} from '@tanstack/react-query'
+import {Toaster} from "@/components/ui/sonner.tsx";
 
 interface MyRouterContext {
     queryClient: QueryClient
@@ -34,6 +33,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 {auth &&
                     <Footer/>
                 }
+
+                <Toaster
+                    position="top-center"
+                    toastOptions={{
+                        classNames: {
+                            error: '!bg-destructive !text-white',
+                            success: '!bg-green-500 !text-white dark:!bg-green-600',
+                            warning: '!bg-yellow-500 !text-white dark:!bg-yellow-600',
+                            info: '!bg-primary !text-primary-foreground',
+                        },
+                    }}
+                />
 
                 {/*TODO: Remove*/}
                 <TanStackDevtools

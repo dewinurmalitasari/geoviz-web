@@ -1,8 +1,9 @@
 import {createFileRoute} from '@tanstack/react-router'
 import {Login} from "@/components/auth/Login.tsx";
-import {useMutation} from "@tanstack/react-query";
 import {useState} from "react";
-import {API_BASE_URL} from "@/config.ts";
+import {toast} from "sonner";
+import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
+import {useApiMutation} from "@/hooks/useApiMutation.ts";
 
 export const Route = createFileRoute('/(auth)/login')({
     component: RouteComponent,
@@ -12,35 +13,29 @@ function RouteComponent() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    // TODO: Not complete yet
-    const loginMutation = useMutation({
-        mutationFn: async (loginData: { username: string; password: string }) => {
-            const response = await fetch(API_BASE_URL + '/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(loginData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            return response.json();
-        },
+    // TODO: Maybe make the error better?
+    const loginMutation = useApiMutation<LoginResponse, LoginPayload>({
+        endpoint: API_ENDPOINTS.auth.login,
+        method: 'POST',
         onSuccess: (data) => {
-            console.log('Login successful:', data);
-            // Handle successful login (redirect, store token, etc.)
+            toast.success(`Welcome! ${data.user.username}`);
+
+            console.log(data); // TODO: Remove this
+
+            // setAuthentication(
+            //     data.user._id,
+            //     data.user.username,
+            //     data.user.role,
+            //     data.token
+            // );
+            // throw redirect({to: '/'})
         },
         onError: (error) => {
-            console.error('Login error:', error);
-            // Handle error (show message, etc.)
-        }
+            toast.error(`Login failed: ${error.message}`);
+        },
     });
 
     const onLoginClick = () => {
-        console.log('Login submitted: ', {username, password});
         loginMutation.mutate({username, password});
     };
 

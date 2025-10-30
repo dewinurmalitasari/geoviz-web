@@ -47,12 +47,3 @@ if (rootElement && !rootElement.innerHTML) {
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
-
-
-// TODO:
-//  - auth and protected routes
-//  - data loading with loaders
-//  - error routes (404, 500, etc)
-//  - security best practices
-//  - performance optimizations
-//  - animations and transitions between routes

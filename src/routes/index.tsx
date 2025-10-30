@@ -4,7 +4,7 @@ import {getAuthentication} from "@/util/auth.ts";
 export const Route = createFileRoute('/')({
     beforeLoad: () => {
         if (getAuthentication() === null) {
-            return redirect({to: '/login'})
+            throw redirect({to: '/login'})
         }
     },
     component: App,
