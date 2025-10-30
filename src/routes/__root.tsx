@@ -1,4 +1,4 @@
-import {createRootRoute, Outlet} from '@tanstack/react-router'
+import {createRootRouteWithContext, Outlet} from '@tanstack/react-router'
 import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
 import {TanStackDevtools} from '@tanstack/react-devtools'
 import Header from "@/components/Header.tsx";
@@ -7,7 +7,15 @@ import Background from "@/components/Background.tsx";
 import {getAuthentication} from "@/util/auth.ts";
 import type {Auth} from "@/type.ts";
 
-export const Route = createRootRoute({
+import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+
+import type {QueryClient} from '@tanstack/react-query'
+
+interface MyRouterContext {
+    queryClient: QueryClient
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
     component: () => {
         const auth: Auth | null = getAuthentication();
 
@@ -37,6 +45,7 @@ export const Route = createRootRoute({
                             name: 'Tanstack Router',
                             render: <TanStackRouterDevtoolsPanel/>,
                         },
+                        TanStackQueryDevtools,
                     ]}
                 />
             </div>

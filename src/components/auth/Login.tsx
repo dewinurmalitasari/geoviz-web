@@ -5,14 +5,17 @@ import GeoButton from "@/components/GeoButton.tsx";
 import {Field, FieldDescription, FieldLabel,} from "@/components/ui/field"
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput,} from "@/components/ui/input-group"
 
-export function Login() {
-    const [showPassword, setShowPassword] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+interface LoginProps {
+    username: string;
+    setUsername: (username: string) => void;
+    password: string;
+    setPassword: (password: string) => void;
+    onLoginClick: () => void;
+    isLoading: boolean;
+}
 
-    const handleSubmit = () => {
-        console.log('Login submitted: ', {username, password});
-    };
+export function Login({username, setUsername, password, setPassword, onLoginClick, isLoading}: LoginProps) {
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <GeoCard
@@ -58,11 +61,11 @@ export function Login() {
             }
             buttons={
                 <GeoButton
-                    onClick={handleSubmit}
+                    onClick={onLoginClick}
                     icon={<LogIn className="w-5 h-5 mr-2"/>}
                     text="Masuk"
                     variant="primary"
-                    isLoading={false}
+                    isLoading={isLoading}
                 />
             }
         />
