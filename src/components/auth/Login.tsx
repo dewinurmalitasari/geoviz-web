@@ -38,7 +38,7 @@ export function Login() {
                         <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center mr-4">
                             <LogIn className="text-deep-purple-600 w-6 h-6" />
                         </div>
-                        <h2 className="text-2xl font-bold text-deep-purple-800">Masuk ke Akun</h2>
+                        <h2 className="text-2xl font-bold text-deep-purple-800">Masuk ke GeoViz</h2>
                     </div>
 
                     {/* Login Form */}
@@ -100,24 +100,6 @@ export function Login() {
                             </div>
                         </div>
 
-                        {/* Remember Me & Forgot Password */}
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <input
-                                    id="remember-me"
-                                    name="remember-me"
-                                    type="checkbox"
-                                    className="h-4 w-4 text-deep-purple-600 focus:ring-deep-purple-500 border-gray-300 rounded"
-                                />
-                                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                                    Ingat saya
-                                </label>
-                            </div>
-                            <a href="#" className="text-sm text-deep-purple-600 hover:text-deep-purple-500 font-medium">
-                                Lupa password?
-                            </a>
-                        </div>
-
                         {/* Login Button */}
                         <button
                             type="submit"
@@ -127,16 +109,6 @@ export function Login() {
                             <LogIn className="ml-2 w-4 h-4" />
                         </button>
                     </form>
-
-                    {/* Divider */}
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-center text-sm text-gray-600">
-                            Belum punya akun?{' '}
-                            <a href="#" className="text-deep-purple-600 hover:text-deep-purple-500 font-medium">
-                                Daftar di sini
-                            </a>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
