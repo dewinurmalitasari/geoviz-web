@@ -4,27 +4,29 @@ interface GeoCardProps {
     icon: ReactNode;
     title: string;
     content: ReactNode;
-    buttons?: ReactNode;
+    footer?: ReactNode;
 }
 
-export default function GeoCard({icon, title, content, buttons}: GeoCardProps) {
+export default function GeoCard({icon, title, content, footer}: GeoCardProps) {
     return (
         <div
-            className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full max-w-md">
+            className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full max-w-md flex flex-col">
             <div className="h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600"></div>
 
-            <div className="p-6 md:p-8">
-                <div className="flex items-center mb-6">
-                    <div
-                        className="w-14 h-14 rounded-xl bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center mr-4">
-                        {icon}
+            <div className="p-6 md:p-8 flex flex-col justify-between flex-1 space-y-4">
+                <div className="space-y-4">
+                    <div className="flex items-center">
+                        <div
+                            className="w-14 h-14 rounded-xl bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center mr-4">
+                            {icon}
+                        </div>
+                        <h2 className="text-2xl font-bold text-deep-purple-800">{title}</h2>
                     </div>
-                    <h2 className="text-2xl font-bold text-deep-purple-800">{title}</h2>
+
+                    {content}
                 </div>
 
-                {content}
-
-                {buttons && <div className="mt-6">{buttons}</div>}
+                {footer && <div>{footer}</div>}
             </div>
         </div>
     );

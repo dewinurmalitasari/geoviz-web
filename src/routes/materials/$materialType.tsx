@@ -1,6 +1,6 @@
 import {createFileRoute} from '@tanstack/react-router'
 
-export const Route = createFileRoute('/material/$materialType')({
+export const Route = createFileRoute('/materials/$materialType')({
     component: RouteComponent,
 })
 

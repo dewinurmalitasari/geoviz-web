@@ -57,7 +57,7 @@ export function Login({username, setUsername, password, setPassword, onLoginClic
                     </Field>
                 </div>
             }
-            buttons={
+            footer={
                 <GeoButton onClick={onLoginClick} variant="primary" isLoading={isLoading}>
                     <LogIn/> Masuk
                 </GeoButton>

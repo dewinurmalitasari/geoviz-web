@@ -1,12 +1,18 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute, redirect, useNavigate} from '@tanstack/react-router'
 import {Login} from "@/components/auth/login.tsx";
 import {useState} from "react";
 import {toast} from "sonner";
 import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
 import {useApiMutation} from "@/hooks/use-api-mutation.ts";
-import {setAuthentication} from "@/util/auth.ts";
+import {getAuthentication, setAuthentication} from "@/util/auth.ts";
 
 export const Route = createFileRoute('/(auth)/login')({
+    beforeLoad: () => {
+        // If already authenticated, redirect to home
+        if (getAuthentication() !== null) {
+            throw redirect({to: '/'})
+        }
+    },
     component: RouteComponent,
 })
 

@@ -37,12 +37,10 @@ export interface LoginResponse {
 }
 
 // TODO:
-//  - auth and protected routes
 //  - make sure that 401 and 403 responses are handled properly in all routes
-//  - Add proper token validation? but only on startup?
 //  - data loading with loaders
 //  - error routes (404, 500, etc)
-//  - tracking user sessions, material access, practice attempts
+//  - tracking users sessions, material access, practice attempts
 //  - security best practices
 //  - performance optimizations
 //  - animations and transitions between routes

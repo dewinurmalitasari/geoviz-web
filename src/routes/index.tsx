@@ -1,4 +1,4 @@
-import {createFileRoute, redirect} from '@tanstack/react-router'
+import {createFileRoute, redirect, useNavigate} from '@tanstack/react-router'
 import {getAuthentication} from "@/util/auth.ts";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
@@ -14,6 +14,7 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
+    const navigate = useNavigate();
     const auth = getAuthentication();
 
     return (
@@ -30,8 +31,8 @@ function App() {
                                 Jelajahi konsep transformasi geometri dengan penjelasan yang mudah dipahami.
                             </p>
                         }
-                        buttons={
-                            <GeoButton onClick={() => console.log('Navigate to materials')}
+                        footer={
+                            <GeoButton onClick={() => navigate({to: '/materials'})}
                                        variant="primary">
                                 <ArrowRight className="w-4 h-4"/> Jelajahi Materi
                             </GeoButton>
@@ -48,11 +49,17 @@ function App() {
                                 yang lebih mendalam.
                             </p>
                         }
-                        buttons={
-                            <GeoButton onClick={() => console.log('Navigate to visualizations')}
-                                       variant="primary">
-                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi
+                        footer={
+                        <div className="space-y-2">
+                            <GeoButton onClick={() => navigate({to: '/2dviz'})}
+                                       variant="secondary">
+                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi 2D
                             </GeoButton>
+                            <GeoButton onClick={() => navigate({to: '/3dviz'})}
+                                       variant="primary">
+                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi 3D
+                            </GeoButton>
+                        </div>
                         }
                     />
 
@@ -68,8 +75,8 @@ function App() {
                                     interaktif.
                                 </p>
                             }
-                            buttons={
-                                <GeoButton onClick={() => console.log('Navigate to practice')}
+                            footer={
+                                <GeoButton onClick={() => navigate({to: '/practices'})}
                                            variant="primary">
                                     <ArrowRight className="w-4 h-4"/> Mulai Latihan
                                 </GeoButton>
@@ -88,8 +95,8 @@ function App() {
                                     statistik dan latihan siswa.
                                 </p>
                             }
-                            buttons={
-                                <GeoButton onClick={() => console.log('Navigate to account settings')}
+                            footer={
+                                <GeoButton onClick={() => navigate({to: '/users'})}
                                            variant="primary">
                                     <ArrowRight className="w-4 h-4"/> Kelola Akun
                                 </GeoButton>
