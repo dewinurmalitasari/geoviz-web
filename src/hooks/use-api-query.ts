@@ -1,19 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
+import {clearAuthentication, getAuthentication} from "@/util/auth.ts";
 
 interface ApiQueryOptions {
     queryKey: unknown[];
     endpoint: string;
     enabled?: boolean;
-    token?: string;
 }
-// TODO: Check use
+
 export function useApiQuery<TData = any>(options: ApiQueryOptions) {
-    const { queryKey, endpoint, enabled = true, token } = options;
+    const { queryKey, endpoint, enabled = true } = options;
 
     return useQuery({
         queryKey,
         queryFn: async () => {
-            const headers: Record<string, string> = {};
+            const auth = getAuthentication();
+            const token = auth?.token;
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
@@ -25,6 +29,13 @@ export function useApiQuery<TData = any>(options: ApiQueryOptions) {
             const isJson = contentType?.includes('application/json');
 
             if (!response.ok) {
+                // Handle 401 Unauthorized TODO: Test this
+                if (response.status === 401) {
+                    clearAuthentication();
+                    window.location.href = '/login';
+                    throw new Error('Sesi habis');
+                }
+
                 let errorMessage = 'Request gagal';
 
                 if (isJson) {

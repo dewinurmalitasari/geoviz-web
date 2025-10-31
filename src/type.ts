@@ -24,10 +24,11 @@ export interface User {
 
 // API Types and Endpoints
 export const API_ENDPOINTS = {
-    auth: {
-        login: `${API_BASE_URL}/login`,
-    },
-    // TODO : Add as needed
+    login: `${API_BASE_URL}/login`,
+    users: `${API_BASE_URL}/users`,
+    materials: `${API_BASE_URL}/materials`,
+    practices: `${API_BASE_URL}/practices`,
+    statistics: `${API_BASE_URL}/statistics`,
 } as const;
 
 export interface DeleteResponse {
@@ -43,6 +44,11 @@ export interface LoginResponse {
     message: string,
     token: string,
     user: User,
+}
+
+export interface GetUsersResponse {
+    message: string,
+    users: User[],
 }
 
 // TODO:

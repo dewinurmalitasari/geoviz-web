@@ -98,6 +98,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                     </div>
                 </div>
             </div>
+            <div className="mt-4 h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 rounded-full" />
         </header>
     );
 }

@@ -1,4 +1,5 @@
 import {useMutation} from "@tanstack/react-query";
+import {clearAuthentication, getAuthentication} from "@/util/auth.ts";
 
 // @ts-ignore TS6133
 interface ApiMutationOptions<TData, TVariables> {
@@ -6,7 +7,6 @@ interface ApiMutationOptions<TData, TVariables> {
     method?: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     onSuccess?: (data: TData) => void;
     onError?: (error: Error) => void;
-    token?: string;
 }
 
 export function useApiMutation<TData = any, TVariables = any>(
@@ -17,11 +17,12 @@ export function useApiMutation<TData = any, TVariables = any>(
         method = 'POST',
         onSuccess,
         onError,
-        token,
     } = options;
 
     return useMutation({
         mutationFn: async (data: TVariables) => {
+            const auth = getAuthentication();
+            const token = auth?.token;
             const headers: Record<string, string> = {
                 'Content-Type': 'application/json',
             };
@@ -40,6 +41,13 @@ export function useApiMutation<TData = any, TVariables = any>(
             const isJson = contentType?.includes('application/json');
 
             if (!response.ok) {
+                // Handle 401 Unauthorized
+                if (response.status === 401) {
+                    clearAuthentication();
+                    window.location.href = '/login';
+                    throw new Error('Sesi habis');
+                }
+
                 let errorMessage = 'Request gagal';
 
                 if (isJson) {

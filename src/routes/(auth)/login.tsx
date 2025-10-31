@@ -1,40 +1,18 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import {Login} from "@/components/auth/login.tsx";
 import {useState} from "react";
 import {toast} from "sonner";
-import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
-import {useApiMutation} from "@/hooks/use-api-mutation.ts";
-import {setAuthentication} from "@/util/auth.ts";
+import {useLogin} from "@/hooks/use-login.ts";
 
 export const Route = createFileRoute('/(auth)/login')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
-    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const loginMutation = useApiMutation<LoginResponse, LoginPayload>({
-        endpoint: API_ENDPOINTS.auth.login,
-        method: 'POST',
-        onSuccess: (data) => {
-            toast.success(`Selamat Datang! ${data.user.username}`);
-
-            setAuthentication(
-                data.user._id,
-                data.user.username,
-                data.user.role,
-                data.token
-            );
-            navigate({to: '/'});
-
-            // TODO: Send visit tracking event
-        },
-        onError: (error) => {
-            toast.error(`Gagal Masuk: ${error.message}`);
-        },
-    });
+    const loginMutation = useLogin();
 
     const onLoginClick = () => {
         if (!username || !password) {
@@ -42,7 +20,7 @@ function RouteComponent() {
             return;
         }
 
-        loginMutation.mutate({username, password});
+        loginMutation.mutate({ username, password });
     };
 
     return (
