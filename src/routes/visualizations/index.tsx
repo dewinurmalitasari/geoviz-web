@@ -1,9 +1,9 @@
 import {createFileRoute} from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(visualization)/3dviz')({
+export const Route = createFileRoute('/visualizations/')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
-    return <div>Hello "/(visualization)/3dviz/"!</div>
+    return <div>Hello "/visualization/"!</div>
 }

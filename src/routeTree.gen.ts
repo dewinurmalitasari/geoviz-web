@@ -10,18 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VisualizationsIndexRouteImport } from './routes/visualizations/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as PracticesIndexRouteImport } from './routes/practices/index'
 import { Route as MaterialsIndexRouteImport } from './routes/materials/index'
+import { Route as VisualizationsVisualizationTypeRouteImport } from './routes/visualizations/$visualizationType'
 import { Route as PracticesPracticeTypeRouteImport } from './routes/practices/$practiceType'
 import { Route as MaterialsMaterialTypeRouteImport } from './routes/materials/$materialType'
-import { Route as visualization3dvizRouteImport } from './routes/(visualization)/3dviz'
-import { Route as visualization2dvizRouteImport } from './routes/(visualization)/2dviz'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VisualizationsIndexRoute = VisualizationsIndexRouteImport.update({
+  id: '/visualizations/',
+  path: '/visualizations/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersIndexRoute = UsersIndexRouteImport.update({
@@ -39,6 +44,12 @@ const MaterialsIndexRoute = MaterialsIndexRouteImport.update({
   path: '/materials/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VisualizationsVisualizationTypeRoute =
+  VisualizationsVisualizationTypeRouteImport.update({
+    id: '/visualizations/$visualizationType',
+    path: '/visualizations/$visualizationType',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PracticesPracticeTypeRoute = PracticesPracticeTypeRouteImport.update({
   id: '/practices/$practiceType',
   path: '/practices/$practiceType',
@@ -47,16 +58,6 @@ const PracticesPracticeTypeRoute = PracticesPracticeTypeRouteImport.update({
 const MaterialsMaterialTypeRoute = MaterialsMaterialTypeRouteImport.update({
   id: '/materials/$materialType',
   path: '/materials/$materialType',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const visualization3dvizRoute = visualization3dvizRouteImport.update({
-  id: '/(visualization)/3dviz',
-  path: '/3dviz',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const visualization2dvizRoute = visualization2dvizRouteImport.update({
-  id: '/(visualization)/2dviz',
-  path: '/2dviz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
@@ -68,83 +69,83 @@ const authLoginRoute = authLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
-  '/2dviz': typeof visualization2dvizRoute
-  '/3dviz': typeof visualization3dvizRoute
   '/materials/$materialType': typeof MaterialsMaterialTypeRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
+  '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
   '/materials': typeof MaterialsIndexRoute
   '/practices': typeof PracticesIndexRoute
   '/users': typeof UsersIndexRoute
+  '/visualizations': typeof VisualizationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
-  '/2dviz': typeof visualization2dvizRoute
-  '/3dviz': typeof visualization3dvizRoute
   '/materials/$materialType': typeof MaterialsMaterialTypeRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
+  '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
   '/materials': typeof MaterialsIndexRoute
   '/practices': typeof PracticesIndexRoute
   '/users': typeof UsersIndexRoute
+  '/visualizations': typeof VisualizationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)/login': typeof authLoginRoute
-  '/(visualization)/2dviz': typeof visualization2dvizRoute
-  '/(visualization)/3dviz': typeof visualization3dvizRoute
   '/materials/$materialType': typeof MaterialsMaterialTypeRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
+  '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
   '/materials/': typeof MaterialsIndexRoute
   '/practices/': typeof PracticesIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/visualizations/': typeof VisualizationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
-    | '/2dviz'
-    | '/3dviz'
     | '/materials/$materialType'
     | '/practices/$practiceType'
+    | '/visualizations/$visualizationType'
     | '/materials'
     | '/practices'
     | '/users'
+    | '/visualizations'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/2dviz'
-    | '/3dviz'
     | '/materials/$materialType'
     | '/practices/$practiceType'
+    | '/visualizations/$visualizationType'
     | '/materials'
     | '/practices'
     | '/users'
+    | '/visualizations'
   id:
     | '__root__'
     | '/'
     | '/(auth)/login'
-    | '/(visualization)/2dviz'
-    | '/(visualization)/3dviz'
     | '/materials/$materialType'
     | '/practices/$practiceType'
+    | '/visualizations/$visualizationType'
     | '/materials/'
     | '/practices/'
     | '/users/'
+    | '/visualizations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authLoginRoute: typeof authLoginRoute
-  visualization2dvizRoute: typeof visualization2dvizRoute
-  visualization3dvizRoute: typeof visualization3dvizRoute
   MaterialsMaterialTypeRoute: typeof MaterialsMaterialTypeRoute
   PracticesPracticeTypeRoute: typeof PracticesPracticeTypeRoute
+  VisualizationsVisualizationTypeRoute: typeof VisualizationsVisualizationTypeRoute
   MaterialsIndexRoute: typeof MaterialsIndexRoute
   PracticesIndexRoute: typeof PracticesIndexRoute
   UsersIndexRoute: typeof UsersIndexRoute
+  VisualizationsIndexRoute: typeof VisualizationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -154,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/visualizations/': {
+      id: '/visualizations/'
+      path: '/visualizations'
+      fullPath: '/visualizations'
+      preLoaderRoute: typeof VisualizationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/users/': {
@@ -177,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaterialsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/visualizations/$visualizationType': {
+      id: '/visualizations/$visualizationType'
+      path: '/visualizations/$visualizationType'
+      fullPath: '/visualizations/$visualizationType'
+      preLoaderRoute: typeof VisualizationsVisualizationTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/practices/$practiceType': {
       id: '/practices/$practiceType'
       path: '/practices/$practiceType'
@@ -189,20 +204,6 @@ declare module '@tanstack/react-router' {
       path: '/materials/$materialType'
       fullPath: '/materials/$materialType'
       preLoaderRoute: typeof MaterialsMaterialTypeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(visualization)/3dviz': {
-      id: '/(visualization)/3dviz'
-      path: '/3dviz'
-      fullPath: '/3dviz'
-      preLoaderRoute: typeof visualization3dvizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(visualization)/2dviz': {
-      id: '/(visualization)/2dviz'
-      path: '/2dviz'
-      fullPath: '/2dviz'
-      preLoaderRoute: typeof visualization2dvizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/login': {
@@ -218,13 +219,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authLoginRoute: authLoginRoute,
-  visualization2dvizRoute: visualization2dvizRoute,
-  visualization3dvizRoute: visualization3dvizRoute,
   MaterialsMaterialTypeRoute: MaterialsMaterialTypeRoute,
   PracticesPracticeTypeRoute: PracticesPracticeTypeRoute,
+  VisualizationsVisualizationTypeRoute: VisualizationsVisualizationTypeRoute,
   MaterialsIndexRoute: MaterialsIndexRoute,
   PracticesIndexRoute: PracticesIndexRoute,
   UsersIndexRoute: UsersIndexRoute,
+  VisualizationsIndexRoute: VisualizationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

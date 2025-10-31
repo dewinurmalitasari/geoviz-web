@@ -1,7 +1,16 @@
 import {API_BASE_URL} from "@/config.ts";
 
-// Auth Types
+// Route Protection\
+export const PUBLIC_ROUTES = [
+    '/login',
+];
 
+export const ROLE_PROTECTED_ROUTES = {
+    '/users': ['admin', 'teacher'],
+    '/practices': ['student'],
+}
+
+// Auth Types
 export interface Auth {
     user: User,
     token: string,

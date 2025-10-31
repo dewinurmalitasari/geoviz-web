@@ -1,4 +1,4 @@
-import {createRootRouteWithContext, Outlet} from '@tanstack/react-router'
+import {createRootRouteWithContext, notFound, Outlet, redirect} from '@tanstack/react-router'
 import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
 import {TanStackDevtools} from '@tanstack/react-devtools'
 import Header from "@/components/header.tsx";
@@ -8,17 +8,42 @@ import {getAuthentication} from "@/util/auth.ts";
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
+import {PUBLIC_ROUTES, ROLE_PROTECTED_ROUTES} from "@/type.ts";
+import {NotFound} from "@/components/not-found.tsx";
 
 interface MyRouterContext {
     queryClient: QueryClient
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-    beforeLoad: () => {
+    beforeLoad: ({location}) => {
         const auth = getAuthentication();
-        return {
-            auth
+
+        // Define public routes
+        const isPublicRoute = PUBLIC_ROUTES.some(route => location.pathname.startsWith(route));
+
+        // Redirect unauthenticated users trying to access protected routes
+        if (!auth && !isPublicRoute) {
+            throw redirect({to: '/login'});
         }
+
+        // Prevent authenticated users from accessing public routes
+        if (auth && isPublicRoute) {
+            throw redirect({to: '/'});
+        }
+
+        // Role-based access control
+        for (const path in ROLE_PROTECTED_ROUTES) {
+            if (location.pathname.startsWith(path)) {
+                const allowedRoles = ROLE_PROTECTED_ROUTES[path as keyof typeof ROLE_PROTECTED_ROUTES];
+                // @ts-ignore TS18047
+                if (!allowedRoles.includes(auth.user.role)) {
+                    throw notFound({data: {isRoleBased: true}});
+                }
+            }
+        }
+
+        return {auth};
     },
     component: () => {
         const {auth} = Route.useRouteContext();
@@ -31,7 +56,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                     <Header username={auth.user.username} role={auth.user.role}/>
                 }
 
-                <div className="flex-grow">
+                <div className="flex-grow h-full flex flex-col justify-center">
                     <Outlet/>
                 </div>
 
@@ -66,5 +91,31 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 />
             </div>
         );
-    }
+    },
+    notFoundComponent: ({data}) => {
+        if (data?.data.isRoleBased) {
+            // Role-based 404 - render full layout
+            const auth = getAuthentication();
+            return (
+                <div className="relative min-h-screen flex flex-col font-sans">
+                    <Background/>
+
+                    {auth &&
+                        <Header username={auth.user.username} role={auth.user.role}/>
+                    }
+
+                    <div className="flex-grow h-full flex flex-col justify-center">
+                        <NotFound/>
+                    </div>
+
+                    {auth &&
+                        <Footer/>
+                    }
+                </div>
+            );
+        }
+
+        // Normal 404 - just the component
+        return <NotFound/>;
+    },
 })

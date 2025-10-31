@@ -1,15 +1,10 @@
-import {createFileRoute, redirect, useNavigate} from '@tanstack/react-router'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {getAuthentication} from "@/util/auth.ts";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
 import {ArrowRight, BookOpen, Boxes, Pencil, User} from 'lucide-react';
 
 export const Route = createFileRoute('/')({
-    beforeLoad: () => {
-        if (getAuthentication() === null) {
-            throw redirect({to: '/login'})
-        }
-    },
     component: App,
 })
 
@@ -48,16 +43,10 @@ function App() {
                         </p>
                     }
                     footer={
-                        <div className="space-y-2">
-                            <GeoButton onClick={() => navigate({to: '/2dviz'})}
-                                       variant="secondary">
-                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi 2D
-                            </GeoButton>
-                            <GeoButton onClick={() => navigate({to: '/3dviz'})}
-                                       variant="primary">
-                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi 3D
-                            </GeoButton>
-                        </div>
+                        <GeoButton onClick={() => navigate({to: '/visualizations'})}
+                                   variant="primary">
+                            <ArrowRight className="w-4 h-4"/> Lihat Visualisasi
+                        </GeoButton>
                     }
                 />
 
