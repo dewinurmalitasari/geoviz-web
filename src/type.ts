@@ -48,8 +48,8 @@ export interface LoginResponse {
 // TODO:
 //  - make sure that 401 and 403 responses are handled properly in all routes
 //  - data loading with loaders
-//  - error routes (404, 500, etc)
 //  - tracking users sessions, material access, practice attempts
+//  - 2d viz with equatrion, 2d and 3d viz with point
 //  - security best practices
 //  - performance optimizations
 //  - animations and transitions between routes

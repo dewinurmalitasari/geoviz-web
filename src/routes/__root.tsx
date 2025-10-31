@@ -93,6 +93,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         );
     },
     notFoundComponent: ({data}) => {
+        // @ts-ignore TS2339
         if (data?.data.isRoleBased) {
             // Role-based 404 - render full layout
             const auth = getAuthentication();

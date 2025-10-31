@@ -1,5 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router'
-import {GraduationCap, Home, Pen, Plus, Users} from "lucide-react";
+import {Eye, GraduationCap, Home, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
 import {toast} from "sonner";
@@ -18,16 +18,16 @@ function RouteComponent() {
     const dummy: User[] = [];
     const roles = ['admin', 'teacher', 'student'];
 
-    for (let i = 1; i <= 30; i++) {
+    for (let i = 1; i <= 300; i++) {
         dummy.push({
             _id: '690411171111506118234115' + i,
-            username: `user${i} aaaaa aaa `,
+            username: `user${i} aaaaa aaaaaa aaaaaaaa`,
             role: roles[i % roles.length] as User['role'],
         });
     }
 
     // Table Columns Definition
-    const userColumns: ColumnDef<User>[] = [
+    const teacherColumns: ColumnDef<User>[] = [
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
@@ -44,10 +44,41 @@ function RouteComponent() {
             cell: ({row}) => {
                 const user = row.original;
 
-                return <div className="flex justify-end px-2">
-                    <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
-                               className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
-                </div>;
+                return (
+                    <div className="flex justify-end px-2">
+                        <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
+                                   className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
+                    </div>
+                );
+            },
+        }
+    ]
+
+    const studentColumns: ColumnDef<User>[] = [
+        {
+            id: 'no',
+            header: () => <div className="text-center font-bold">No</div>,
+            cell: ({row}) => <div className="text-center">{row.index + 1}</div>,
+        },
+        {
+            accessorKey: 'username',
+            header: () => <div className="text-start font-bold">Username</div>,
+            cell: ({row}) => <div className="text-start">{row.original.username}</div>,
+        },
+        {
+            id: 'actions',
+            header: () => <div className="text-end font-bold pe-22">Aksi</div>,
+            cell: ({row}) => {
+                const user = row.original;
+
+                return (
+                    <div className="flex justify-end pe-4 space-x-4">
+                        <GeoButton onClick={() => toast.warning(user._id)} variant="primary"
+                                   className="h-[40px] w-[80px]"><Eye/> Lihat</GeoButton>
+                        <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
+                                   className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
+                    </div>
+                );
             },
         }
     ]
@@ -59,15 +90,15 @@ function RouteComponent() {
                 <Home/> Kembali ke Beranda
             </GeoButton>
 
-            <div className="flex flex-col flex-grow md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="flex flex-col flex-grow xl:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <GeoCard
                     icon={<GraduationCap/>}
                     title="Akun Siswa"
                     content={
-                        <DataTable columns={userColumns} data={dummy} isLoading={false}/>
+                        <DataTable columns={studentColumns} data={dummy} isLoading={false}/>
                     }
                     titleButton={
-                        <GeoButton onClick={() => toast.warning('not implemented yet')}>
+                        <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
                             <Plus/> Tambah
                         </GeoButton>
                     }
@@ -77,10 +108,10 @@ function RouteComponent() {
                     icon={<Users/>}
                     title="Akun Guru"
                     content={
-                        <DataTable columns={userColumns} data={dummy} isLoading={true}/>
+                        <DataTable columns={teacherColumns} data={dummy} isLoading={true}/>
                     }
                     titleButton={
-                        <GeoButton onClick={() => toast.warning('not implemented yet')}>
+                        <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
                             <Plus/> Tambah
                         </GeoButton>
                     }
