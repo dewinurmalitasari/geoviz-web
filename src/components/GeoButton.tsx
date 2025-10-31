@@ -23,7 +23,7 @@ export default function GeoButton({onClick, icon, text, variant = 'primary', isL
     return (
         <Button
             className={cn(
-                "w-full h-full flex justify-center items-center gap-2 px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-103 active:scale-95",
+                "w-full h-full flex justify-center items-center gap-2 px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer",
                 variantStyles[variant]
             )}
             onClick={onClick}

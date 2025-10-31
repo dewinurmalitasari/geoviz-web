@@ -17,7 +17,6 @@ export interface User {
 export const API_ENDPOINTS = {
     auth: {
         login: `${API_BASE_URL}/login`,
-        logout: `${API_BASE_URL}/logout`,
     },
     // TODO : Add as needed
 } as const;
