@@ -10,7 +10,7 @@ interface GeoCardProps {
 export default function GeoCard({icon, title, content, footer}: GeoCardProps) {
     return (
         <div
-            className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full max-w-md flex flex-col">
+            className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full flex flex-col">
             <div className="h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600"></div>
 
             <div className="p-6 md:p-8 flex flex-col justify-between flex-1 space-y-4">

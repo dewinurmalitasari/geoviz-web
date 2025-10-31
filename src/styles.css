@@ -147,10 +147,38 @@ code {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(60px, -60px);
+    }
+    50% {
+        transform: translate(-50px, 50px);
+    }
+    75% {
+        transform: translate(50px, 30px);
+    }
+}
+
+@keyframes float-alt {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    33% {
+        transform: translate(-55px, 55px);
+    }
+    66% {
+        transform: translate(55px, -40px);
     }
 }
