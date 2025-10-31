@@ -1,8 +1,8 @@
 import {createFileRoute, redirect} from '@tanstack/react-router'
 import {getAuthentication} from "@/util/auth.ts";
-import GeoCard from "@/components/GeoCard.tsx";
-import GeoButton from "@/components/GeoButton";
-import {ArrowRight, BookOpen, Boxes, Pencil} from 'lucide-react';
+import GeoCard from "@/components/geo-card.tsx";
+import GeoButton from "@/components/geo-button.tsx";
+import {ArrowRight, BookOpen, Boxes, Pencil, User} from 'lucide-react';
 
 export const Route = createFileRoute('/')({
     beforeLoad: () => {
@@ -14,20 +14,7 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-    const handleExploreMaterials = () => {
-        // TODO: Add navigation logic
-        console.log('Navigate to materials');
-    };
-
-    const handleStartPractice = () => {
-        // TODO: Add navigation logic
-        console.log('Navigate to practice');
-    };
-
-    const handleViewVisualization = () => {
-        // TODO: Add navigation logic
-        console.log('Navigate to visualization');
-    };
+    const auth = getAuthentication();
 
     return (
         <div>
@@ -44,32 +31,10 @@ function App() {
                             </p>
                         }
                         buttons={
-                            <GeoButton
-                                onClick={handleExploreMaterials}
-                                icon={<ArrowRight className="w-4 h-4"/>}
-                                text="Jelajahi Materi"
-                                variant="primary"
-                            />
-                        }
-                    />
-
-                    {/* Practice Card */}
-                    <GeoCard
-                        icon={<Pencil className="text-deep-purple-600 text-xl md:text-2xl"/>}
-                        title="Latihan Soal"
-                        content={
-                            <p className="text-gray-600 mb-6 text-sm md:text-base">
-                                Uji pemahaman Anda dengan berbagai latihan soal transformasi geometri yang menarik dan
-                                interaktif.
-                            </p>
-                        }
-                        buttons={
-                            <GeoButton
-                                onClick={handleStartPractice}
-                                icon={<ArrowRight className="w-4 h-4"/>}
-                                text="Mulai Berlatih"
-                                variant="primary"
-                            />
+                            <GeoButton onClick={() => console.log('Navigate to materials')}
+                                       variant="primary">
+                                <ArrowRight className="w-4 h-4"/> Jelajahi Materi
+                            </GeoButton>
                         }
                     />
 
@@ -84,14 +49,54 @@ function App() {
                             </p>
                         }
                         buttons={
-                            <GeoButton
-                                onClick={handleViewVisualization}
-                                icon={<ArrowRight className="w-4 h-4"/>}
-                                text="Lihat Visualisasi"
-                                variant="primary"
-                            />
+                            <GeoButton onClick={() => console.log('Navigate to visualizations')}
+                                       variant="primary">
+                                <ArrowRight className="w-4 h-4"/> Lihat Visualisasi
+                            </GeoButton>
                         }
                     />
+
+                    {/* Practice Card */}
+                    {auth?.user.role === "student" &&
+                        <GeoCard
+                            icon={<Pencil className="text-deep-purple-600 text-xl md:text-2xl"/>}
+                            title="Latihan Soal"
+                            content={
+                                <p className="text-gray-600 mb-6 text-sm md:text-base">
+                                    Uji pemahaman Anda dengan berbagai latihan soal transformasi geometri yang menarik
+                                    dan
+                                    interaktif.
+                                </p>
+                            }
+                            buttons={
+                                <GeoButton onClick={() => console.log('Navigate to practice')}
+                                           variant="primary">
+                                    <ArrowRight className="w-4 h-4"/> Mulai Latihan
+                                </GeoButton>
+                            }
+                        />
+                    }
+
+                    {/* Manage Account Card */}
+                    {(auth?.user.role === "admin" || auth?.user.role === "teacher") && (
+                        <GeoCard
+                            icon={<User className="text-deep-purple-600 text-xl md:text-2xl"/>}
+                            title="Kelola Akun"
+                            content={
+                                <p className="text-gray-600 mb-6 text-sm md:text-base">
+                                    Kelola akun siswa {auth?.user.role === 'admin' ? 'dan guru' : ''}, serta melihat
+                                    statistik dan latihan siswa.
+                                </p>
+                            }
+                            buttons={
+                                <GeoButton onClick={() => console.log('Navigate to account settings')}
+                                           variant="primary">
+                                    <ArrowRight className="w-4 h-4"/> Kelola Akun
+                                </GeoButton>
+                            }
+                        />
+                    )}
+
                 </div>
 
                 {/* Progress Section TODO: Deal with this later */}

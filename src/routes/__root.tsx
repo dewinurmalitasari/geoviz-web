@@ -1,9 +1,9 @@
 import {createRootRouteWithContext, Outlet} from '@tanstack/react-router'
 import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
 import {TanStackDevtools} from '@tanstack/react-devtools'
-import Header from "@/components/Header.tsx";
-import Footer from "@/components/Footer.tsx";
-import Background from "@/components/Background.tsx";
+import Header from "@/components/header.tsx";
+import Footer from "@/components/footer.tsx";
+import Background from "@/components/background.tsx";
 import {getAuthentication} from "@/util/auth.ts";
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
@@ -43,10 +43,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                     position="top-center"
                     toastOptions={{
                         classNames: {
-                            error: '!bg-destructive !text-white',
-                            success: '!bg-green-500 !text-white dark:!bg-green-600',
-                            warning: '!bg-yellow-500 !text-white dark:!bg-yellow-600',
-                            info: '!bg-primary !text-primary-foreground',
+                            error: '!bg-gradient-to-r !from-red-600 !to-red-700 !text-white dark:!from-red-500 dark:!to-red-600',
+                            success: '!bg-gradient-to-r !from-deep-purple-500 !to-deep-purple-700 !text-white',
+                            warning: '!bg-gradient-to-r !from-geo-purple-400 !to-geo-purple-600 !text-white',
+                            info: '!bg-gradient-to-r !from-geo-purple-100 !to-geo-purple-200 !text-deep-purple-700 dark:!from-deep-purple-600 dark:!to-deep-purple-500 dark:!text-geo-purple-50',
                         },
                     }}
                 />

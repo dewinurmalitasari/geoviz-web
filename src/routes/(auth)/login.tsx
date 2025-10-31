@@ -1,9 +1,9 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router'
-import {Login} from "@/components/auth/Login.tsx";
+import {Login} from "@/components/auth/login.tsx";
 import {useState} from "react";
 import {toast} from "sonner";
 import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
-import {useApiMutation} from "@/hooks/useApiMutation.ts";
+import {useApiMutation} from "@/hooks/use-api-mutation.ts";
 import {setAuthentication} from "@/util/auth.ts";
 
 export const Route = createFileRoute('/(auth)/login')({

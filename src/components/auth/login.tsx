@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Eye, EyeOff, KeyRound, LogIn, User} from 'lucide-react';
-import GeoCard from "@/components/GeoCard.tsx";
-import GeoButton from "@/components/GeoButton.tsx";
+import GeoCard from "@/components/geo-card.tsx";
+import GeoButton from "@/components/geo-button.tsx";
 import {Field, FieldLabel,} from "@/components/ui/field"
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput,} from "@/components/ui/input-group"
 
@@ -58,13 +58,9 @@ export function Login({username, setUsername, password, setPassword, onLoginClic
                 </div>
             }
             buttons={
-                <GeoButton
-                    onClick={onLoginClick}
-                    icon={<LogIn className="w-5 h-5 mr-2"/>}
-                    text="Masuk"
-                    variant="primary"
-                    isLoading={isLoading}
-                />
+                <GeoButton onClick={onLoginClick} variant="primary" isLoading={isLoading}>
+                    <LogIn/> Masuk
+                </GeoButton>
             }
         />
     );

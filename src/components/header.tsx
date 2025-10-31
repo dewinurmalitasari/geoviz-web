@@ -1,4 +1,4 @@
-import LogoutButton from "@/components/auth/LogoutButton.tsx";
+import LogoutButton from "@/components/auth/logout-button.tsx";
 
 interface HeaderProps {
     username?: string;
