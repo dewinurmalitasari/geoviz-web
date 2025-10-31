@@ -7,7 +7,7 @@ import type {User} from "@/type.ts";
 import {DataTable} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import PageHeader from "@/components/page-header.tsx";
-import {getUsers} from "@/hooks/use-users.ts";
+import {useGetUsers} from "@/hooks/use-users.ts";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
@@ -25,13 +25,13 @@ function RouteComponent() {
         data: students,
         isFetching: isFetchingStudents,
         error: studentsError,
-    } = getUsers('student');
+    } = useGetUsers('student');
 
     const {
         data: teachers,
         isFetching: isFetchingTeachers,
         error: teachersError
-    } = getUsers('teacher');
+    } = useGetUsers('teacher');
 
     if (studentsError || teachersError) {
         toast.error('Gagal memuat data: ' + (studentsError?.message ?? teachersError?.message));

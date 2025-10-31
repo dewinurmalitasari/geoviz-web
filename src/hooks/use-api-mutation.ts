@@ -1,5 +1,6 @@
-import {useMutation} from "@tanstack/react-query";
-import {clearAuthentication, getAuthentication} from "@/util/auth.ts";
+import { useMutation } from "@tanstack/react-query";
+import { getAuthentication } from "@/util/auth.ts";
+import { handleApiResponse } from "@/util/api-response.ts";
 
 // @ts-ignore TS6133
 interface ApiMutationOptions<TData, TVariables> {
@@ -37,40 +38,7 @@ export function useApiMutation<TData = any, TVariables = any>(
                 body: JSON.stringify(data),
             });
 
-            const contentType = response.headers.get('content-type');
-            const isJson = contentType?.includes('application/json');
-
-            if (!response.ok) {
-                // Handle 401 Unauthorized
-                if (response.status === 401) {
-                    clearAuthentication();
-                    window.location.href = '/login';
-                    throw new Error('Sesi habis');
-                }
-
-                let errorMessage = 'Request gagal';
-
-                if (isJson) {
-                    try {
-                        const errorData = await response.json();
-                        errorMessage = errorData.message || errorMessage;
-                    } catch {
-                        // Ignore JSON parse errors for error responses
-                    }
-                }
-
-                throw new Error(errorMessage);
-            }
-
-            if (isJson) {
-                try {
-                    return await response.json() as TData;
-                } catch (error) {
-                    throw new Error('Gagal mengurai respons JSON');
-                }
-            }
-
-            return {} as TData;
+            return handleApiResponse<TData>(response);
         },
         onSuccess,
         onError,
