@@ -8,19 +8,22 @@ import {DataTable} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import PageHeader from "@/components/page-header.tsx";
 import {useGetUsers} from "@/hooks/use-users.ts";
+import {getAuthentication} from "@/util/auth.ts";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
     loader: async ({context}) => {
         // Invalidate and refetch the queries TODO: Ensure all get are doing this too
         await Promise.all([
-            context.queryClient.invalidateQueries({ queryKey: ['users', 'student'] }),
-            context.queryClient.invalidateQueries({ queryKey: ['users', 'teacher'] }),
+            context.queryClient.invalidateQueries({queryKey: ['users', 'student']}),
+            context.queryClient.invalidateQueries({queryKey: ['users', 'teacher']}),
         ]);
     },
 })
 
 function RouteComponent() {
+    const auth = getAuthentication();
+
     const {
         data: students,
         isFetching: isFetchingStudents,
@@ -96,7 +99,7 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title="Manajemen Akun" description="Kelola akun siswa dan guru."/>
+            <PageHeader title="Manajemen Akun" description="Kelola akun pada platform GeoViz."/>
 
             <div className="flex flex-col flex-grow xl:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <GeoCard
@@ -116,22 +119,24 @@ function RouteComponent() {
                     }
                 />
 
-                <GeoCard
-                    icon={<Users/>}
-                    title="Akun Guru"
-                    content={
-                        <DataTable
-                            columns={teacherColumns}
-                            data={teachers?.users ?? []}
-                            isLoading={isFetchingTeachers}
-                        />
-                    }
-                    titleButton={
-                        <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
-                            <Plus/> Tambah
-                        </GeoButton>
-                    }
-                />
+                {auth && auth.user.role === 'admin' && (
+                    <GeoCard
+                        icon={<Users/>}
+                        title="Akun Guru"
+                        content={
+                            <DataTable
+                                columns={teacherColumns}
+                                data={teachers?.users ?? []}
+                                isLoading={isFetchingTeachers}
+                            />
+                        }
+                        titleButton={
+                            <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
+                                <Plus/> Tambah
+                            </GeoButton>
+                        }
+                    />
+                )}
             </div>
         </div>
     );

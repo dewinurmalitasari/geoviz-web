@@ -8,7 +8,10 @@ export async function handleApiResponse<TData>(response: Response): Promise<TDat
         // Handle 401 Unauthorized
         if (response.status === 401) {
             clearAuthentication();
-            window.location.href = '/login'; // INFO: Can't use navigation in non-react context
+
+            if (!window.location.pathname.includes('/login')) {
+                window.location.href = '/login';
+            }
         }
 
         let errorMessage = 'Request gagal';
