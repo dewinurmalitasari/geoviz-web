@@ -3,6 +3,6 @@ import {API_ENDPOINTS, type LoginPayload, type LoginResponse} from "@/type.ts";
 
 export const authService = {
     login: (loginData: LoginPayload): Promise<LoginResponse> => {
-        return api.post<LoginResponse>(API_ENDPOINTS.login, loginData);
+        return api.post<LoginResponse>(API_ENDPOINTS.auth.login, loginData);
     },
 };
