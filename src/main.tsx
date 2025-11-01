@@ -9,13 +9,16 @@ import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
+import {createHashHistory} from '@tanstack/react-router'
 
 // TODO: Send visit tracking event if logged in, else skip
 
 // Create a new router instance
+const hashHistory = createHashHistory()
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
 const router = createRouter({
     routeTree,
+    history: hashHistory,
     context: {
         ...TanStackQueryProviderContext,
     },

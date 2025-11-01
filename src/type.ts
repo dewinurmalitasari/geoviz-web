@@ -67,5 +67,5 @@ export interface UserPayload {
 //  - tracking users sessions, material access, practice attempts
 //  - 2d viz with equatrion, 2d and 3d viz with point
 //  - security best practices
-//  - performance optimizations
+//  - performance optimizations like preloading routes
 //  - animations and transitions between routes
