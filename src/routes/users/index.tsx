@@ -2,7 +2,6 @@ import {createFileRoute, useNavigate, useRouter} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {toast} from "sonner";
 import type {User, UsersResponse} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
@@ -13,7 +12,7 @@ import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {ApiError} from "@/lib/api-client.ts";
 import AddUserForm from "@/components/form/user/add-user-form.tsx";
-import {useCallback, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import EditUserForm from "@/components/form/user/edit-user-form.tsx";
 import DeleteUserForm from "@/components/form/user/delete-user-form.tsx";
 
@@ -65,20 +64,6 @@ function RouteComponent() {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-
-    const handleEditSuccess = useCallback(() => {
-        setSelectedUser(null);
-        router.invalidate();
-    }, [router]);
-
-    const handleDeleteClick = useCallback(() => {
-        setDeleteOpen(true);
-    }, []);
-
-    const handleDeleteSuccess = useCallback(() => {
-        setSelectedUser(null);
-        router.invalidate();
-    }, [router]);
 
     // Table Columns Definition
     const teacherColumns: ColumnDef<User>[] = useMemo(() => [
@@ -206,7 +191,10 @@ function RouteComponent() {
                             <DataTable
                                 columns={teacherColumns}
                                 data={teachers?.users ?? []}
-                                onRowClick={(user) => toast.warning(user._id)}
+                                onRowClick={(user) => {
+                                    setSelectedUser(user);
+                                    setEditOpen(true);
+                                }}
                             />
                         }
                         titleButton={
@@ -229,17 +217,27 @@ function RouteComponent() {
                     open={editOpen}
                     onOpenChange={setEditOpen}
                     user={selectedUser}
-                    onSuccess={handleEditSuccess}
-                    onDeleteClick={handleDeleteClick}
+                    onSuccess={() => {
+                        setSelectedUser(null);
+                        router.invalidate();
+                    }}
+                    onDeleteClick={() => {
+                        setDeleteOpen(true);
+                    }}
                 />
             )}
 
             {selectedUser && (
                 <DeleteUserForm
                     open={deleteOpen}
-                    onOpenChange={setDeleteOpen}
+                    onOpenChange={() => {
+                        setDeleteOpen(false);
+                    }}
                     user={selectedUser}
-                    onSuccess={handleDeleteSuccess}
+                    onSuccess={() => {
+                        setSelectedUser(null);
+                        router.invalidate();
+                    }}
                 />
             )}
         </div>
