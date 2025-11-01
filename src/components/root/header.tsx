@@ -1,5 +1,6 @@
 import LogoutButton from "@/components/auth/logout-button.tsx";
 import {Link} from "@tanstack/react-router";
+import {ROUTES} from "@/type.ts";
 
 interface HeaderProps {
     username?: string;
@@ -13,7 +14,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                 {/* Desktop Layout (md and above) */}
                 <div className="hidden md:flex items-center justify-between gap-4">
                     {/* Logo and Title */}
-                    <Link to="/" className="flex items-center gap-3 min-w-0">
+                    <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0">
                         <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
                             <img src="favicon.svg" alt="Logo" className="w-6 h-6 md:w-7 md:h-7"/>
                         </div>
@@ -51,7 +52,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                     {/* Top Row - Logo/Title */}
                     <div className="flex items-start justify-between gap-4">
                         {/* Logo and Title */}
-                        <Link to="/" className="flex items-center gap-3 min-w-0 flex-1">
+                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-1">
                             <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
                                 <img src="favicon.svg" alt="Logo" className="w-6 h-6"/>
                             </div>

@@ -1,5 +1,5 @@
 import GeoButton from "@/components/geo/geo-button.tsx";
-import type {ProgressData} from "@/type.ts";
+import {type ProgressData, ROUTES} from "@/type.ts";
 
 interface ProgressProps {
     progress: ProgressData;
@@ -15,7 +15,7 @@ export default function Progress({progress, _id}: ProgressProps) {
                     Progress Pembelajaran Anda
                 </h2>
                 <GeoButton
-                    to={`/users/${_id}`}
+                    to={ROUTES.users.userDetail(_id)}
                     variant="outline"
                     className="w-full sm:w-auto text-sm px-4 py-2 whitespace-nowrap"
                 >

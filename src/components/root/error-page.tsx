@@ -5,6 +5,7 @@ import {getAuthentication} from "@/lib/auth.ts";
 import Background from "@/components/root/background.tsx";
 import Header from "@/components/root/header.tsx";
 import Footer from "@/components/root/footer.tsx";
+import {ROUTES} from "@/type.ts";
 
 interface ErrorPageProps {
     useTemplate?: boolean;
@@ -35,7 +36,7 @@ export function ErrorPage({useTemplate = false, status, statusText, title, messa
                             <GeoButton onClick={() => window.history.back()} variant="primary" className="flex-1">
                                 <ArrowLeft className="w-5 h-5"/> Kembali
                             </GeoButton>
-                            <GeoButton to="/" variant="secondary" className="flex-1">
+                            <GeoButton to={ROUTES.home} variant="secondary" className="flex-1">
                                 <Home className="w-5 h-5"/> Beranda
                             </GeoButton>
                         </div>

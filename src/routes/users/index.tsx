@@ -2,7 +2,7 @@ import {createFileRoute, useRouter} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import type {User, UsersResponse} from "@/type.ts";
+import {ROUTES, type User, type UsersResponse} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import PageHeader from "@/components/root/page-header.tsx";
@@ -128,7 +128,7 @@ function RouteComponent() {
                 return (
                     <div className="flex justify-end pe-4 space-x-4">
                         <GeoButton
-                            to={`/users/${user._id}`}
+                            to={ROUTES.users.userDetail(user._id)}
                             variant="primary"
                             className="h-[40px] w-[80px]"
                         >

@@ -11,7 +11,7 @@ import {useEffect, useMemo} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import {BookOpenCheck, ChartColumn, ClipboardList, Eye} from "lucide-react";
 import type {ColumnDef} from "@tanstack/react-table";
-import type {Practice} from "@/type.ts";
+import {type Practice, ROUTES} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 
@@ -109,7 +109,7 @@ function RouteComponent() {
                 return (
                     <div className="flex justify-end pe-4">
                         <GeoButton
-                            to={`/practices/result/${row.original._id}`}
+                            to={ROUTES.practices.practiceResult(row.original._id)}
                             variant="primary"
                             className="h-[40px] w-[80px]"
                         >

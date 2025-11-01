@@ -17,7 +17,7 @@ import { Route as MaterialsIndexRouteImport } from './routes/materials/index'
 import { Route as VisualizationsVisualizationTypeRouteImport } from './routes/visualizations/$visualizationType'
 import { Route as UsersUserIdRouteImport } from './routes/users/$userId'
 import { Route as PracticesPracticeTypeRouteImport } from './routes/practices/$practiceType'
-import { Route as MaterialsMaterialTypeRouteImport } from './routes/materials/$materialType'
+import { Route as MaterialsMaterialIdRouteImport } from './routes/materials/$materialId'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PracticesResultPracticeIdRouteImport } from './routes/practices/result/$practiceId'
 
@@ -62,9 +62,9 @@ const PracticesPracticeTypeRoute = PracticesPracticeTypeRouteImport.update({
   path: '/practices/$practiceType',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MaterialsMaterialTypeRoute = MaterialsMaterialTypeRouteImport.update({
-  id: '/materials/$materialType',
-  path: '/materials/$materialType',
+const MaterialsMaterialIdRoute = MaterialsMaterialIdRouteImport.update({
+  id: '/materials/$materialId',
+  path: '/materials/$materialId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
@@ -82,7 +82,7 @@ const PracticesResultPracticeIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
-  '/materials/$materialType': typeof MaterialsMaterialTypeRoute
+  '/materials/$materialId': typeof MaterialsMaterialIdRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
@@ -95,7 +95,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
-  '/materials/$materialType': typeof MaterialsMaterialTypeRoute
+  '/materials/$materialId': typeof MaterialsMaterialIdRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
@@ -109,7 +109,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)/login': typeof authLoginRoute
-  '/materials/$materialType': typeof MaterialsMaterialTypeRoute
+  '/materials/$materialId': typeof MaterialsMaterialIdRoute
   '/practices/$practiceType': typeof PracticesPracticeTypeRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/visualizations/$visualizationType': typeof VisualizationsVisualizationTypeRoute
@@ -124,7 +124,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
-    | '/materials/$materialType'
+    | '/materials/$materialId'
     | '/practices/$practiceType'
     | '/users/$userId'
     | '/visualizations/$visualizationType'
@@ -137,7 +137,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
-    | '/materials/$materialType'
+    | '/materials/$materialId'
     | '/practices/$practiceType'
     | '/users/$userId'
     | '/visualizations/$visualizationType'
@@ -150,7 +150,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(auth)/login'
-    | '/materials/$materialType'
+    | '/materials/$materialId'
     | '/practices/$practiceType'
     | '/users/$userId'
     | '/visualizations/$visualizationType'
@@ -164,7 +164,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authLoginRoute: typeof authLoginRoute
-  MaterialsMaterialTypeRoute: typeof MaterialsMaterialTypeRoute
+  MaterialsMaterialIdRoute: typeof MaterialsMaterialIdRoute
   PracticesPracticeTypeRoute: typeof PracticesPracticeTypeRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
   VisualizationsVisualizationTypeRoute: typeof VisualizationsVisualizationTypeRoute
@@ -233,11 +233,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticesPracticeTypeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/materials/$materialType': {
-      id: '/materials/$materialType'
-      path: '/materials/$materialType'
-      fullPath: '/materials/$materialType'
-      preLoaderRoute: typeof MaterialsMaterialTypeRouteImport
+    '/materials/$materialId': {
+      id: '/materials/$materialId'
+      path: '/materials/$materialId'
+      fullPath: '/materials/$materialId'
+      preLoaderRoute: typeof MaterialsMaterialIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/login': {
@@ -260,7 +260,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authLoginRoute: authLoginRoute,
-  MaterialsMaterialTypeRoute: MaterialsMaterialTypeRoute,
+  MaterialsMaterialIdRoute: MaterialsMaterialIdRoute,
   PracticesPracticeTypeRoute: PracticesPracticeTypeRoute,
   UsersUserIdRoute: UsersUserIdRoute,
   VisualizationsVisualizationTypeRoute: VisualizationsVisualizationTypeRoute,

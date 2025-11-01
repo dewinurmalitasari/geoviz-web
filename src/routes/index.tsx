@@ -8,7 +8,7 @@ import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {statisticsService} from "@/services/statistics-service.ts";
-import type {ProgressData, StatisticsSummaryResponse} from "@/type.ts";
+import {type ProgressData, ROUTES, type StatisticsSummaryResponse} from "@/type.ts";
 import PageHeader from "@/components/root/page-header.tsx";
 
 export const Route = createFileRoute('/')({
@@ -84,7 +84,7 @@ function App() {
                             </p>
                         }
                         footer={
-                            <GeoButton variant="primary" to="/users">
+                            <GeoButton variant="primary" to={ROUTES.users.base}>
                                 <ArrowRight className="w-4 h-4"/> Kelola Akun
                             </GeoButton>
                         }
@@ -101,7 +101,7 @@ function App() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to="/materials">
+                        <GeoButton variant="primary" to={ROUTES.materials.base}>
                             <ArrowRight className="w-4 h-4"/> Jelajahi Materi
                         </GeoButton>
                     }
@@ -118,7 +118,7 @@ function App() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to="/visualizations">
+                        <GeoButton variant="primary" to={ROUTES.visualizations.base}>
                             <ArrowRight className="w-4 h-4"/> Lihat Visualisasi
                         </GeoButton>
                     }
@@ -138,7 +138,7 @@ function App() {
                         }
                         footer={
 
-                            <GeoButton variant="primary" to="/practices">
+                            <GeoButton variant="primary" to={ROUTES.practices.base}>
                                 <ArrowRight className="w-4 h-4"/> Mulai Latihan
                             </GeoButton>
                         }

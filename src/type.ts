@@ -1,6 +1,31 @@
 import {API_BASE_URL} from "@/config.ts";
 
-// Route Protection\
+// Route Paths
+export const ROUTES = {
+    home: '/',
+    auth: {
+        login: '/login',
+    },
+    users: {
+        base: '/users',
+        userDetail: (userId: string) => `/users/${userId}`,
+    },
+    materials: {
+        base: '/materials',
+        materialDetail: (materialId: string) => `/materials/${materialId}`,
+    },
+    practices: {
+        base: '/practices',
+        practiceType: (practiceType: string) => `/practices/${practiceType}`,
+        practiceResult: (practiceId: string) => `/practices/result/${practiceId}`,
+    },
+    visualizations: {
+        base: '/visualizations',
+        visualizationType: (visualizationType: string) => `/visualizations/${visualizationType}`,
+    }
+} as const;
+
+// Route Protection
 export const PUBLIC_ROUTES = [
     '/login',
 ];
