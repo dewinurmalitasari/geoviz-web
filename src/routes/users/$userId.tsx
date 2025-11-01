@@ -103,6 +103,31 @@ function RouteComponent() {
             },
         },
         {
+            id: 'code',
+            accessorKey: 'code',
+            header: () => <div className="text-center font-bold">Kode Latihan</div>,
+            cell: ({row}) => <div className="text-center">{row.original.code}</div>,
+        },
+        {
+            id: 'score',
+            accessorFn: (row) => {
+                const percentage = (row.score.correct / row.score.total) * 100;
+                return percentage.toFixed(0);
+            },
+            header: () => <div className="text-center font-bold">Nilai</div>,
+            cell: ({getValue}) => {
+                return <div className="text-center">{getValue<string>()}</div>;
+            },
+        },
+        {
+            id: 'correctTotal',
+            accessorFn: (row) => `${row.score.correct}/${row.score.total}`,
+            header: () => <div className="text-center font-bold">Benar/Total</div>,
+            cell: ({getValue}) => {
+                return <div className="text-center">{getValue<string>()}</div>;
+            },
+        },
+        {
             id: 'actions',
             header: () => <div className="text-end font-bold pe-10">Aksi</div>,
             cell: ({row}) => {
