@@ -1,4 +1,4 @@
-import {createFileRoute, useNavigate, useRouter} from '@tanstack/react-router'
+import {createFileRoute, useRouter} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
@@ -56,7 +56,6 @@ export const Route = createFileRoute('/users/')({
 })
 
 function RouteComponent() {
-    const navigate = useNavigate();
     const router = useRouter();
     const {students, teachers} = Route.useLoaderData();
 
@@ -90,8 +89,7 @@ function RouteComponent() {
                 return (
                     <div className="flex justify-end px-2">
                         <GeoButton
-                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                e.stopPropagation();
+                            onClick={() => {
                                 setSelectedUser(user);
                                 setEditOpen(true);
                             }}
@@ -130,9 +128,6 @@ function RouteComponent() {
                 return (
                     <div className="flex justify-end pe-4 space-x-4">
                         <GeoButton
-                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                e.stopPropagation();
-                            }}
                             to={`/users/${user._id}`}
                             variant="primary"
                             className="h-[40px] w-[80px]"
@@ -141,8 +136,7 @@ function RouteComponent() {
                         </GeoButton>
 
                         <GeoButton
-                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                e.stopPropagation();
+                            onClick={() => {
                                 setSelectedUser(user);
                                 setEditOpen(true);
                             }}
@@ -169,7 +163,6 @@ function RouteComponent() {
                         <DataTable
                             columns={studentColumns}
                             data={students?.users ?? []}
-                            onRowClick={(user) => navigate({to: `/users/${user._id}`})}
                         />
                     }
                     titleButton={
@@ -193,10 +186,6 @@ function RouteComponent() {
                             <DataTable
                                 columns={teacherColumns}
                                 data={teachers?.users ?? []}
-                                onRowClick={(user) => {
-                                    setSelectedUser(user);
-                                    setEditOpen(true);
-                                }}
                             />
                         }
                         titleButton={

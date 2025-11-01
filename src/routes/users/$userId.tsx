@@ -9,10 +9,11 @@ import {practicesService} from "@/services/practices-service.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import {useEffect, useMemo} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {BookOpenCheck, ChartColumn, ClipboardList} from "lucide-react";
+import {BookOpenCheck, ChartColumn, ClipboardList, Eye} from "lucide-react";
 import type {ColumnDef} from "@tanstack/react-table";
 import type {Practice} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
+import GeoButton from "@/components/geo/geo-button.tsx";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
@@ -36,7 +37,7 @@ export const Route = createFileRoute('/users/$userId')({
 
         return {userResponse, practicesResponse};
     },
-    errorComponent: ({ error }) => {
+    errorComponent: ({error}) => {
         if (error instanceof ApiError) {
             return (
                 <ErrorPage
@@ -68,7 +69,6 @@ export const Route = createFileRoute('/users/$userId')({
 })
 
 function RouteComponent() {
-    const navigate = Route.useNavigate();
     const isStudent = getAuthentication()?.user.role === 'student';
     const {userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse} = Route.useLoaderData();
 
@@ -85,20 +85,48 @@ function RouteComponent() {
     const practicesResponseColumns: ColumnDef<Practice>[] = useMemo(() => [
         {
             id: 'createdAt',
-            accessorKey: 'createdAt',
-            header: () => <div className="text-center font-bold">Tanggal</div>,
-            cell: ({row}) => {
-                const date = new Date(row.original.createdAt);
-                return <div className="text-center">{date.toLocaleDateString()}</div>;
+            accessorFn: (row) => {
+                const date = new Date(row.createdAt);
+                const formatter = new Intl.DateTimeFormat('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                });
+                return formatter.format(date).replace(',', ' -');
+            },
+            header: () => <div className="text-center font-bold">Waktu</div>,
+            cell: ({getValue}) => {
+                return <div className="text-center">{getValue<string>()}</div>;
             },
         },
+        {
+            id: 'actions',
+            header: () => <div className="text-end font-bold pe-10">Aksi</div>,
+            cell: ({row}) => {
+                return (
+                    <div className="flex justify-end pe-4">
+                        <GeoButton
+                            to={`/practices/result/${row.original._id}`}
+                            variant="primary"
+                            className="h-[40px] w-[80px]"
+                        >
+                            <Eye/> Lihat
+                        </GeoButton>
+                    </div>
+                );
+            }
+        }
+
     ], []);
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader
-                title={isStudent? 'Histori Latihan' : `Detail ${userResponse? userResponse.user.username : 'Siswa'}`}
-                description={isStudent? 'Informasi histori latihan soal.' : 'Informasi lengkap mengenai siswa.' }
+                title={isStudent ? 'Histori Latihan' : `Detail ${userResponse ? userResponse.user.username : 'Siswa'}`}
+                description={isStudent ? 'Informasi histori latihan soal.' : 'Informasi lengkap mengenai siswa.'}
             />
 
             <div className="flex flex-col flex-grow space-y-4">
@@ -125,7 +153,6 @@ function RouteComponent() {
                         <DataTable
                             columns={practicesResponseColumns}
                             data={practicesResponse.practices ?? []}
-                            onRowClick={(practice) => navigate({to: `/practices/result/${practice._id}`})}
                         />
                     }
                 />
