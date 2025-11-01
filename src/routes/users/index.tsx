@@ -85,8 +85,10 @@ function RouteComponent() {
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row, table}) => <div
-                className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
+            cell: ({row}) => {
+                const index = teachers?.users.findIndex(u => u._id === row.original._id) ?? -1;
+                return <div className="text-center">{(teachers?.users.length ?? 0) - index}</div>;
+            },
         },
         {
             accessorKey: 'username',
@@ -122,8 +124,10 @@ function RouteComponent() {
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row, table}) => <div
-                className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
+            cell: ({row}) => {
+                const index = students?.users.findIndex(u => u._id === row.original._id) ?? -1;
+                return <div className="text-center">{(students?.users.length ?? 0) - index}</div>;
+            },
         },
         {
             accessorKey: 'username',
