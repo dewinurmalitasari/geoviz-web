@@ -1,10 +1,10 @@
-import {Dialog, DialogClose, DialogContent, DialogFooter} from '@/components/ui/dialog';
-import {Drawer, DrawerClose, DrawerContent, DrawerFooter} from '@/components/ui/drawer';
-import {useIsMobile} from '@/hooks/use-mobile';
-import GeoButton from "@/components/geo-button.tsx";
+import {Dialog, DialogClose, DialogContent, DialogFooter} from '@/components/ui/dialog.tsx';
+import {Drawer, DrawerClose, DrawerContent, DrawerFooter} from '@/components/ui/drawer.tsx';
+import {useIsMobile} from '@/hooks/use-mobile.ts';
+import GeoButton from "@/components/geo/geo-button.tsx";
 import {LogOut, Trash} from "lucide-react";
-import GeoDialogHeader from "@/components/geo-dialog-header.tsx";
-import GeoDrawerHeader from "@/components/geo-drawer-header.tsx";
+import GeoDialogHeader from "@/components/geo/geo-dialog-header.tsx";
+import GeoDrawerHeader from "@/components/geo/geo-drawer-header.tsx";
 
 interface DeleteDialogProps {
     open: boolean;

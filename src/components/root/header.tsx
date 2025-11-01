@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ username = "Pengguna", role = "Student" }: HeaderProps) {
     return (
-        <header className="py-4 px-4 md:py-6 md:px-8">
+        <header className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 md:py-6 md:px-8">
             <div className="container mx-auto">
                 {/* Desktop Layout (md and above) */}
                 <div className="hidden md:flex items-center justify-between gap-4">
@@ -67,7 +67,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                     </div>
 
                     {/* Bottom Row - User Details and Logout Button */}
-                    <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-deep-purple-50 to-purple-50 rounded-xl p-3 border border-deep-purple-100">
+                    <div className="flex items-center justify-between gap-3 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm">
                         {/* User Details */}
                         <div className="flex items-center gap-3 flex-1">
                             {/* User Avatar */}
@@ -85,7 +85,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                                         {username}
                                     </p>
                                 </div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
                                     {role}
                                 </span>
                             </div>
@@ -98,7 +98,6 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                     </div>
                 </div>
             </div>
-            <div className="mt-4 h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 rounded-full" />
         </header>
     );
 }

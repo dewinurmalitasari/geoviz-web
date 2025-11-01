@@ -1,4 +1,4 @@
-import GeoButton from "@/components/geo-button.tsx";
+import GeoButton from "@/components/geo/geo-button.tsx";
 import {ArrowLeft} from "lucide-react";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useNavigate} from "@tanstack/react-router";
@@ -12,7 +12,7 @@ export default function PageHeader({title, description}: PageHeaderProps) {
     const navigate = useNavigate();
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 mt-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">

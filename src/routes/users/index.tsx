@@ -1,16 +1,16 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
-import GeoCard from "@/components/geo-card.tsx";
-import GeoButton from "@/components/geo-button.tsx";
+import GeoCard from "@/components/geo/geo-card.tsx";
+import GeoButton from "@/components/geo/geo-button.tsx";
 import {toast} from "sonner";
 import type {User, UsersResponse} from "@/type.ts";
-import {DataTable} from "@/components/data-table.tsx";
+import {DataTable} from "@/components/table/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
-import PageHeader from "@/components/page-header.tsx";
+import PageHeader from "@/components/root/page-header.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import {userService} from "@/services/user-service.ts";
-import {LoadingPage} from "@/components/loading-page.tsx";
-import {ErrorPage} from "@/components/error-page.tsx";
+import {LoadingPage} from "@/components/root/loading-page.tsx";
+import {ErrorPage} from "@/components/root/error-page.tsx";
 import {ApiError} from "@/lib/api-client.ts";
 
 export const Route = createFileRoute('/users/')({
@@ -29,7 +29,7 @@ export const Route = createFileRoute('/users/')({
 
         return {students, teachers};
     },
-    errorComponent: ({ error }) => {
+    errorComponent: ({error}) => {
         if (error instanceof ApiError) {
             return (
                 <ErrorPage
@@ -61,7 +61,7 @@ function RouteComponent() {
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row}) => <div className="text-center">{row.index + 1}</div>,
+            cell: ({row, table}) => <div className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
         },
         {
             accessorKey: 'username',
@@ -76,11 +76,19 @@ function RouteComponent() {
 
                 return (
                     <div className="flex justify-end px-2">
-                        <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
-                                   className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
+                        <GeoButton
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.stopPropagation();
+                                toast.warning(user._id);
+                            }}
+                            variant="secondary"
+                            className="h-[40px] w-[80px]"
+                        >
+                            <Pen/> Edit
+                        </GeoButton>
                     </div>
                 );
-            },
+            }
         }
     ]
 
@@ -88,7 +96,7 @@ function RouteComponent() {
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row}) => <div className="text-center">{row.index + 1}</div>,
+            cell: ({row, table}) => <div className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
         },
         {
             accessorKey: 'username',
@@ -103,13 +111,30 @@ function RouteComponent() {
 
                 return (
                     <div className="flex justify-end pe-4 space-x-4">
-                        <GeoButton onClick={() => navigate({to: `/users/${user._id}`})} variant="primary"
-                                   className="h-[40px] w-[80px]"><Eye/> Lihat</GeoButton>
-                        <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
-                                   className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
+                        <GeoButton
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.stopPropagation();
+                                navigate({to: `/users/${user._id}`});
+                            }}
+                            variant="primary"
+                            className="h-[40px] w-[80px]"
+                        >
+                            <Eye/> Lihat
+                        </GeoButton>
+
+                        <GeoButton
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.stopPropagation();
+                                toast.warning(user._id);
+                            }}
+                            variant="secondary"
+                            className="h-[40px] w-[80px]"
+                        >
+                            <Pen/> Edit
+                        </GeoButton>
                     </div>
                 );
-            },
+            }
         }
     ]
 
@@ -125,6 +150,7 @@ function RouteComponent() {
                         <DataTable
                             columns={studentColumns}
                             data={students?.users ?? []}
+                            onRowClick={(user) => navigate({to: `/users/${user._id}`})}
                         />
                     }
                     titleButton={
@@ -142,6 +168,7 @@ function RouteComponent() {
                             <DataTable
                                 columns={teacherColumns}
                                 data={teachers?.users ?? []}
+                                onRowClick={(user) => toast.warning(user._id)}
                             />
                         }
                         titleButton={

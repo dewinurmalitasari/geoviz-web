@@ -13,9 +13,9 @@ import {
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table.tsx"
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {TablePagination} from "@/components/table-pagination.tsx";
-import {useIsMobile} from "@/hooks/use-mobile"
-import {Input} from "@/components/ui/input"
+import {TablePagination} from "@/components/table/table-pagination.tsx";
+import {useIsMobile} from "@/hooks/use-mobile.ts"
+import {Input} from "@/components/ui/input.tsx"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -24,7 +24,12 @@ interface DataTableProps<TData, TValue> {
     onRowClick?: (row: TData) => void
 }
 
-export function DataTable<TData, TValue>({columns, data, isLoading = false, onRowClick}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+                                             columns,
+                                             data,
+                                             isLoading = false,
+                                             onRowClick
+                                         }: DataTableProps<TData, TValue>) {
     const isMobile = useIsMobile()
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -109,7 +114,7 @@ export function DataTable<TData, TValue>({columns, data, isLoading = false, onRo
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
-                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 transition-colors duration-200"
+                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 hover:shadow-[inset_4px_0_0_0] hover:shadow-deep-purple-500 transition-all duration-200 cursor-pointer"
                                 onClick={() => onRowClick && onRowClick(row.original)}
                             >
                                 {row.getVisibleCells().map((cell) => (

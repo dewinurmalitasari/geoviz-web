@@ -6,8 +6,8 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination"
-import { useIsMobile } from "@/hooks/use-mobile"
+} from "@/components/ui/pagination.tsx"
+import { useIsMobile } from "@/hooks/use-mobile.ts"
 
 interface TablePaginationProps {
     table: any

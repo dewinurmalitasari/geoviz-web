@@ -1,7 +1,7 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {getAuthentication} from "@/lib/auth.ts";
-import GeoCard from "@/components/geo-card.tsx";
-import GeoButton from "@/components/geo-button.tsx";
+import GeoCard from "@/components/geo/geo-card.tsx";
+import GeoButton from "@/components/geo/geo-button.tsx";
 import {ArrowRight, BookOpen, Boxes, Pencil, User} from 'lucide-react';
 
 export const Route = createFileRoute('/')({

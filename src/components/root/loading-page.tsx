@@ -1,4 +1,4 @@
-import GeoCard from "@/components/geo-card.tsx";
+import GeoCard from "@/components/geo/geo-card.tsx";
 import {Spinner} from "@/components/ui/spinner.tsx";
 
 export function LoadingPage({ page }: { page: string }) {

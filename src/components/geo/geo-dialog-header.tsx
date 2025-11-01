@@ -1,4 +1,4 @@
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog"
+import {DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx"
 import type {ReactNode} from "react"
 
 interface GeoDialogHeaderProps {

@@ -1,11 +1,11 @@
 import {Button} from "@/components/ui/button.tsx";
 import type {ReactNode} from "react";
-import {cn} from "@/lib/utils";
+import {cn} from "@/lib/utils.ts";
 import {Spinner} from "@/components/ui/spinner.tsx";
 import {Slot} from "@radix-ui/react-slot";
 
 interface GeoButtonProps {
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     children: ReactNode;
     variant?: 'primary' | 'secondary' | 'destructive' | 'outline';
     isLoading?: boolean;

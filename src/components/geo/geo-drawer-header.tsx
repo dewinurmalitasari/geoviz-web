@@ -1,4 +1,4 @@
-import {DrawerHeader, DrawerTitle} from "@/components/ui/drawer"
+import {DrawerHeader, DrawerTitle} from "@/components/ui/drawer.tsx"
 import type {ReactNode} from "react"
 
 interface GeoDrawerHeaderProps {

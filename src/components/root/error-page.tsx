@@ -1,11 +1,11 @@
 import {AlertCircle, ArrowLeft, Home} from 'lucide-react';
-import GeoCard from "@/components/geo-card.tsx";
-import GeoButton from "@/components/geo-button.tsx";
+import GeoCard from "@/components/geo/geo-card.tsx";
+import GeoButton from "@/components/geo/geo-button.tsx";
 import {useNavigate} from "@tanstack/react-router";
 import {getAuthentication} from "@/lib/auth.ts";
-import Background from "@/components/background.tsx";
-import Header from "@/components/header.tsx";
-import Footer from "@/components/footer.tsx";
+import Background from "@/components/root/background.tsx";
+import Header from "@/components/root/header.tsx";
+import Footer from "@/components/root/footer.tsx";
 
 interface ErrorPageProps {
     useTemplate?: boolean;

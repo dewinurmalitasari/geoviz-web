@@ -69,3 +69,4 @@ export interface UserPayload {
 //  - security best practices
 //  - performance optimizations like preloading routes
 //  - animations and transitions between routes
+//  - scrollbar?

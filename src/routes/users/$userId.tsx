@@ -1,8 +1,8 @@
 import {createFileRoute} from '@tanstack/react-router'
-import {LoadingPage} from "@/components/loading-page.tsx";
+import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {userService} from "@/services/user-service.ts";
 import {ApiError} from "@/lib/api-client.ts";
-import {ErrorPage} from "@/components/error-page.tsx";
+import {ErrorPage} from "@/components/root/error-page.tsx";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
