@@ -1,5 +1,5 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router'
-import {getAuthentication} from "@/util/auth.ts";
+import {getAuthentication} from "@/lib/auth.ts";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
 import {ArrowRight, BookOpen, Boxes, Pencil, User} from 'lucide-react';

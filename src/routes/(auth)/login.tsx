@@ -1,26 +1,44 @@
-import {createFileRoute} from '@tanstack/react-router'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {Login} from "@/components/auth/login.tsx";
 import {useState} from "react";
 import {toast} from "sonner";
-import {useLogin} from "@/hooks/use-login.ts";
+import {authService} from "@/services/auth-service.ts";
+import {setAuthentication} from "@/lib/auth.ts";
 
 export const Route = createFileRoute('/(auth)/login')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const loginMutation = useLogin();
-
-    const onLoginClick = () => {
+    const onLoginClick = async () => {
         if (!username || !password) {
             toast.error("Username dan password harus terisi!");
             return;
         }
 
-        loginMutation.mutate({ username, password });
+        setIsLoading(true);
+        try {
+            const data = await authService.login({ username, password });
+
+            setAuthentication(
+                data.user._id,
+                data.user.username,
+                data.user.role,
+                data.token
+            );
+            
+            toast.success(`Selamat Datang! ${data.user.username}`);
+            navigate({ to: '/' });
+        } catch (error) {
+            toast.error('Gagal Login: ' + (error as Error).message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -31,7 +49,7 @@ function RouteComponent() {
                 password={password}
                 setPassword={setPassword}
                 onLoginClick={onLoginClick}
-                isLoading={loginMutation.isPending}
+                isLoading={isLoading}
             />
         </div>
     );

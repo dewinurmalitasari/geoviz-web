@@ -1,5 +1,5 @@
 import {useNavigate} from '@tanstack/react-router';
-import {clearAuthentication} from "@/util/auth.ts";
+import {clearAuthentication} from "@/lib/auth.ts";
 import GeoButton from "@/components/geo-button.tsx";
 import {LogOut} from "lucide-react";
 import {useState} from "react";

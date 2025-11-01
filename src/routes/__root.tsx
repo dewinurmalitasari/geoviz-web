@@ -4,7 +4,7 @@ import {TanStackDevtools} from '@tanstack/react-devtools'
 import Header from "@/components/header.tsx";
 import Footer from "@/components/footer.tsx";
 import Background from "@/components/background.tsx";
-import {getAuthentication} from "@/util/auth.ts";
+import {getAuthentication} from "@/lib/auth.ts";
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
@@ -96,9 +96,21 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         return <ErrorPage
             // @ts-ignore TS2339
             useTemplate={data?.data.useTemplate}
-            code={404}
+            status={404}
+            statusText="Not Found"
             title="Halaman Tidak ditemukan"
             message="Halaman yang Anda cari tidak ditemukan."
         />;
     },
+    errorComponent: ({error}) => {
+        return (
+            <ErrorPage
+                useTemplate={true}
+                status={500}
+                statusText="Internal Server Error"
+                title="Terjadi Kesalahan"
+                message={error.message || "Terjadi kesalahan."}
+            />
+        );
+    }
 })

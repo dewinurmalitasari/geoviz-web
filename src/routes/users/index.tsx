@@ -3,37 +3,58 @@ import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
 import {toast} from "sonner";
-import type {User} from "@/type.ts";
+import type {User, UsersResponse} from "@/type.ts";
 import {DataTable} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import PageHeader from "@/components/page-header.tsx";
-import {useGetUsers} from "@/hooks/use-users.ts";
-import {getAuthentication} from "@/util/auth.ts";
+import {getAuthentication} from "@/lib/auth.ts";
+import {userService} from "@/services/user-service.ts";
+import {LoadingPage} from "@/components/loading-page.tsx";
+import {ErrorPage} from "@/components/error-page.tsx";
+import {ApiError} from "@/lib/api-client.ts";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
+    pendingComponent: () => <LoadingPage page="Manajemen Akun"/>,
+    loader: async () => {
+        const auth = getAuthentication();
+
+        // If user role is admin load teacher too
+        let teachers: UsersResponse | null = null;
+        if (auth?.user.role === 'admin') {
+            teachers = await userService.getUsers('teacher');
+        }
+
+        const students = await userService.getUsers('student');
+
+        return {students, teachers};
+    },
+    errorComponent: ({ error }) => {
+        if (error instanceof ApiError) {
+            return (
+                <ErrorPage
+                    status={error.status}
+                    statusText={error.statusText}
+                    title="Terjadi Kesalahan memuat data pengguna"
+                    message={error.message || "Gagal memuat data pengguna."}
+                />
+            );
+        }
+
+        return (
+            <ErrorPage
+                status={500}
+                statusText="Internal Server Error"
+                title="Terjadi Kesalahan memuat data pengguna"
+                message={error.message || "Gagal memuat data pengguna."}
+            />
+        );
+    },
 })
 
 function RouteComponent() {
-    const auth = getAuthentication();
     const navigate = useNavigate();
-
-    // Prevent fetch every render
-    const {
-        data: students,
-        isFetching: isFetchingStudents,
-        error: studentsError,
-    } = useGetUsers('student');
-
-    const {
-        data: teachers,
-        isFetching: isFetchingTeachers,
-        error: teachersError
-    } = useGetUsers('teacher');
-
-    if (studentsError || teachersError) {
-        toast.error('Gagal memuat data: ' + (studentsError?.message ?? teachersError?.message));
-    }
+    const {students, teachers} = Route.useLoaderData();
 
     // Table Columns Definition
     const teacherColumns: ColumnDef<User>[] = [
@@ -104,7 +125,6 @@ function RouteComponent() {
                         <DataTable
                             columns={studentColumns}
                             data={students?.users ?? []}
-                            isLoading={isFetchingStudents}
                         />
                     }
                     titleButton={
@@ -114,7 +134,7 @@ function RouteComponent() {
                     }
                 />
 
-                {auth && auth.user.role === 'admin' && (
+                {teachers &&
                     <GeoCard
                         icon={<Users/>}
                         title="Akun Guru"
@@ -122,7 +142,6 @@ function RouteComponent() {
                             <DataTable
                                 columns={teacherColumns}
                                 data={teachers?.users ?? []}
-                                isLoading={isFetchingTeachers}
                             />
                         }
                         titleButton={
@@ -131,7 +150,7 @@ function RouteComponent() {
                             </GeoButton>
                         }
                     />
-                )}
+                }
             </div>
         </div>
     );

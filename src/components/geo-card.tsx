@@ -3,7 +3,7 @@ import type {ReactNode} from "react";
 interface GeoCardProps {
     icon: ReactNode;
     title: string;
-    content: ReactNode;
+    content?: ReactNode;
     footer?: ReactNode;
     titleButton?: ReactNode;
 }
