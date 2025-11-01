@@ -4,3 +4,25 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+declare global {
+    interface String {
+        toCapitalized(): string;
+        translateRole(): string;
+    }
+}
+
+String.prototype.toCapitalized = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+};
+
+String.prototype.translateRole = function () {
+    switch (this.toLowerCase()) {
+        case 'student':
+            return 'Siswa';
+        case 'teacher':
+            return 'Guru';
+        default:
+            return this.toCapitalized();
+    }
+}

@@ -18,7 +18,7 @@ export default function LogoutButton() {
 
     return (
         <div>
-            <DestructiveDialog open={open} onOpenChange={setOpen} onDeleteCLick={onLogoutClick} isLogout={true}/>
+            <DestructiveDialog open={open} onOpenChange={setOpen} onDeleteClick={onLogoutClick} isLogout={true}/>
             
             <GeoButton onClick={() => setOpen(true)} variant="destructive">
                 <LogOut/> Keluar

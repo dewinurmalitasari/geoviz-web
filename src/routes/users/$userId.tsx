@@ -9,6 +9,8 @@ export const Route = createFileRoute('/users/$userId')({
     pendingComponent: () => <LoadingPage page="Detail Siswa"/>,
     loader: async ({params}) => {
         const user = await userService.getUser(params.userId);
+
+        // TODO: Make it so that student data is displayed and if the student access this make sure the id matches theirs
         return {user};
     },
     errorComponent: ({ error }) => {

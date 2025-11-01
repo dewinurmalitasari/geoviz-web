@@ -1,4 +1,4 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute, useNavigate, useRouter} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
@@ -12,6 +12,10 @@ import {userService} from "@/services/user-service.ts";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {ApiError} from "@/lib/api-client.ts";
+import AddUserForm from "@/components/form/user/add-user-form.tsx";
+import {useCallback, useMemo, useState} from "react";
+import EditUserForm from "@/components/form/user/edit-user-form.tsx";
+import DeleteUserForm from "@/components/form/user/delete-user-form.tsx";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
@@ -54,14 +58,35 @@ export const Route = createFileRoute('/users/')({
 
 function RouteComponent() {
     const navigate = useNavigate();
+    const router = useRouter();
     const {students, teachers} = Route.useLoaderData();
 
+    // Form Management
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [editOpen, setEditOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+
+    const handleEditSuccess = useCallback(() => {
+        setSelectedUser(null);
+        router.invalidate();
+    }, [router]);
+
+    const handleDeleteClick = useCallback(() => {
+        setDeleteOpen(true);
+    }, []);
+
+    const handleDeleteSuccess = useCallback(() => {
+        setSelectedUser(null);
+        router.invalidate();
+    }, [router]);
+
     // Table Columns Definition
-    const teacherColumns: ColumnDef<User>[] = [
+    const teacherColumns: ColumnDef<User>[] = useMemo(() => [
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row, table}) => <div className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
+            cell: ({row, table}) => <div
+                className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
         },
         {
             accessorKey: 'username',
@@ -79,7 +104,8 @@ function RouteComponent() {
                         <GeoButton
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
-                                toast.warning(user._id);
+                                setSelectedUser(user);
+                                setEditOpen(true);
                             }}
                             variant="secondary"
                             className="h-[40px] w-[80px]"
@@ -90,13 +116,14 @@ function RouteComponent() {
                 );
             }
         }
-    ]
+    ], [setSelectedUser, setEditOpen]);
 
-    const studentColumns: ColumnDef<User>[] = [
+    const studentColumns: ColumnDef<User>[] = useMemo(() => [
         {
             id: 'no',
             header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row, table}) => <div className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
+            cell: ({row, table}) => <div
+                className="text-center">{table.getFilteredRowModel().rows.length - row.index}</div>,
         },
         {
             accessorKey: 'username',
@@ -125,7 +152,8 @@ function RouteComponent() {
                         <GeoButton
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
-                                toast.warning(user._id);
+                                setSelectedUser(user);
+                                setEditOpen(true);
                             }}
                             variant="secondary"
                             className="h-[40px] w-[80px]"
@@ -136,7 +164,7 @@ function RouteComponent() {
                 );
             }
         }
-    ]
+    ], [navigate, setSelectedUser, setEditOpen]);
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -154,9 +182,15 @@ function RouteComponent() {
                         />
                     }
                     titleButton={
-                        <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
-                            <Plus/> Tambah
-                        </GeoButton>
+                        <AddUserForm
+                            trigger={
+                                <GeoButton className="w-[100px]">
+                                    <Plus/> Tambah
+                                </GeoButton>
+                            }
+                            role="student"
+                            onSuccess={() => router.invalidate()}
+                        />
                     }
                 />
 
@@ -172,13 +206,38 @@ function RouteComponent() {
                             />
                         }
                         titleButton={
-                            <GeoButton onClick={() => toast.warning('not implemented yet')} className="w-[100px]">
-                                <Plus/> Tambah
-                            </GeoButton>
+                            <AddUserForm
+                                trigger={
+                                    <GeoButton className="w-[100px]">
+                                        <Plus/> Tambah
+                                    </GeoButton>
+                                }
+                                role="teacher"
+                                onSuccess={() => router.invalidate()}
+                            />
                         }
                     />
                 }
             </div>
+
+            {selectedUser && (
+                <EditUserForm
+                    open={editOpen}
+                    onOpenChange={setEditOpen}
+                    user={selectedUser}
+                    onSuccess={handleEditSuccess}
+                    onDeleteClick={handleDeleteClick}
+                />
+            )}
+
+            {selectedUser && (
+                <DeleteUserForm
+                    open={deleteOpen}
+                    onOpenChange={setDeleteOpen}
+                    user={selectedUser}
+                    onSuccess={handleDeleteSuccess}
+                />
+            )}
         </div>
     );
 }

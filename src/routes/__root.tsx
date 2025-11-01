@@ -1,11 +1,11 @@
 import {createRootRouteWithContext, notFound, Outlet, redirect} from '@tanstack/react-router'
-import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
-import {TanStackDevtools} from '@tanstack/react-devtools'
+// import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
+// import {TanStackDevtools} from '@tanstack/react-devtools'
 import Header from "@/components/root/header.tsx";
 import Footer from "@/components/root/footer.tsx";
 import Background from "@/components/root/background.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+// import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
 import {PUBLIC_ROUTES, ROLE_PROTECTED_ROUTES} from "@/type.ts";
@@ -77,18 +77,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 />
 
                 {/*TODO: Remove*/}
-                <TanStackDevtools
-                    config={{
-                        position: 'bottom-right',
-                    }}
-                    plugins={[
-                        {
-                            name: 'Tanstack Router',
-                            render: <TanStackRouterDevtoolsPanel/>,
-                        },
-                        TanStackQueryDevtools,
-                    ]}
-                />
+                {/*<TanStackDevtools*/}
+                {/*    config={{*/}
+                {/*        position: 'bottom-right',*/}
+                {/*    }}*/}
+                {/*    plugins={[*/}
+                {/*        {*/}
+                {/*            name: 'Tanstack Router',*/}
+                {/*            render: <TanStackRouterDevtoolsPanel/>,*/}
+                {/*        },*/}
+                {/*        TanStackQueryDevtools,*/}
+                {/*    ]}*/}
+                {/*/>*/}
             </div>
         );
     },

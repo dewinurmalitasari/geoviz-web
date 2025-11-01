@@ -6,10 +6,10 @@ import {LogOut, Trash} from "lucide-react";
 import GeoDialogHeader from "@/components/geo/geo-dialog-header.tsx";
 import GeoDrawerHeader from "@/components/geo/geo-drawer-header.tsx";
 
-interface DeleteDialogProps {
+interface DestructiveDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onDeleteCLick: () => void;
+    onDeleteClick: () => void;
     isProcessing?: boolean;
     item?: string;
     isLogout?: boolean;
@@ -19,17 +19,19 @@ export default function DestructiveDialog(
     {
         open,
         onOpenChange,
-        onDeleteCLick,
+        onDeleteClick,
         isProcessing = false,
         item = "",
         isLogout
-    }: DeleteDialogProps) {
+    }: DestructiveDialogProps) {
     const isMobile = useIsMobile();
 
     const content = (
-        <div className="p-4 {isMobile ? 'text-center : ''}">
+        <div className="text-center px-4 text-lg">
             <p>
-                {isLogout ? 'Apakah Anda yakin ingin keluar dari akun ini?' : `Apakah Anda yakin ingin menghapus ${item} ini?`}
+                {isLogout ? 'Apakah Anda yakin ingin keluar dari akun ini?' : `Apakah Anda yakin ingin menghapus`}
+                <br/>
+                {item && <span className="font-semibold"> {item}? </span>}
             </p>
             {!isLogout &&
                 <p className="mt-2 text-sm text-gray-500">
@@ -53,19 +55,20 @@ export default function DestructiveDialog(
                         <DrawerClose asChild>
                             <GeoButton variant="outline">Batal</GeoButton>
                         </DrawerClose>
-                        <DrawerClose asChild>
-                            <GeoButton variant="destructive" onClick={onDeleteCLick} isLoading={isProcessing}>
-                                {isLogout ? (
-                                    <>
-                                        <LogOut/> Keluar
-                                    </>
-                                ) : (
-                                    <>
-                                        <Trash/> Hapus
-                                    </>
-                                )}
-                            </GeoButton>
-                        </DrawerClose>
+                        <GeoButton variant="destructive" onClick={() => {
+                            onDeleteClick()
+                            if (isLogout) onOpenChange(false)
+                        }} isLoading={isProcessing}>
+                            {isLogout ? (
+                                <>
+                                    <LogOut/> Keluar
+                                </>
+                            ) : (
+                                <>
+                                    <Trash/> Hapus
+                                </>
+                            )}
+                        </GeoButton>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -84,20 +87,21 @@ export default function DestructiveDialog(
                     <DialogClose asChild>
                         <GeoButton variant="outline" className="w-full max-w-[20%]">Batal</GeoButton>
                     </DialogClose>
-                    <DrawerClose asChild>
-                        <GeoButton variant="destructive" onClick={onDeleteCLick} isLoading={isProcessing}
-                                   className="w-full max-w-[20%]">
-                            {isLogout ? (
-                                <>
-                                    <LogOut/> Keluar
-                                </>
-                            ) : (
-                                <>
-                                    <Trash/> Hapus
-                                </>
-                            )}
-                        </GeoButton>
-                    </DrawerClose>
+                    <GeoButton variant="destructive" onClick={() => {
+                        onDeleteClick()
+                        if (isLogout) onOpenChange(false)
+                    }} isLoading={isProcessing}
+                               className="w-full max-w-[20%]">
+                        {isLogout ? (
+                            <>
+                                <LogOut/> Keluar
+                            </>
+                        ) : (
+                            <>
+                                <Trash/> Hapus
+                            </>
+                        )}
+                    </GeoButton>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

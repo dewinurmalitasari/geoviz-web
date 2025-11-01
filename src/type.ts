@@ -57,9 +57,9 @@ export interface UserResponse {
 }
 
 export interface UserPayload {
-    username: string,
-    password: string,
-    role: 'student' | 'teacher',
+    username?: string,
+    password?: string,
+    role?: 'student' | 'teacher',
 }
 
 // TODO:

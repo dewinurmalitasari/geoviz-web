@@ -36,7 +36,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                                     {username}
                                 </p>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-100 text-deep-purple-800 border border-deep-purple-200">
-                                    {role}
+                                    {role?.translateRole()}
                                 </span>
                             </div>
                         </div>
@@ -86,7 +86,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                                     </p>
                                 </div>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
-                                    {role}
+                                    {role?.translateRole()}
                                 </span>
                             </div>
                         </div>
