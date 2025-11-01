@@ -46,9 +46,20 @@ export interface LoginResponse {
     user: User,
 }
 
-export interface GetUsersResponse {
+export interface UsersResponse {
     message: string,
     users: User[],
+}
+
+export interface UserResponse {
+    message: string,
+    user: User,
+}
+
+export interface UserPayload {
+    username: string,
+    password: string,
+    role: 'student' | 'teacher',
 }
 
 // TODO:

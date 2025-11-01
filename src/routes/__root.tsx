@@ -9,7 +9,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
 import {PUBLIC_ROUTES, ROLE_PROTECTED_ROUTES} from "@/type.ts";
-import {NotFound} from "@/components/not-found.tsx";
+import {ErrorPage} from "@/components/error-page.tsx";
 
 interface MyRouterContext {
     queryClient: QueryClient
@@ -38,7 +38,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 const allowedRoles = ROLE_PROTECTED_ROUTES[path as keyof typeof ROLE_PROTECTED_ROUTES];
                 // @ts-ignore TS18047
                 if (!allowedRoles.includes(auth.user.role)) {
-                    throw notFound({data: {isRoleBased: true}});
+                    throw notFound({data: {useTemplate: true}});
                 }
             }
         }
@@ -93,30 +93,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         );
     },
     notFoundComponent: ({data}) => {
-        // @ts-ignore TS2339
-        if (data?.data.isRoleBased) {
-            // Role-based 404 - render full layout
-            const auth = getAuthentication();
-            return (
-                <div className="relative min-h-screen flex flex-col font-sans">
-                    <Background/>
-
-                    {auth &&
-                        <Header username={auth.user.username} role={auth.user.role}/>
-                    }
-
-                    <div className="flex-grow h-full flex flex-col justify-center">
-                        <NotFound/>
-                    </div>
-
-                    {auth &&
-                        <Footer/>
-                    }
-                </div>
-            );
-        }
-
-        // Normal 404 - just the component
-        return <NotFound/>;
+        return <ErrorPage
+            // @ts-ignore TS2339
+            useTemplate={data?.data.useTemplate}
+            code={404}
+            title="Halaman Tidak ditemukan"
+            message="Halaman yang Anda cari tidak ditemukan."
+        />;
     },
 })

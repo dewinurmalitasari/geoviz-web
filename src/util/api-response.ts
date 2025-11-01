@@ -1,4 +1,5 @@
-import { clearAuthentication } from "@/util/auth.ts";
+import {clearAuthentication} from "@/util/auth.ts";
+import {notFound} from "@tanstack/react-router";
 
 export async function handleApiResponse<TData>(response: Response): Promise<TData> {
     const contentType = response.headers.get('content-type');
@@ -12,6 +13,12 @@ export async function handleApiResponse<TData>(response: Response): Promise<TDat
             if (!window.location.pathname.includes('/login')) {
                 window.location.href = '/login';
             }
+        }
+
+        // Handle 404 Not Found TODO
+        if (response.status === 404) {
+            console.log(response);
+            throw notFound();
         }
 
         let errorMessage = 'Request gagal';

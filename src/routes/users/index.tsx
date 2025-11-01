@@ -1,4 +1,4 @@
-import {createFileRoute} from '@tanstack/react-router'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo-card.tsx";
 import GeoButton from "@/components/geo-button.tsx";
@@ -12,18 +12,13 @@ import {getAuthentication} from "@/util/auth.ts";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
-    loader: async ({context}) => {
-        // Invalidate and refetch the queries TODO: Ensure all get are doing this too
-        await Promise.all([
-            context.queryClient.invalidateQueries({queryKey: ['users', 'student']}),
-            context.queryClient.invalidateQueries({queryKey: ['users', 'teacher']}),
-        ]);
-    },
 })
 
 function RouteComponent() {
     const auth = getAuthentication();
+    const navigate = useNavigate();
 
+    // Prevent fetch every render
     const {
         data: students,
         isFetching: isFetchingStudents,
@@ -87,7 +82,7 @@ function RouteComponent() {
 
                 return (
                     <div className="flex justify-end pe-4 space-x-4">
-                        <GeoButton onClick={() => toast.warning(user._id)} variant="primary"
+                        <GeoButton onClick={() => navigate({to: `/users/${user._id}`})} variant="primary"
                                    className="h-[40px] w-[80px]"><Eye/> Lihat</GeoButton>
                         <GeoButton onClick={() => toast.warning(user._id)} variant="secondary"
                                    className="h-[40px] w-[80px]"><Pen/> Edit</GeoButton>
