@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ username = "Pengguna", role = "Student" }: HeaderProps) {
     return (
-        <header className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 md:py-6 md:px-8">
+        <header className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 md:px-8">
             <div className="container mx-auto">
                 {/* Desktop Layout (md and above) */}
                 <div className="hidden md:flex items-center justify-between gap-4">

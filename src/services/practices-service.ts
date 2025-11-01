@@ -1,0 +1,17 @@
+import {api} from "@/lib/api-client.ts";
+import {
+    API_ENDPOINTS,
+    type PracticeResponse,
+    type PracticePayload,
+    type PracticesResponse,
+} from "@/type.ts";
+
+export const practicesService = {
+    recordPractice: (practiceData: PracticePayload): Promise<PracticeResponse> => {
+        return api.post<PracticeResponse>(API_ENDPOINTS.practices.base, practiceData);
+    },
+
+    getPractices: (userId: string): Promise<PracticesResponse> => {
+        return api.get<PracticesResponse>(API_ENDPOINTS.practices.withId(userId));
+    },
+};

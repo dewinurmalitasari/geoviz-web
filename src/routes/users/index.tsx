@@ -76,6 +76,7 @@ function RouteComponent() {
             },
         },
         {
+            id: 'username',
             accessorKey: 'username',
             header: () => <div className="text-start font-bold">Username</div>,
             cell: ({row}) => <div className="text-start">{row.original.username}</div>,
@@ -115,6 +116,7 @@ function RouteComponent() {
             },
         },
         {
+            id: 'username',
             accessorKey: 'username',
             header: () => <div className="text-start font-bold">Username</div>,
             cell: ({row}) => <div className="text-start">{row.original.username}</div>,
@@ -130,8 +132,8 @@ function RouteComponent() {
                         <GeoButton
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
-                                navigate({to: `/users/${user._id}`});
                             }}
+                            to={`/users/${user._id}`}
                             variant="primary"
                             className="h-[40px] w-[80px]"
                         >
@@ -153,7 +155,7 @@ function RouteComponent() {
                 );
             }
         }
-    ], [navigate, setSelectedUser, setEditOpen]);
+    ], [setSelectedUser, setEditOpen]);
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">

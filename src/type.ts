@@ -5,11 +5,6 @@ export const PUBLIC_ROUTES = [
     '/login',
 ];
 
-export const ROLE_PROTECTED_ROUTES = {
-    '/users': ['admin', 'teacher'],
-    '/practices': ['student'],
-}
-
 // Auth Types
 export interface Auth {
     user: User,
@@ -22,18 +17,35 @@ export interface User {
     role: 'admin' | 'student' | 'teacher',
 }
 
-// API Types and Endpoints
+// Progress Types
+export interface ProgressData {
+    material: {
+        total: number;
+        accessed: number;
+        percent: string
+    };
+    practice: {
+        total: number;
+        completed: number;
+        percent: string
+    };
+}
+
+// API Endpoints
 export const API_ENDPOINTS = {
     auth: {
         login: `${API_BASE_URL}/login`,
     },
     users: {
         base: `${API_BASE_URL}/users`,
-        withRole: (role: string) => `${API_BASE_URL}/users/?roles=${role}`,
+        withRole: (role: string) => `${API_BASE_URL}/users?role=${role}`,
         withId: (_id: string) => `${API_BASE_URL}/users/${_id}`,
     },
     materials: `${API_BASE_URL}/materials`,
-    practices: `${API_BASE_URL}/practices`,
+    practices: {
+        base: `${API_BASE_URL}/practices`,
+        withId: (_id: string) => `${API_BASE_URL}/practices/user/${_id}`,
+    },
     statistics: {
         base: `${API_BASE_URL}/statistics`,
         withId: (_id: string) => `${API_BASE_URL}/statistics/user/${_id}`,
@@ -45,7 +57,7 @@ export interface DeleteResponse {
     message: string,
 }
 
-// Auth
+// Auth Types
 export interface LoginPayload {
     username: string,
     password: string,
@@ -57,7 +69,7 @@ export interface LoginResponse {
     user: User,
 }
 
-// Users
+// User Types
 export interface UsersResponse {
     message: string,
     users: User[],
@@ -74,8 +86,8 @@ export interface UserPayload {
     role?: 'student' | 'teacher',
 }
 
-// Statistics
-type VisitData = Record<string, never>;
+// Statistics Types
+type VisitData = Record<string, never>; // No additional data needed for visits
 
 interface MaterialAccessData {
     material: string; // This is ID
@@ -90,7 +102,7 @@ interface PracticeCompletedData {
     practice: string; // This is ID
 }
 
-export type StatisticsPayload =
+export type StatisticPayload =
     | { type: 'visits'; data: VisitData }
     | { type: 'material_access'; data: MaterialAccessData }
     | { type: 'practice_attempt'; data: PracticeAttemptData }
@@ -138,6 +150,38 @@ export interface StatisticsSummaryResponse {
     };
 }
 
+// Practice Types
+export interface PracticePayload {
+    code: string,
+    score: {
+        correct: number,
+        total: number,
+    },
+    contents: any, // TODO: Define this later
+}
+
+export interface Practice {
+    _id: string,
+    code: string,
+    score: {
+        correct: number,
+        total: number,
+    },
+    contents: any, // TODO: Define this later
+    user: string, // This is user ID
+    createdAt: string,
+    updatedAt: string,
+}
+
+export interface PracticeResponse {
+    message: string,
+    practice: Practice,
+}
+
+export interface PracticesResponse {
+    message: string,
+    practices: Practice[],
+}
 
 // TODO:
 //  - data loading with loaders

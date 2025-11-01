@@ -1,4 +1,4 @@
-import {createRootRouteWithContext, notFound, Outlet, redirect} from '@tanstack/react-router'
+import {createRootRouteWithContext, Outlet, redirect} from '@tanstack/react-router'
 // import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
 // import {TanStackDevtools} from '@tanstack/react-devtools'
 import Header from "@/components/root/header.tsx";
@@ -8,7 +8,7 @@ import {getAuthentication} from "@/lib/auth.ts";
 // import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
-import {PUBLIC_ROUTES, ROLE_PROTECTED_ROUTES} from "@/type.ts";
+import {PUBLIC_ROUTES} from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 
 interface MyRouterContext {
@@ -30,17 +30,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         // Prevent authenticated users from accessing public routes
         if (auth && isPublicRoute) {
             throw redirect({to: '/'});
-        }
-
-        // Role-based access control
-        for (const path in ROLE_PROTECTED_ROUTES) {
-            if (location.pathname.startsWith(path)) {
-                const allowedRoles = ROLE_PROTECTED_ROUTES[path as keyof typeof ROLE_PROTECTED_ROUTES];
-                // @ts-ignore TS18047
-                if (!allowedRoles.includes(auth.user.role)) {
-                    throw notFound({data: {useTemplate: true}});
-                }
-            }
         }
 
         return {auth};
@@ -91,16 +80,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 {/*/>*/}
             </div>
         );
-    },
-    notFoundComponent: ({data}) => {
-        return <ErrorPage
-            // @ts-ignore TS2339
-            useTemplate={data?.data.useTemplate}
-            status={404}
-            statusText="Not Found"
-            title="Halaman Tidak ditemukan"
-            message="Halaman yang Anda cari tidak ditemukan."
-        />;
     },
     errorComponent: ({error}) => {
         return (

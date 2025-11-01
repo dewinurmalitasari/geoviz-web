@@ -1,4 +1,4 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import {getAuthentication} from "@/lib/auth.ts";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
@@ -8,7 +8,8 @@ import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {statisticsService} from "@/services/statistics-service.ts";
-import {useEffect} from "react";
+import type {ProgressData, StatisticsSummaryResponse} from "@/type.ts";
+import PageHeader from "@/components/root/page-header.tsx";
 
 export const Route = createFileRoute('/')({
     component: App,
@@ -17,8 +18,26 @@ export const Route = createFileRoute('/')({
         const auth = getAuthentication();
         if (auth?.user.role !== 'student') return {}
 
-        const statisticsSummary = await statisticsService.getStatisticsSummary(auth.user._id);
-        return {statisticsSummary};
+        const statisticsSummary: StatisticsSummaryResponse = await statisticsService.getStatisticsSummary(auth.user._id);
+
+        const progress: ProgressData = {
+            material: {
+                total: statisticsSummary.summary.totalMaterialsUnique,
+                accessed: Object.keys(statisticsSummary.summary.materialAccessCount).length,
+                percent: statisticsSummary.summary.totalMaterialsUnique === 0
+                    ? '0%'
+                    : `${((Object.keys(statisticsSummary.summary.materialAccessCount).length / statisticsSummary.summary.totalMaterialsUnique) * 100).toFixed(2)}%`
+            },
+            practice: {
+                total: statisticsSummary.summary.totalPracticesUnique,
+                completed: statisticsSummary.summary.totalPracticesCompleted,
+                percent: statisticsSummary.summary.totalPracticesUnique === 0
+                    ? '0%'
+                    : `${((statisticsSummary.summary.totalPracticesCompleted / statisticsSummary.summary.totalPracticesUnique) * 100).toFixed(2)}%`
+            }
+        }
+
+        return {progress};
     },
     errorComponent: ({error}) => {
         if (error instanceof ApiError) {
@@ -44,17 +63,34 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-    const navigate = useNavigate();
     const auth = getAuthentication();
-    const {statisticsSummary} = Route.useLoaderData();
-
-    useEffect(() => {
-        console.log(statisticsSummary);
-    }, [statisticsSummary]);
+    const {progress} = Route.useLoaderData();
 
     return (
-        <div className="flex-grow px-4 md:px-16 py-6">
+        <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
+            <PageHeader title="Dashboard" description="Selamat datang di aplikasi pembelajaran transformasi geometri!"
+                        noBackButton/>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {/* Manage Account Card */}
+                {(auth?.user.role === "admin" || auth?.user.role === "teacher") && (
+                    <GeoCard
+                        icon={<User/>}
+                        title="Kelola Akun"
+                        content={
+                            <p className="text-gray-600 mb-6 text-sm md:text-base">
+                                Kelola akun siswa {auth?.user.role === 'admin' ? 'dan guru' : ''}, serta melihat
+                                statistik dan latihan siswa.
+                            </p>
+                        }
+                        footer={
+                            <GeoButton variant="primary" to="/users">
+                                <ArrowRight className="w-4 h-4"/> Kelola Akun
+                            </GeoButton>
+                        }
+                    />
+                )}
+
                 {/* Materials Card */}
                 <GeoCard
                     icon={<BookOpen/>}
@@ -65,8 +101,7 @@ function App() {
                         </p>
                     }
                     footer={
-                        <GeoButton onClick={() => navigate({to: '/materials'})}
-                                   variant="primary">
+                        <GeoButton variant="primary" to="/materials">
                             <ArrowRight className="w-4 h-4"/> Jelajahi Materi
                         </GeoButton>
                     }
@@ -83,8 +118,7 @@ function App() {
                         </p>
                     }
                     footer={
-                        <GeoButton onClick={() => navigate({to: '/visualizations'})}
-                                   variant="primary">
+                        <GeoButton variant="primary" to="/visualizations">
                             <ArrowRight className="w-4 h-4"/> Lihat Visualisasi
                         </GeoButton>
                     }
@@ -103,38 +137,18 @@ function App() {
                             </p>
                         }
                         footer={
-                            <GeoButton onClick={() => navigate({to: '/practices'})}
-                                       variant="primary">
+
+                            <GeoButton variant="primary" to="/practices">
                                 <ArrowRight className="w-4 h-4"/> Mulai Latihan
                             </GeoButton>
                         }
                     />
                 }
 
-                {/* Manage Account Card */}
-                {(auth?.user.role === "admin" || auth?.user.role === "teacher") && (
-                    <GeoCard
-                        icon={<User/>}
-                        title="Kelola Akun"
-                        content={
-                            <p className="text-gray-600 mb-6 text-sm md:text-base">
-                                Kelola akun siswa {auth?.user.role === 'admin' ? 'dan guru' : ''}, serta melihat
-                                statistik dan latihan siswa.
-                            </p>
-                        }
-                        footer={
-                            <GeoButton onClick={() => navigate({to: '/users'})}
-                                       variant="primary">
-                                <ArrowRight className="w-4 h-4"/> Kelola Akun
-                            </GeoButton>
-                        }
-                    />
-                )}
-
             </div>
 
             {auth?.user.role === "student" && (
-                <Progress/>
+                <Progress progress={progress as ProgressData} _id={auth.user._id}/>
             )}
         </div>
     )

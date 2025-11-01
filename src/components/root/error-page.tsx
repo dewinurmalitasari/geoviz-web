@@ -1,7 +1,6 @@
 import {AlertCircle, ArrowLeft, Home} from 'lucide-react';
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {useNavigate} from "@tanstack/react-router";
 import {getAuthentication} from "@/lib/auth.ts";
 import Background from "@/components/root/background.tsx";
 import Header from "@/components/root/header.tsx";
@@ -16,7 +15,6 @@ interface ErrorPageProps {
 }
 
 export function ErrorPage({useTemplate = false, status, statusText, title, message}: ErrorPageProps) {
-    const navigate = useNavigate();
 
     const error = (
         <div className="flex justify-center">
@@ -34,10 +32,10 @@ export function ErrorPage({useTemplate = false, status, statusText, title, messa
                     }
                     footer={
                         <div className="flex flex-row justify-between space-x-4 pt-4">
-                            <GeoButton onClick={() => navigate({to: '..'})} variant="primary" className="flex-1">
+                            <GeoButton onClick={() => window.history.back()} variant="primary" className="flex-1">
                                 <ArrowLeft className="w-5 h-5"/> Kembali
                             </GeoButton>
-                            <GeoButton onClick={() => navigate({to: '/'})} variant="secondary" className="flex-1">
+                            <GeoButton to="/" variant="secondary" className="flex-1">
                                 <Home className="w-5 h-5"/> Beranda
                             </GeoButton>
                         </div>

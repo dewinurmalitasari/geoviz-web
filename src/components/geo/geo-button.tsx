@@ -3,6 +3,7 @@ import type {ReactNode} from "react";
 import {cn} from "@/lib/utils.ts";
 import {Spinner} from "@/components/ui/spinner.tsx";
 import {Slot} from "@radix-ui/react-slot";
+import {Link} from "@tanstack/react-router";
 
 interface GeoButtonProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -11,6 +12,7 @@ interface GeoButtonProps {
     isLoading?: boolean;
     className?: string;
     asChild?: boolean;
+    to?: string;
 }
 
 const variantStyles = {
@@ -20,7 +22,7 @@ const variantStyles = {
     outline: "border-1 border-deep-purple-500 text-deep-purple-700 dark:text-deep-purple-300 bg-transparent hover:bg-deep-purple-50 dark:hover:bg-deep-purple-900/20"
 };
 
-export default function GeoButton({onClick, children, variant = 'primary', isLoading = false, className, asChild = false}: GeoButtonProps) {
+export default function GeoButton({onClick, children, variant = 'primary', isLoading = false, className, asChild = false, to}: GeoButtonProps) {
     const Comp = asChild ? Slot : Button;
 
     return (
@@ -32,8 +34,15 @@ export default function GeoButton({onClick, children, variant = 'primary', isLoa
             )}
             onClick={onClick}
             disabled={isLoading}
+            asChild={to? true : asChild}
         >
-            {isLoading ? <Spinner/> : children}
+            {to ? (
+                <Link to={to}>
+                    {isLoading ? <Spinner/> : children}
+                </Link>
+            ) : (
+                isLoading ? <Spinner/> : children
+            )}
         </Comp>
     );
 }

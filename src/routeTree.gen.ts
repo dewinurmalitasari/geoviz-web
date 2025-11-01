@@ -19,6 +19,7 @@ import { Route as UsersUserIdRouteImport } from './routes/users/$userId'
 import { Route as PracticesPracticeTypeRouteImport } from './routes/practices/$practiceType'
 import { Route as MaterialsMaterialTypeRouteImport } from './routes/materials/$materialType'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as PracticesResultPracticeIdRouteImport } from './routes/practices/result/$practiceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -71,6 +72,12 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticesResultPracticeIdRoute =
+  PracticesResultPracticeIdRouteImport.update({
+    id: '/practices/result/$practiceId',
+    path: '/practices/result/$practiceId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/practices': typeof PracticesIndexRoute
   '/users': typeof UsersIndexRoute
   '/visualizations': typeof VisualizationsIndexRoute
+  '/practices/result/$practiceId': typeof PracticesResultPracticeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesByTo {
   '/practices': typeof PracticesIndexRoute
   '/users': typeof UsersIndexRoute
   '/visualizations': typeof VisualizationsIndexRoute
+  '/practices/result/$practiceId': typeof PracticesResultPracticeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -108,6 +117,7 @@ export interface FileRoutesById {
   '/practices/': typeof PracticesIndexRoute
   '/users/': typeof UsersIndexRoute
   '/visualizations/': typeof VisualizationsIndexRoute
+  '/practices/result/$practiceId': typeof PracticesResultPracticeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/practices'
     | '/users'
     | '/visualizations'
+    | '/practices/result/$practiceId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/practices'
     | '/users'
     | '/visualizations'
+    | '/practices/result/$practiceId'
   id:
     | '__root__'
     | '/'
@@ -146,6 +158,7 @@ export interface FileRouteTypes {
     | '/practices/'
     | '/users/'
     | '/visualizations/'
+    | '/practices/result/$practiceId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -159,6 +172,7 @@ export interface RootRouteChildren {
   PracticesIndexRoute: typeof PracticesIndexRoute
   UsersIndexRoute: typeof UsersIndexRoute
   VisualizationsIndexRoute: typeof VisualizationsIndexRoute
+  PracticesResultPracticeIdRoute: typeof PracticesResultPracticeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -233,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practices/result/$practiceId': {
+      id: '/practices/result/$practiceId'
+      path: '/practices/result/$practiceId'
+      fullPath: '/practices/result/$practiceId'
+      preLoaderRoute: typeof PracticesResultPracticeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -247,6 +268,7 @@ const rootRouteChildren: RootRouteChildren = {
   PracticesIndexRoute: PracticesIndexRoute,
   UsersIndexRoute: UsersIndexRoute,
   VisualizationsIndexRoute: VisualizationsIndexRoute,
+  PracticesResultPracticeIdRoute: PracticesResultPracticeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -2,13 +2,13 @@ import {api} from "@/lib/api-client.ts";
 import {
     API_ENDPOINTS,
     type StatisticResponse,
-    type StatisticsPayload,
+    type StatisticPayload,
     type StatisticsResponse,
     type StatisticsSummaryResponse
 } from "@/type.ts";
 
 export const statisticsService = {
-    recordStatistic: (statisticData: StatisticsPayload): Promise<StatisticResponse> => {
+    recordStatistic: (statisticData: StatisticPayload): Promise<StatisticResponse> => {
         return api.post<StatisticResponse>(API_ENDPOINTS.statistics.base, statisticData);
     },
 

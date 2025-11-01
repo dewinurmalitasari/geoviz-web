@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
-                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 hover:shadow-[inset_4px_0_0_0] hover:shadow-deep-purple-500 transition-all duration-200 cursor-pointer"
+                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 hover:shadow-[inset_4px_0_0_0] hover:shadow-deep-purple-500 transition-all duration-200"
                                 onClick={() => onRowClick && onRowClick(row.original)}
                             >
                                 {row.getVisibleCells().map((cell) => (

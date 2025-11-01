@@ -1,4 +1,5 @@
 import type {ReactNode} from "react";
+import {cn} from "@/lib/utils.ts";
 
 interface GeoCardProps {
     icon: ReactNode;
@@ -6,12 +7,17 @@ interface GeoCardProps {
     content?: ReactNode;
     footer?: ReactNode;
     titleButton?: ReactNode;
+    className?: string;
 }
 
-export default function GeoCard({icon, title, content, footer, titleButton}: GeoCardProps) {
+export default function GeoCard({icon, title, content, footer, titleButton, className}: GeoCardProps) {
     return (
         <div
-            className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full flex flex-col flex-grow">
+            className={cn(
+                "bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full flex flex-col flex-grow",
+                className
+            )}
+        >
             <div className="h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600"></div>
 
             <div className="p-6 md:p-8 flex flex-col justify-between flex-1 space-y-4">
