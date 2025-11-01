@@ -2,12 +2,12 @@ import * as React from "react";
 import {
     type ColumnDef,
     type ColumnFiltersState,
-    type SortingState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    type SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 
@@ -15,7 +15,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {TablePagination} from "@/components/table-pagination.tsx";
 import {useIsMobile} from "@/hooks/use-mobile"
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -56,7 +56,8 @@ export function DataTable<TData, TValue>({columns, data, isLoading = false,}: Da
 
     return (
         <div className="overflow-hidden rounded-xl border border-deep-purple-200 dark:border-deep-purple-600 shadow-sm">
-            <div className="flex items-center py-4 px-4 bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600 border-b border-deep-purple-200 dark:border-deep-purple-500">
+            <div
+                className="flex items-center py-4 px-4 bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600 border-b border-deep-purple-200 dark:border-deep-purple-500">
                 <Input
                     placeholder="Cari semua..."
                     value={globalFilter ?? ""}
