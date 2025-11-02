@@ -162,18 +162,20 @@ interface PracticeCount {
     completed: number;
 }
 
+export interface SummaryStatistics {
+    totalVisits: number;
+    totalMaterialsUnique: number;
+    totalMaterialsAccessed: number;
+    totalPracticesUnique: number;
+    totalPracticeAttempts: number;
+    totalPracticesCompleted: number;
+    materialAccessCount: Record<string, number>;
+    practiceCount: Record<string, PracticeCount>;
+}
+
 export interface StatisticsSummaryResponse {
     message: string;
-    summary: {
-        totalVisits: number;
-        totalMaterialsUnique: number;
-        totalMaterialsAccessed: number;
-        totalPracticesUnique: number;
-        totalPracticeAttempts: number;
-        totalPracticesCompleted: number;
-        materialAccessCount: Record<string, number>;
-        practiceCount: Record<string, PracticeCount>;
-    };
+    summary: SummaryStatistics;
 }
 
 // Practice Types
@@ -217,3 +219,4 @@ export interface PracticesResponse {
 //  - performance optimizations like preloading routes
 //  - animations and transitions between routes
 //  - scrollbar?
+//  - table resize problem

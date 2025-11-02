@@ -9,9 +9,10 @@ import {practicesService} from "@/services/practices-service.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import {useEffect} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {BookOpenCheck, ChartColumn, ClipboardList} from "lucide-react";
+import {BookOpenCheck, ChartColumn} from "lucide-react";
 import {DataTable} from "@/components/table/data-table.tsx";
 import {usePracticeColumns, useStatisticsColumns} from "@/components/table/users/$userId.tsx";
+import UserSummary from "@/components/user/user-summary.tsx";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
@@ -91,26 +92,23 @@ function RouteComponent() {
             />
 
             <div className="flex flex-col flex-grow space-y-4">
-                {/*TODO: Hide if user is student*/}
-                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 flex-grow">
-                    <GeoCard
-                        icon={<ClipboardList/>}
-                        title="Ringkasan Siswa"
-                        content={<></>}
-                        className="flex-1"
-                    />
+                {statisticsSummaryResponse &&
+                    <UserSummary summary={statisticsSummaryResponse.summary}/>
+                }
+
+                {statisticsResponse &&
                     <GeoCard
                         icon={<ChartColumn/>}
                         title="Statistik Siswa"
                         content={
                             <DataTable
                                 columns={statisticsColumns}
-                                data={statisticsResponse?.statistics ?? []}
+                                data={statisticsResponse.statistics ?? []}
                             />
                         }
                         className="flex-1"
                     />
-                </div>
+                }
 
                 <GeoCard
                     icon={<BookOpenCheck/>}
