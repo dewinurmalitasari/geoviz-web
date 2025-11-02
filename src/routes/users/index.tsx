@@ -85,7 +85,7 @@ function RouteComponent() {
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader title="Manajemen Akun" description="Kelola akun pada platform GeoViz."/>
 
-            <div className="flex flex-col flex-grow xl:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="flex flex-col flex-grow xl:flex-row md:space-x-4 space-y-4 xl:space-y-0">
                 <GeoCard
                     icon={<GraduationCap/>}
                     title="Akun Siswa"

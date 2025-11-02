@@ -4,6 +4,8 @@ import {materialService} from "@/services/material-service.ts";
 import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import PageHeader from "@/components/root/page-header.tsx";
+import GeoCard from "@/components/geo/geo-card.tsx";
+import {BookOpen, Calculator, Lightbulb} from "lucide-react";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -45,20 +47,54 @@ function RouteComponent() {
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader title={material.title} description="Detail materi transformasi geometri" />
 
-            <h1 className="text-3xl font-bold">{material.title}</h1>
-            <p className="text-lg">{material.description}</p>
-            {material.formula && (
-                <div>
-                    <h2 className="text-2xl font-semibold mt-4">Rumus</h2>
-                    <p className="mt-2">{material.formula}</p>
-                </div>
-            )}
-            {material.example && (
-                <div>
-                    <h2 className="text-2xl font-semibold mt-4">Contoh</h2>
-                    <p className="mt-2">{material.example}</p>
-                </div>
-            )}
+            <GeoCard
+                icon={<BookOpen/>}
+                title={material.title}
+                content={
+                    <div className="space-y-6">
+                        {/* Description */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <BookOpen className="w-5 h-5 text-deep-purple-600" />
+                                <h3 className="text-lg font-semibold text-deep-purple-700">Deskripsi</h3>
+                            </div>
+                            <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border-l-4 border-deep-purple-300">
+                                {material.description}
+                            </p>
+                        </div>
+
+                        {/* Formula */}
+                        {material.formula && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Calculator className="w-5 h-5 text-green-600" />
+                                    <h3 className="text-lg font-semibold text-deep-purple-700">Rumus</h3>
+                                </div>
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <p className="font-mono text-lg text-gray-800 text-center font-medium">
+                                        {material.formula}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Example */}
+                        {material.example && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Lightbulb className="w-5 h-5 text-amber-600" />
+                                    <h3 className="text-lg font-semibold text-deep-purple-700">Contoh</h3>
+                                </div>
+                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                        {material.example}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                }
+            />
         </div>
     );
 }

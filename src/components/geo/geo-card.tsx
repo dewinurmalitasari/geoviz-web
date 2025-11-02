@@ -14,7 +14,7 @@ export default function GeoCard({icon, title, content, footer, titleButton, clas
     return (
         <div
             className={cn(
-                "bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 w-full flex flex-col flex-grow",
+                "bg-white rounded-2xl shadow-lg border border-deep-purple-100 overflow-hidden card-hover w-full flex flex-col flex-grow",
                 className
             )}
         >
