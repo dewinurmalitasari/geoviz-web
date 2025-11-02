@@ -34,7 +34,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
         },
         {
             title: "Latihan Dikerjakan",
-            value: `${summary.totalPracticesCompleted}/${summary.totalPracticeAttempts}`,
+            value: `${summary.totalPracticesCompleted}/${summary.totalPracticesAvailable}`,
             icon: <Target className="w-5 h-5"/>,
             gradient: "from-orange-500 to-red-500",
             bgGradient: "from-orange-100 to-red-100"
@@ -117,9 +117,9 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                             <p className={cn(
                                 "text-2xl font-bold",
                                 index === 3 || index === 4 ?
-                                    summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.7 ?
+                                    summary.totalPracticesCompleted / summary.totalPracticesAvailable >= 0.7 ?
                                         "text-green-600" :
-                                        summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.4 ?
+                                        summary.totalPracticesCompleted / summary.totalPracticesAvailable >= 0.4 ?
                                             "text-yellow-600" :
                                             "text-red-600"
                                     : "text-deep-purple-800"
