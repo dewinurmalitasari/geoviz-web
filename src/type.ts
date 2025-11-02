@@ -246,5 +246,4 @@ export interface MaterialPayload {
 //  - security best practices
 //  - performance optimizations like preloading routes
 //  - animations and transitions between routes
-//  - scrollarea shadcn on geo-input, form-dialog, entire page?
 //  - table resize problem

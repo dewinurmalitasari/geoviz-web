@@ -16,6 +16,7 @@ import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {TablePagination} from "@/components/table/table-pagination.tsx";
 import {useIsMobile} from "@/hooks/use-mobile.ts"
 import {Input} from "@/components/ui/input.tsx"
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -64,72 +65,76 @@ export function DataTable<TData, TValue>({columns, data, isLoading = false,}: Da
                     onChange={(event) => setGlobalFilter(event.target.value)}
                     className="max-w-sm flex-1 border-deep-purple-200 dark:border-deep-purple-500 bg-white dark:bg-deep-purple-800 text-gray-700 dark:text-gray-200 focus-visible:ring-deep-purple-500 dark:focus-visible:ring-deep-purple-400"
                 />
-                <div className="text-sm font-medium text-deep-purple-700 dark:text-deep-purple-200 flex-1 ml-2 text-right">
+                <div
+                    className="text-sm font-medium text-deep-purple-700 dark:text-deep-purple-200 flex-1 ml-2 text-right">
                     {table.getFilteredRowModel().rows.length} dari {data.length} entri
                 </div>
             </div>
 
-            <Table className={isMobile ? "text-sm" : ""}>
-                <TableHeader
-                    className="bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}
-                                  className="border-b border-deep-purple-200 dark:border-deep-purple-500 hover:bg-transparent">
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}
-                                               className="text-deep-purple-800 dark:text-geo-purple-50 font-bold">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody className="bg-white dark:bg-deep-purple-800">
-                    {isLoading ? (
-                        Array.from({length: isMobile ? 3 : 10}).map((_, rowIndex) => (
-                            <TableRow
-                                key={`skeleton-${rowIndex}`}
-                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-transparent"
-                            >
-                                {columns.map((_, colIndex) => (
-                                    <TableCell key={`skeleton-cell-${colIndex}`}
-                                               className="text-gray-700 dark:text-gray-200">
-                                        <Skeleton className="h-6 bg-geo-purple-200 dark:bg-deep-purple-600"/>
-                                    </TableCell>
-                                ))}
+            <ScrollArea className="w-full">
+                <Table className={isMobile ? "text-sm" : ""}>
+                    <TableHeader
+                        className="bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}
+                                      className="border-b border-deep-purple-200 dark:border-deep-purple-500 hover:bg-transparent">
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}
+                                                   className="text-deep-purple-800 dark:text-geo-purple-50 font-bold">
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
                             </TableRow>
-                        ))
-                    ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                                className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 hover:shadow-[inset_4px_0_0_0] hover:shadow-deep-purple-500 transition-all duration-200"
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id} className="text-gray-700 dark:text-gray-200">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+                        ))}
+                    </TableHeader>
+                    <TableBody className="bg-white dark:bg-deep-purple-800">
+                        {isLoading ? (
+                            Array.from({length: isMobile ? 3 : 10}).map((_, rowIndex) => (
+                                <TableRow
+                                    key={`skeleton-${rowIndex}`}
+                                    className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-transparent"
+                                >
+                                    {columns.map((_, colIndex) => (
+                                        <TableCell key={`skeleton-cell-${colIndex}`}
+                                                   className="text-gray-700 dark:text-gray-200">
+                                            <Skeleton className="h-6 bg-geo-purple-200 dark:bg-deep-purple-600"/>
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                    className="border-b border-geo-purple-100 dark:border-deep-purple-600 hover:bg-deep-purple-50 dark:hover:bg-deep-purple-700/80 hover:shadow-[inset_4px_0_0_0] hover:shadow-deep-purple-500 transition-all duration-200"
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id} className="text-gray-700 dark:text-gray-200">
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell colSpan={columns.length}
+                                           className="h-24 text-center text-deep-purple-600 dark:text-deep-purple-300 font-semibold">
+                                    Tidak ada data.
+                                </TableCell>
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow className="hover:bg-transparent">
-                            <TableCell colSpan={columns.length}
-                                       className="h-24 text-center text-deep-purple-600 dark:text-deep-purple-300 font-semibold">
-                                Tidak ada data.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        )}
+                    </TableBody>
+                </Table>
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
 
             <TablePagination table={table}/>
         </div>

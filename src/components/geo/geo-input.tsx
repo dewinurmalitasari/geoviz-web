@@ -2,6 +2,7 @@ import {Field, FieldDescription, FieldLabel} from "@/components/ui/field.tsx";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group.tsx";
 import {useEffect, useRef, useState} from "react";
 import {Eye, EyeOff} from "lucide-react";
+import {Textarea} from "@/components/ui/textarea.tsx";
 
 interface GeoInputProps {
     id: string;
@@ -82,12 +83,10 @@ export default function GeoInput(
             </FieldLabel>
             <InputGroup id={id}>
                 {multiline ? (
-                    <textarea
+                    <Textarea
                         ref={textareaRef}
                         id={id}
-                        className={`flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                            !resizable ? 'resize-none' : 'resize-y'
-                        } transition-all duration-200`}
+                        className={`${!resizable ? 'resize-none' : 'resize-y'}`}
                         placeholder={`${label}...`}
                         value={value}
                         onChange={onChange}
@@ -95,6 +94,7 @@ export default function GeoInput(
                         rows={minRows}
                         style={{
                             minHeight: `${minRows * 1.5}rem`,
+                            maxHeight: `${maxRows * 1.5}rem`,
                         }}
                     />
                 ) : (
