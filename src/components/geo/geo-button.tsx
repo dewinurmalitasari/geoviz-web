@@ -4,6 +4,7 @@ import {cn} from "@/lib/utils.ts";
 import {Spinner} from "@/components/ui/spinner.tsx";
 import {Slot} from "@radix-ui/react-slot";
 import {Link} from "@tanstack/react-router";
+import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
 
 interface GeoButtonProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -24,6 +25,7 @@ const variantStyles = {
 
 export default function GeoButton({onClick, children, variant = 'primary', isLoading = false, className, asChild = false, to}: GeoButtonProps) {
     const Comp = asChild ? Slot : Button;
+    const animatedNavigate = useAnimatedNavigation();
 
     return (
         <Comp
@@ -37,7 +39,13 @@ export default function GeoButton({onClick, children, variant = 'primary', isLoa
             asChild={to? true : asChild}
         >
             {to ? (
-                <Link to={to}>
+                <Link
+                    to={to}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        animatedNavigate({to});
+                    }}
+                >
                     {isLoading ? <Spinner/> : children}
                 </Link>
             ) : (

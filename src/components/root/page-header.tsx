@@ -1,7 +1,7 @@
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {ArrowLeft} from "lucide-react";
 import {Separator} from "@/components/ui/separator.tsx";
-import {useNavigate} from "@tanstack/react-router";
+import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
 
 interface PageHeaderProps {
     title: string;
@@ -11,11 +11,12 @@ interface PageHeaderProps {
 }
 
 export default function PageHeader({title, description, noBackButton, additionalButtons}: PageHeaderProps) {
-    const navigate = useNavigate();
+    const animatedNavigate = useAnimatedNavigation();
 
     return (
         <div className="space-y-4 mt-6" data-aos="zoom-in">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm w-full">
+            <div
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm w-full">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
                         {title}
@@ -27,7 +28,7 @@ export default function PageHeader({title, description, noBackButton, additional
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     {!noBackButton &&
                         <GeoButton
-                            onClick={() => navigate({to: '..'})}
+                            onClick={() => animatedNavigate({to: '..'})}
                             variant="primary"
                             className="w-full sm:w-auto whitespace-nowrap"
                         >
