@@ -22,18 +22,18 @@ export const Route = createFileRoute('/')({
 
         const progress: ProgressData = {
             material: {
-                total: statisticsSummary.summary.totalMaterialsUnique,
+                total: statisticsSummary.summary.totalMaterialsAvailable,
                 accessed: Object.keys(statisticsSummary.summary.materialAccessCount).length,
-                percent: statisticsSummary.summary.totalMaterialsUnique === 0
+                percent: statisticsSummary.summary.totalMaterialsAvailable === 0
                     ? '0%'
-                    : `${((Object.keys(statisticsSummary.summary.materialAccessCount).length / statisticsSummary.summary.totalMaterialsUnique) * 100).toFixed(2)}%`
+                    : `${((Object.keys(statisticsSummary.summary.materialAccessCount).length / statisticsSummary.summary.totalMaterialsAvailable) * 100).toFixed(2)}%`
             },
             practice: {
-                total: statisticsSummary.summary.totalPracticesUnique,
+                total: statisticsSummary.summary.totalPracticesAvailable,
                 completed: statisticsSummary.summary.totalPracticesCompleted,
-                percent: statisticsSummary.summary.totalPracticesUnique === 0
+                percent: statisticsSummary.summary.totalPracticesAvailable === 0
                     ? '0%'
-                    : `${((statisticsSummary.summary.totalPracticesCompleted / statisticsSummary.summary.totalPracticesUnique) * 100).toFixed(2)}%`
+                    : `${((statisticsSummary.summary.totalPracticesCompleted / statisticsSummary.summary.totalPracticesAvailable) * 100).toFixed(2)}%`
             }
         }
 

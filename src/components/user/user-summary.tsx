@@ -19,18 +19,18 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
             bgGradient: "from-blue-100 to-cyan-100"
         },
         {
-            title: "Materi Diakses",
-            value: `${summary.totalMaterialsUnique} materi`,
-            icon: <BookOpen className="w-5 h-5"/>,
-            gradient: "from-green-500 to-emerald-500",
-            bgGradient: "from-green-100 to-emerald-100"
-        },
-        {
             title: "Akses Materi",
             value: summary.totalMaterialsAccessed,
             icon: <FileText className="w-5 h-5"/>,
             gradient: "from-purple-500 to-pink-500",
             bgGradient: "from-purple-100 to-pink-100"
+        },
+        {
+            title: "Total Materi",
+            value: summary.totalMaterialsAvailable,
+            icon: <BookOpen className="w-5 h-5"/>,
+            gradient: "from-green-500 to-emerald-500",
+            bgGradient: "from-green-100 to-emerald-100"
         },
         {
             title: "Latihan Dikerjakan",
@@ -49,8 +49,8 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
             bgGradient: "from-indigo-100 to-blue-100"
         },
         {
-            title: "Jenis Latihan",
-            value: `${summary.totalMaterialsUnique} latihan`,
+            title: "Total Latihan",
+            value: summary.totalPracticesAvailable,
             icon: <BarChart3 className="w-5 h-5"/>,
             gradient: "from-teal-500 to-green-500",
             bgGradient: "from-teal-100 to-green-100"
@@ -60,7 +60,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
     // Get material access
     const materialAccess = Object.entries(summary.materialAccessCount)
         .sort(([, a], [, b]) => b - a)
-        .slice(0, summary.totalMaterialsUnique);
+        .slice(0, summary.totalMaterialsAvailable);
 
     // Get practice completion stats
     const practiceStats = Object.entries(summary.practiceCount)
@@ -78,13 +78,13 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
     // For now this is a simple weighted calculation
     const calculateEngagement = (summary: SummaryStatistics) => {
         const maxExpected = {
-            visits: 24,        // ~2x per week for a semester
-            materials: summary.totalMaterialsUnique,
-            practices: 20,     // ~2 practices per topic
+            visits: 24,                                         // ~2x per week for a semester
+            materials: summary.totalMaterialsAvailable,         // all materials
+            practices: summary.totalMaterialsAvailable * 2,     // ~2 practices per topic
         };
 
         const visitEngagement = Math.min(100, (summary.totalVisits / maxExpected.visits) * 100);
-        const materialEngagement = Math.min(100, (summary.totalMaterialsUnique / maxExpected.materials) * 100);
+        const materialEngagement = Math.min(100, (summary.totalMaterialsAccessed / maxExpected.materials) * 100);
         const practiceEngagement = Math.min(100, (summary.totalPracticeAttempts / maxExpected.practices) * 100);
 
         // Weighted average favoring active participation
@@ -172,7 +172,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                     title="Statistik Penyelesaian Latihan"
                     content={
                         <div className="space-y-4">
-                            {practiceStats.slice(0, summary.totalPracticesUnique).map((practice) => (
+                            {practiceStats.slice(0, summary.totalPracticesAvailable).map((practice) => (
                                 <div key={practice.name} className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm font-medium text-gray-700 capitalize">
@@ -232,7 +232,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                         fill="none"
                                         stroke="url(#materialGradient)"
                                         strokeWidth="3"
-                                        strokeDasharray={`${Math.min(100, Math.round((Object.keys(summary.materialAccessCount).length / summary.totalMaterialsUnique) * 100))}, 100`}
+                                        strokeDasharray={`${Math.min(100, Math.round(summary.completionRateMaterials))}, 100`}
                                         strokeLinecap="round"
                                     />
                                     <defs>
@@ -244,7 +244,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-lg font-bold text-deep-purple-800">
-                                        {Math.min(100, Math.round((Object.keys(summary.materialAccessCount).length / summary.totalMaterialsUnique) * 100))}%
+                                        {Math.min(100, Math.round(summary.completionRateMaterials))}%
                                     </span>
                                 </div>
                             </div>
@@ -269,7 +269,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                         fill="none"
                                         stroke="url(#practiceAttemptGradient)"
                                         strokeWidth="3"
-                                        strokeDasharray={`${Math.min(100, Math.round((Object.keys(summary.practiceCount).length / summary.totalPracticesUnique) * 100))}, 100`}
+                                        strokeDasharray={`${Math.min(100, Math.round((summary.completionRatePractices)))}, 100`}
                                         strokeLinecap="round"
                                     />
                                     <defs>
@@ -281,7 +281,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-lg font-bold text-deep-purple-800">
-                                        {Math.min(100, Math.round((Object.keys(summary.practiceCount).length / summary.totalPracticesUnique) * 100))}%
+                                        {Math.min(100, Math.round((summary.completionRatePractices)))}%
                                     </span>
                                 </div>
                             </div>

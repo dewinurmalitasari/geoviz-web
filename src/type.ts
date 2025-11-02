@@ -66,7 +66,10 @@ export const API_ENDPOINTS = {
         withRole: (role: string) => `${API_BASE_URL}/users?role=${role}`,
         withId: (_id: string) => `${API_BASE_URL}/users/${_id}`,
     },
-    materials: `${API_BASE_URL}/materials`,
+    materials: {
+        base: `${API_BASE_URL}/materials`,
+        withId: (_id: string) => `${API_BASE_URL}/materials/${_id}`,
+    },
     practices: {
         base: `${API_BASE_URL}/practices`,
         withId: (_id: string) => `${API_BASE_URL}/practices/user/${_id}`,
@@ -164,13 +167,15 @@ interface PracticeCount {
 
 export interface SummaryStatistics {
     totalVisits: number;
-    totalMaterialsUnique: number;
+    totalMaterialsAvailable: number;
     totalMaterialsAccessed: number;
-    totalPracticesUnique: number;
+    totalPracticesAvailable: number;
     totalPracticeAttempts: number;
     totalPracticesCompleted: number;
     materialAccessCount: Record<string, number>;
     practiceCount: Record<string, PracticeCount>;
+    completionRateMaterials: number;
+    completionRatePractices: number;
 }
 
 export interface StatisticsSummaryResponse {
@@ -209,6 +214,34 @@ export interface PracticeResponse {
 export interface PracticesResponse {
     message: string,
     practices: Practice[],
+}
+
+// Material Types
+export interface Material {
+    _id: string,
+    title: string,
+    description: string,
+    formula: string,
+    example: string,
+    createdAt: string,
+    updatedAt: string,
+}
+
+export interface MaterialResponse {
+    message: string,
+    material: Material,
+}
+
+export interface MaterialsResponse {
+    message: string,
+    materials: Material[],
+}
+
+export interface MaterialPayload {
+    title?: string,
+    description?: string,
+    formula?: string,
+    example?: string,
 }
 
 // TODO:
