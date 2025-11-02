@@ -24,7 +24,7 @@ export const Route = createFileRoute('/users/$userId')({
         }
 
         const userResponse = await userService.getUser(params.userId);
-        const practicesResponse = await practicesService.getPractices(params.userId);
+        const practicesResponse = await practicesService.getPractices(params.userId, true);
         // Don't fetch statistics if the user is a student
         if (!isStudent) {
             const statisticsResponse = await statisticsService.getStatistics(params.userId);

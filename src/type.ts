@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
     },
     practices: {
         base: `${API_BASE_URL}/practices`,
-        withId: (_id: string) => `${API_BASE_URL}/practices/user/${_id}`,
+        withId: (_id: string, noContent: boolean = false) => `${API_BASE_URL}/practices/user/${_id}?noContent=${noContent}`,
     },
     statistics: {
         base: `${API_BASE_URL}/statistics`,
@@ -185,7 +185,7 @@ export interface PracticePayload {
         correct: number,
         total: number,
     },
-    contents: any, // TODO: Define this later
+    content: any, // TODO: Define this later
 }
 
 export interface Practice {
@@ -195,7 +195,7 @@ export interface Practice {
         correct: number,
         total: number,
     },
-    contents: any, // TODO: Define this later
+    content?: any, // TODO: Define this later
     user: string, // This is user ID
     createdAt: string,
     updatedAt: string,
