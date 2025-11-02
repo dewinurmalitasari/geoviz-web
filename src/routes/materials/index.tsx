@@ -13,6 +13,7 @@ import {useState} from "react";
 import EditMaterialForm from "@/components/form/material/edit-material-form.tsx";
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import AddMaterialForm from "@/components/form/material/add-material-form.tsx";
+import {useIsMobile} from "@/hooks/use-mobile.ts";
 
 export const Route = createFileRoute('/materials/')({
     component: RouteComponent,
@@ -53,6 +54,8 @@ function RouteComponent() {
     const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+
+    const isMobile = useIsMobile()
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -108,6 +111,7 @@ function RouteComponent() {
                                 }
                             </div>
                         }
+                        data-aos-delay={isMobile? 0 : ((index % 4) * 100)}
                     />
                 ))}
             </div>

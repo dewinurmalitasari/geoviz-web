@@ -8,15 +8,18 @@ interface GeoCardProps {
     footer?: ReactNode;
     titleButton?: ReactNode;
     className?: string;
+    'data-aos-delay'?: number;
 }
 
-export default function GeoCard({icon, title, content, footer, titleButton, className}: GeoCardProps) {
+export default function GeoCard({icon, title, content, footer, titleButton, className, 'data-aos-delay': dataAosDelay}: GeoCardProps) {
     return (
         <div
             className={cn(
                 "bg-white rounded-2xl shadow-lg border border-deep-purple-100 overflow-hidden card-hover w-full flex flex-col flex-grow",
                 className
             )}
+            data-aos="zoom-in"
+            data-aos-delay={dataAosDelay}
         >
             <div className="h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600"></div>
 

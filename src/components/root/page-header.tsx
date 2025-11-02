@@ -14,7 +14,7 @@ export default function PageHeader({title, description, noBackButton, additional
     const navigate = useNavigate();
 
     return (
-        <div className="space-y-4 mt-6">
+        <div className="space-y-4 mt-6" data-aos="zoom-in">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm w-full">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">

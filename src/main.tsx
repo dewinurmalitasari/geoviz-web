@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import AOS from 'aos';
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
 
@@ -34,6 +35,12 @@ declare module '@tanstack/react-router' {
         router: typeof router
     }
 }
+
+// Initialize AOS (Animate On Scroll) library
+AOS.init({
+    duration: 700,
+    once: true
+});
 
 // Render the app
 const rootElement = document.getElementById('app')

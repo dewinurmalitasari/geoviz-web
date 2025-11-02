@@ -9,6 +9,7 @@ interface ProgressProps {
 export default function Progress({progress, _id}: ProgressProps) {
     return (
         <div
+            data-aos="zoom-in-up"
             className="mt-8 md:mt-12 bg-gradient-to-r from-deep-purple-50 to-deep-purple-100 rounded-2xl p-5 md:p-6 shadow-md border border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                 <h2 className="text-xl md:text-2xl font-bold text-deep-purple-800 md:text-start text-center w-full">
