@@ -136,7 +136,7 @@ function RouteComponent() {
             {selectedUser && (
                 <EditUserForm
                     open={editOpen}
-                    onOpenChange={setEditOpen}
+                    setOpen={setEditOpen}
                     user={selectedUser}
                     onSuccess={() => {
                         setSelectedUser(null);

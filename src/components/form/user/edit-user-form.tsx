@@ -6,13 +6,13 @@ import {userService} from "@/services/user-service.ts";
 
 interface EditUserFormProps {
     open: boolean;
-    onOpenChange: (open: boolean) => void;
+    setOpen: (open: boolean) => void;
     user: User,
     onSuccess: () => void,
     onDeleteClick: () => void,
 }
 
-export default function EditUserForm({open, onOpenChange, user, onSuccess, onDeleteClick}: EditUserFormProps) {
+export default function EditUserForm({open, setOpen, user, onSuccess, onDeleteClick}: EditUserFormProps) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [values, setValues] = useState<UserPayload>({
         username: user.username,
@@ -37,7 +37,7 @@ export default function EditUserForm({open, onOpenChange, user, onSuccess, onDel
 
             toast.success(`Pengguna "${data.user.username}" berhasil diperbarui!`);
             onSuccess();
-            onOpenChange(false);
+            setOpen(false);
         } catch (error) {
             toast.error('Gagal memperbarui: ' + (error as Error).message);
         } finally {
@@ -50,7 +50,7 @@ export default function EditUserForm({open, onOpenChange, user, onSuccess, onDel
         <div>
             <UserDialog
                 open={open}
-                onOpenChange={onOpenChange}
+                onOpenChange={setOpen}
                 isProcessing={isProcessing}
                 isEdit={true}
                 toEditUsername={user?.username}

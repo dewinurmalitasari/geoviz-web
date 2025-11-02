@@ -18,7 +18,7 @@ export default function GeoInput({id, label, value, onChange, icon, isPassword =
 
     return (
         <Field>
-            <FieldLabel htmlFor={id}>{label}</FieldLabel>
+            <FieldLabel htmlFor={id} className="font-bold text-md">{label}</FieldLabel>
             <InputGroup id={id}>
                 <InputGroupInput
                     type={showPassword ? 'text' : isPassword ? 'password' : 'text'}

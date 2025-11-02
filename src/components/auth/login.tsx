@@ -1,7 +1,7 @@
 import {KeyRound, LogIn, User} from 'lucide-react';
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import GeoInput from "@/components/ui/geo-input.tsx";
+import GeoInput from "@/components/geo/geo-input.tsx";
 
 interface LoginProps {
     username: string;

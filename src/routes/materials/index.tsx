@@ -1,15 +1,18 @@
-import {createFileRoute} from '@tanstack/react-router'
+import {createFileRoute, useRouter} from '@tanstack/react-router'
 import PageHeader from "@/components/root/page-header.tsx";
 import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {materialService} from "@/services/material-service.ts";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {ROUTES} from "@/type.ts";
+import {type Material, ROUTES} from "@/type.ts";
 import {Eye, Pen, Plus} from "lucide-react";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
-import {toast} from "sonner";
+import {useState} from "react";
+import EditMaterialForm from "@/components/form/material/edit-material-form.tsx";
+import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
+import AddMaterialForm from "@/components/form/material/add-material-form.tsx";
 
 export const Route = createFileRoute('/materials/')({
     component: RouteComponent,
@@ -43,8 +46,13 @@ export const Route = createFileRoute('/materials/')({
 })
 
 function RouteComponent() {
+    const router = useRouter();
     const auth = getAuthentication()
     const {materials} = Route.useLoaderData();
+
+    const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null);
+    const [editOpen, setEditOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -53,13 +61,17 @@ function RouteComponent() {
                 description="Pelajari konsep-konsep transformasi geometri"
                 additionalButtons={
                     auth?.user.role === 'admin' &&
-                    <GeoButton
-                        onClick={() => toast.warning('Not implemented yet!')}
-                        variant="secondary"
-                        className="flex-1"
-                    >
-                        <Plus/> Tambah Materi
-                    </GeoButton>
+                    <AddMaterialForm
+                        onSuccess={() => router.invalidate()}
+                        trigger={
+                            <GeoButton
+                                variant="secondary"
+                                className="flex-1"
+                            >
+                                <Plus/> Tambah Materi
+                            </GeoButton>
+                        }
+                    />
                 }
             />
 
@@ -85,7 +97,10 @@ function RouteComponent() {
 
                                 {auth?.user.role === 'admin' &&
                                     <GeoButton
-                                        onClick={() => toast.warning('Not implemented yet!')}
+                                        onClick={() => {
+                                            setSelectedMaterial(material);
+                                            setEditOpen(true);
+                                        }}
                                         variant="secondary"
                                     >
                                         <Pen/> Edit
@@ -96,6 +111,35 @@ function RouteComponent() {
                     />
                 ))}
             </div>
+
+            {selectedMaterial && (
+                <EditMaterialForm
+                    open={editOpen}
+                    setOpen={setEditOpen}
+                    material={selectedMaterial}
+                    onSuccess={() => {
+                        setSelectedMaterial(null);
+                        router.invalidate();
+                    }}
+                    onDeleteClick={() => {
+                        setDeleteOpen(true);
+                    }}
+                />
+            )}
+
+            {selectedMaterial && (
+                <DeleteMaterialForm
+                    open={deleteOpen}
+                    onOpenChange={() => {
+                        setDeleteOpen(false);
+                    }}
+                    material={selectedMaterial}
+                    onSuccess={() => {
+                        setSelectedMaterial(null);
+                        router.invalidate();
+                    }}
+                />
+            )}
         </div>
     );
 }

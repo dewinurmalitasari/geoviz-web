@@ -1,0 +1,62 @@
+import MaterialDialog from "@/components/dialog/material-dialog.tsx";
+import {useState} from "react";
+import type {MaterialPayload} from "@/type.ts";
+import {toast} from "sonner";
+import {materialService} from "@/services/material-service.ts";
+
+interface AddMaterialFormProps {
+    trigger: React.ReactNode;
+    onSuccess: () => void;
+}
+
+export default function AddMaterialForm({trigger, onSuccess}: AddMaterialFormProps) {
+    const [open, setOpen] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [values, setValues] = useState<MaterialPayload>({
+        title: '',
+        description: '',
+        formula: '',
+        example: '',
+    });
+
+    const onAddClick = async () => {
+        if (!values.title || !values.description || !values.formula || !values.example) {
+            toast.error("Semua field harus diisi!");
+            return;
+        }
+
+        setIsProcessing(true);
+        try {
+            const data = await materialService.createMaterial(values);
+
+            toast.success(`Materi "${data.material.title}" berhasil ditambahkan!`);
+            setValues({
+                title: '',
+                description: '',
+                formula: '',
+                example: '',
+            });
+            onSuccess();
+            setOpen(false);
+        } catch (error) {
+            toast.error('Gagal menambahkan: ' + (error as Error).message);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+
+    return (
+        <div>
+            <MaterialDialog
+                isProcessing={isProcessing}
+                values={values}
+                setValues={setValues}
+                onClick={onAddClick}
+                trigger={trigger}
+                open={open}
+                onOpenChange={setOpen}
+            />
+        </div>
+    );
+}
