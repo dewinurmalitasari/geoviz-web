@@ -72,7 +72,7 @@ export default function FormDialog(
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className="!max-w-2xl">
                 <GeoDialogHeader icon={icon ?? defaultIcon} title={title}/>
                 {content}
                 <DialogFooter>
