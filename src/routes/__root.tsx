@@ -81,6 +81,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
             </div>
         );
     },
+    notFoundComponent: () => {
+        return <ErrorPage
+            status={404}
+            statusText="Not Found"
+            title="Halaman Tidak ditemukan"
+            message="Halaman yang Anda cari tidak ditemukan."
+        />;
+    },
     errorComponent: ({error}) => {
         return (
             <ErrorPage

@@ -6,6 +6,7 @@ import Background from "@/components/root/background.tsx";
 import Header from "@/components/root/header.tsx";
 import Footer from "@/components/root/footer.tsx";
 import {ROUTES} from "@/type.ts";
+import {useNavigate} from "@tanstack/react-router";
 
 interface ErrorPageProps {
     useTemplate?: boolean;
@@ -16,6 +17,7 @@ interface ErrorPageProps {
 }
 
 export function ErrorPage({useTemplate = false, status, statusText, title, message}: ErrorPageProps) {
+    const navigate = useNavigate();
 
     const error = (
         <div className="flex justify-center">
@@ -33,7 +35,7 @@ export function ErrorPage({useTemplate = false, status, statusText, title, messa
                     }
                     footer={
                         <div className="flex flex-row justify-between space-x-4 pt-4">
-                            <GeoButton onClick={() => window.history.back()} variant="primary" className="flex-1">
+                            <GeoButton onClick={() => navigate({to: '..'})} variant="primary" className="flex-1">
                                 <ArrowLeft className="w-5 h-5"/> Kembali
                             </GeoButton>
                             <GeoButton to={ROUTES.home} variant="secondary" className="flex-1">
