@@ -144,16 +144,15 @@ export function usePracticeColumns(): ColumnDef<Practice>[] {
         {
             id: 'actions',
             header: () => (
-                <div className="text-end font-bold pe-6 text-deep-purple-800 dark:text-geo-purple-50">
+                <div className="text-center font-bold">
                     Aksi
                 </div>
             ),
             cell: ({row}) => (
-                <div className="flex justify-end pe-4">
+                <div className="flex justify-center">
                     <GeoButton
                         to={ROUTES.practices.practiceResult(row.original._id)}
                         variant="primary"
-                        className="h-10 w-24 bg-gradient-to-r from-geo-purple-500 to-deep-purple-500 hover:from-geo-purple-600 hover:to-deep-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
                     >
                         <Eye className="h-4 w-4 mr-1"/> Lihat
                     </GeoButton>

@@ -98,7 +98,7 @@ function RouteComponent() {
                     titleButton={
                         <AddUserForm
                             trigger={
-                                <GeoButton className="w-[100px]">
+                                <GeoButton className="w-[100px]" variant="secondary">
                                     <Plus/> Tambah
                                 </GeoButton>
                             }
@@ -121,7 +121,7 @@ function RouteComponent() {
                         titleButton={
                             <AddUserForm
                                 trigger={
-                                    <GeoButton className="w-[100px]">
+                                    <GeoButton className="w-[100px]" variant="secondary">
                                         <Plus/> Tambah
                                     </GeoButton>
                                 }

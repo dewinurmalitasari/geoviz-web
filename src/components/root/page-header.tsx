@@ -6,9 +6,10 @@ interface PageHeaderProps {
     title: string;
     description?: string;
     noBackButton?: boolean;
+    additionalButtons?: React.ReactNode;
 }
 
-export default function PageHeader({title, description, noBackButton}: PageHeaderProps) {
+export default function PageHeader({title, description, noBackButton, additionalButtons}: PageHeaderProps) {
     return (
         <div className="space-y-4 mt-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -20,15 +21,20 @@ export default function PageHeader({title, description, noBackButton}: PageHeade
                         {description}
                     </p>
                 </div>
-                {!noBackButton &&
-                    <GeoButton
-                        onClick={() => window.history.back()}
-                        variant="primary"
-                        className="w-full sm:w-auto whitespace-nowrap"
-                    >
-                        <ArrowLeft className="w-4 h-4"/> Kembali
-                    </GeoButton>
-                }
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    {!noBackButton &&
+                        <GeoButton
+                            onClick={() => window.history.back()}
+                            variant="primary"
+                            className="w-full sm:w-auto whitespace-nowrap"
+                        >
+                            <ArrowLeft className="w-4 h-4"/> Kembali
+                        </GeoButton>
+                    }
+
+
+                    {additionalButtons}
+                </div>
             </div>
             <Separator className="mt-4 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 rounded-full"/>
         </div>
