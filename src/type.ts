@@ -52,7 +52,7 @@ export const API_ENDPOINTS = {
         withId: (_id: string) => `${API_BASE_URL}/users/${_id}`,
     },
     materials: {
-        base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials?${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
+        base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
         withId: (_id: string) => `${API_BASE_URL}/materials/${_id}`,
     },
     practices: {
