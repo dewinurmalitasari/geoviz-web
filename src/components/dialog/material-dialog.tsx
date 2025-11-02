@@ -1,4 +1,4 @@
-import {FileText, User2} from "lucide-react";
+import {FileText, Type} from "lucide-react";
 import type {MaterialPayload} from "@/type.ts";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import FormDialog from "@/components/dialog/form-dialog.tsx";
@@ -30,7 +30,6 @@ export default function MaterialDialog(
         trigger,
     }: MaterialDialogProps) {
 
-    // TODO
     return (
         <FormDialog
             open={open}
@@ -43,13 +42,42 @@ export default function MaterialDialog(
             onDelete={onDeleteClick}
             trigger={trigger}
         >
-            <GeoInput
-                id="title"
-                label="Judul"
-                value={values.title ?? ''}
-                onChange={(e) => setValues({...values, title: e.target.value})}
-                icon={"TODO"}
-            />
+            <div className="overflow-y-auto max-h-[50vh] space-y-4 p-1">
+                <GeoInput
+                    id="title"
+                    label="Judul"
+                    value={values.title ?? ''}
+                    onChange={(e) => setValues({...values, title: e.target.value})}
+                    icon={<Type/>}
+                />
+
+                <GeoInput
+                    id="description"
+                    label="Deskripsi"
+                    value={values.description ?? ''}
+                    onChange={(e) => setValues({...values, description: e.target.value})}
+                    multiline
+                    minRows={3}
+                />
+
+                <GeoInput
+                    id="formula"
+                    label="Rumus"
+                    value={values.formula ?? ''}
+                    onChange={(e) => setValues({...values, formula: e.target.value})}
+                    multiline
+                    minRows={3}
+                />
+
+                <GeoInput
+                    id="example"
+                    label="Contoh"
+                    value={values.example ?? ''}
+                    onChange={(e) => setValues({...values, example: e.target.value})}
+                    multiline
+                    minRows={3}
+                />
+            </div>
         </FormDialog>
     );
 }

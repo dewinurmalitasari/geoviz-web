@@ -52,7 +52,8 @@ export const API_ENDPOINTS = {
         withId: (_id: string) => `${API_BASE_URL}/users/${_id}`,
     },
     materials: {
-        base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
+        base: `${API_BASE_URL}/materials`,
+        // base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
         withId: (_id: string) => `${API_BASE_URL}/materials/${_id}`,
     },
     practices: {
@@ -245,5 +246,5 @@ export interface MaterialPayload {
 //  - security best practices
 //  - performance optimizations like preloading routes
 //  - animations and transitions between routes
-//  - scrollbar?
+//  - scrollarea shadcn on geo-input, form-dialog, entire page?
 //  - table resize problem

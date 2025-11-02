@@ -2,8 +2,12 @@ import { api } from "@/lib/api-client.ts";
 import {API_ENDPOINTS, type DeleteResponse, type MaterialPayload, type MaterialResponse, type MaterialsResponse} from "@/type.ts";
 
 export const materialService = {
-    getMaterials: (noFormulaAndExample: boolean = false): Promise<MaterialsResponse> => {
-        return api.get<MaterialsResponse>(API_ENDPOINTS.materials.base(noFormulaAndExample));
+    // getMaterials: (noFormulaAndExample: boolean = false): Promise<MaterialsResponse> => {
+    //     return api.get<MaterialsResponse>(API_ENDPOINTS.materials.base(noFormulaAndExample));
+    // },
+
+    getMaterials: (): Promise<MaterialsResponse> => {
+        return api.get<MaterialsResponse>(API_ENDPOINTS.materials.base);
     },
 
     getMaterial: (materialId: string): Promise<MaterialResponse> => {
@@ -11,7 +15,7 @@ export const materialService = {
     },
 
     createMaterial: (materialData: MaterialPayload): Promise<MaterialResponse> => {
-        return api.post<MaterialResponse>(API_ENDPOINTS.materials.base(), materialData);
+        return api.post<MaterialResponse>(API_ENDPOINTS.materials.base, materialData);
     },
 
     updateMaterial: (materialId: string, materialData: MaterialPayload): Promise<MaterialResponse> => {

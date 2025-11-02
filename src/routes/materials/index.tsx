@@ -18,7 +18,7 @@ export const Route = createFileRoute('/materials/')({
     component: RouteComponent,
     pendingComponent: () => <LoadingPage page="Materi"/>,
     loader: async () => {
-        const materialsResponse = await materialService.getMaterials(true)
+        const materialsResponse = await materialService.getMaterials()
         const materials = materialsResponse.materials;
         return {materials};
     },
