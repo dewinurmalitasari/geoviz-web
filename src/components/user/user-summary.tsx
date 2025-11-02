@@ -1,7 +1,8 @@
 // components/user/user-summary.tsx
 import {cn} from "@/lib/utils.ts";
-import {BarChart3, BookOpen, CheckCircle, Clock, FileText, Target, TrendingUp} from "lucide-react";
+import {BarChart3, BookOpen, ChartBar, ChartPie, CheckCircle, Clock, FileText, Target} from "lucide-react";
 import type {SummaryStatistics} from "@/type.ts";
+import GeoCard from "@/components/geo/geo-card.tsx";
 
 interface UserSummaryProps {
     summary: SummaryStatistics;
@@ -97,246 +98,238 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                 {statsCards.map((stat, index) => (
                     <div
                         key={index}
-                        className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 overflow-hidden"
                     >
-                        <div className={cn(
-                            "w-12 h-12 rounded-lg bg-gradient-to-r flex items-center justify-center mb-3",
-                            stat.bgGradient
-                        )}>
+                        <div className={cn("h-1 bg-gradient-to-r", stat.gradient)}></div>
+                        <div className="p-4">
                             <div className={cn(
-                                "text-white bg-gradient-to-r rounded-lg w-8 h-8 flex items-center justify-center",
-                                stat.gradient
+                                "w-12 h-12 rounded-lg bg-gradient-to-r flex items-center justify-center mb-3",
+                                stat.bgGradient
                             )}>
-                                {stat.icon}
+                                <div className={cn(
+                                    "text-white bg-gradient-to-r rounded-lg w-8 h-8 flex items-center justify-center",
+                                    stat.gradient
+                                )}>
+                                    {stat.icon}
+                                </div>
                             </div>
+                            <h3 className="text-sm font-medium text-gray-600 mb-1">{stat.title}</h3>
+                            <p className={cn(
+                                "text-2xl font-bold",
+                                index === 3 || index === 4 ?
+                                    summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.7 ?
+                                        "text-green-600" :
+                                        summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.4 ?
+                                            "text-yellow-600" :
+                                            "text-red-600"
+                                    : "text-deep-purple-800"
+                            )}>
+                                {stat.value}
+                            </p>
                         </div>
-                        <h3 className="text-sm font-medium text-gray-600 mb-1">{stat.title}</h3>
-                        <p className={cn(
-                            "text-2xl font-bold",
-                            index === 3 || index === 4 ?
-                                summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.7 ?
-                                    "text-green-600" :
-                                    summary.totalPracticesCompleted / summary.totalPracticeAttempts >= 0.4 ?
-                                        "text-yellow-600" :
-                                        "text-red-600"
-                                : "text-deep-purple-800"
-                        )}>
-                            {stat.value}
-                        </p>
                     </div>
                 ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Top Materials Section */}
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div
-                            className="w-10 h-10 rounded-lg bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-deep-purple-600"/>
-                        </div>
-                        <h3 className="text-lg font-semibold text-deep-purple-800">Statistik Akses Materi</h3>
-                    </div>
-
-                    <div className="space-y-3">
-                        {materialAccess.map(([material, count], index) => (
-                            <div key={material}
-                                 className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
-                                <div className="flex items-center gap-3">
-                                    <div
-                                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
-                                        <span className="text-sm font-bold text-deep-purple-600">{index + 1}</span>
-                                    </div>
-                                    <span className="font-medium text-gray-700 text-sm line-clamp-1">{material}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500">{count} akses</span>
-                                    <div className="w-20 bg-gray-200 rounded-full h-2">
+                {/* Material Access Section */}
+                <GeoCard
+                    icon={<ChartBar/>}
+                    title="Statistik Akses Materi"
+                    content={
+                        <div className="space-y-3">
+                            {materialAccess.map(([material, count], index) => (
+                                <div key={material}
+                                     className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                                    <div className="flex items-center gap-3">
                                         <div
-                                            className="bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 h-2 rounded-full transition-all duration-500"
-                                            style={{
-                                                width: `${(count / Math.max(...materialAccess.map(([, c]) => c))) * 100}%`
-                                            }}
+                                            className="w-8 h-8 rounded-lg bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
+                                            <span className="text-sm font-bold text-deep-purple-600">{index + 1}</span>
+                                        </div>
+                                        <span
+                                            className="font-medium text-gray-700 text-sm line-clamp-1">{material}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-gray-500">{count} akses</span>
+                                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                                            <div
+                                                className="bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 h-2 rounded-full transition-all duration-500"
+                                                style={{
+                                                    width: `${(count / Math.max(...materialAccess.map(([, c]) => c))) * 100}%`
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    }
+                />
+
+                {/* Practice Completion Section */}
+                <GeoCard
+                    icon={<Target/>}
+                    title="Statistik Penyelesaian Latihan"
+                    content={
+                        <div className="space-y-4">
+                            {practiceStats.slice(0, summary.totalPracticesUnique).map((practice) => (
+                                <div key={practice.name} className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm font-medium text-gray-700 capitalize">
+                                            {practice.name.replace(/_/g, ' ')}
+                                        </span>
+                                        <span className={cn(
+                                            "text-sm font-bold",
+                                            practice.completionRate >= 70 ? "text-green-600" :
+                                                practice.completionRate >= 40 ? "text-yellow-600" : "text-red-600"
+                                        )}>
+                                            {practice.completionRate.toFixed(0)}%
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                                        <span>Dikerjakan: {practice.attempted}</span>
+                                        <span>Diselesaikan: {practice.completed}</span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                        <div
+                                            className={cn(
+                                                "h-2 rounded-full transition-all duration-500",
+                                                practice.completionRate >= 70 ? "bg-gradient-to-r from-green-400 to-green-600" :
+                                                    practice.completionRate >= 40 ? "bg-gradient-to-r from-yellow-400 to-yellow-600" :
+                                                        "bg-gradient-to-r from-red-400 to-red-600"
+                                            )}
+                                            style={{width: `${practice.completionRate}%`}}
                                         />
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Practice Completion Section */}
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div
-                            className="w-10 h-10 rounded-lg bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
-                            <Target className="w-5 h-5 text-deep-purple-600"/>
+                            ))}
                         </div>
-                        <h3 className="text-lg font-semibold text-deep-purple-800">Statistik Penyelesaian Latihan</h3>
-                    </div>
-
-                    <div className="space-y-4">
-                        {practiceStats.slice(0, summary.totalPracticesUnique).map((practice) => (
-                            <div key={practice.name} className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm font-medium text-gray-700 capitalize">
-                                        {practice.name.replace(/_/g, ' ')}
-                                    </span>
-                                    <span className={cn(
-                                        "text-sm font-bold",
-                                        practice.completionRate >= 70 ? "text-green-600" :
-                                            practice.completionRate >= 40 ? "text-yellow-600" : "text-red-600"
-                                    )}>
-                                        {practice.completionRate.toFixed(0)}%
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-3 text-xs text-gray-500">
-                                    <span>Dikerjakan: {practice.attempted}</span>
-                                    <span>Diselesaikan: {practice.completed}</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div
-                                        className={cn(
-                                            "h-2 rounded-full transition-all duration-500",
-                                            practice.completionRate >= 70 ? "bg-gradient-to-r from-green-400 to-green-600" :
-                                                practice.completionRate >= 40 ? "bg-gradient-to-r from-yellow-400 to-yellow-600" :
-                                                    "bg-gradient-to-r from-red-400 to-red-600"
-                                        )}
-                                        style={{width: `${practice.completionRate}%`}}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                    }
+                />
             </div>
 
             {/* Overall Progress */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <div className="flex items-center gap-3 mb-6">
-                    <div
-                        className="w-10 h-10 rounded-lg bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
-                        <BarChart3 className="w-5 h-5 text-deep-purple-600"/>
-                    </div>
-                    <h3 className="text-lg font-semibold text-deep-purple-800">Progress Keseluruhan</h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center">
-                        <div className="relative inline-block">
-                            <svg className="w-24 h-24" viewBox="0 0 36 36">
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="#E5E7EB"
-                                    strokeWidth="3"
-                                />
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="url(#materialGradient)"
-                                    strokeWidth="3"
-                                    strokeDasharray={`${Math.min(100, (summary.totalMaterialsUnique / 20) * 100)}, 100`}
-                                    strokeLinecap="round"
-                                />
-                                <defs>
-                                    <linearGradient id="materialGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#8B5CF6"/>
-                                        <stop offset="100%" stopColor="#7C3AED"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-lg font-bold text-deep-purple-800">
-                                    {Math.min(100, (summary.totalMaterialsUnique / 20) * 100)}%
-                                </span>
+            <GeoCard
+                icon={<ChartPie/>}
+                title="Progress Keseluruhan"
+                content={
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="text-center">
+                            <div className="relative inline-block">
+                                <svg className="w-24 h-24" viewBox="0 0 36 36">
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#E5E7EB"
+                                        strokeWidth="3"
+                                    />
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="url(#materialGradient)"
+                                        strokeWidth="3"
+                                        strokeDasharray={`${Math.min(100, Math.round((summary.totalMaterialsUnique / 20) * 100))}, 100`}
+                                        strokeLinecap="round"
+                                    />
+                                    <defs>
+                                        <linearGradient id="materialGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#8B5CF6"/>
+                                            <stop offset="100%" stopColor="#7C3AED"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-lg font-bold text-deep-purple-800">
+                                        {Math.min(100, Math.round((summary.totalMaterialsUnique / 20) * 100))}%
+                                    </span>
+                                </div>
                             </div>
+                            <p className="mt-2 text-sm font-medium text-gray-600">Progress Materi</p>
                         </div>
-                        <p className="mt-2 text-sm font-medium text-gray-600">Progress Materi</p>
-                    </div>
 
-                    <div className="text-center">
-                        <div className="relative inline-block">
-                            <svg className="w-24 h-24" viewBox="0 0 36 36">
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="#E5E7EB"
-                                    strokeWidth="3"
-                                />
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="url(#practiceGradient)"
-                                    strokeWidth="3"
-                                    strokeDasharray={`${Math.min(100, (summary.totalPracticesCompleted / summary.totalPracticeAttempts) * 100)}, 100`}
-                                    strokeLinecap="round"
-                                />
-                                <defs>
-                                    <linearGradient id="practiceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#10B981"/>
-                                        <stop offset="100%" stopColor="#059669"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-lg font-bold text-deep-purple-800">
-                                    {summary.totalPracticeAttempts > 0
-                                        ? `${Math.round((summary.totalPracticesCompleted / summary.totalPracticeAttempts) * 100)}%`
-                                        : "0%"
-                                    }
-                                </span>
+                        <div className="text-center">
+                            <div className="relative inline-block">
+                                <svg className="w-24 h-24" viewBox="0 0 36 36">
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#E5E7EB"
+                                        strokeWidth="3"
+                                    />
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="url(#practiceGradient)"
+                                        strokeWidth="3"
+                                        strokeDasharray={`${Math.min(100, Math.round((summary.totalPracticesCompleted / summary.totalPracticeAttempts) * 100))}, 100`}
+                                        strokeLinecap="round"
+                                    />
+                                    <defs>
+                                        <linearGradient id="practiceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#10B981"/>
+                                            <stop offset="100%" stopColor="#059669"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-lg font-bold text-deep-purple-800">
+                                        {summary.totalPracticeAttempts > 0
+                                            ? `${Math.min(100, Math.round((summary.totalPracticesCompleted / summary.totalPracticeAttempts) * 100))}%`
+                                            : "0%"
+                                        }
+                                    </span>
+                                </div>
                             </div>
+                            <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Penyelesaian</p>
                         </div>
-                        <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Penyelesaian</p>
-                    </div>
 
-                    <div className="text-center">
-                        <div className="relative inline-block">
-                            <svg className="w-24 h-24" viewBox="0 0 36 36">
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="#E5E7EB"
-                                    strokeWidth="3"
-                                />
-                                <path
-                                    d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="url(#engagementGradient)"
-                                    strokeWidth="3"
-                                    strokeDasharray={`${Math.min(100, calculateEngagement(summary))}, 100`}
-                                    strokeLinecap="round"
-                                />
-                                <defs>
-                                    <linearGradient id="engagementGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#3B82F6"/>
-                                        <stop offset="100%" stopColor="#1D4ED8"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-lg font-bold text-deep-purple-800">
-                                    {Math.min(100, calculateEngagement(summary))}%
-                                </span>
+                        <div className="text-center">
+                            <div className="relative inline-block">
+                                <svg className="w-24 h-24" viewBox="0 0 36 36">
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#E5E7EB"
+                                        strokeWidth="3"
+                                    />
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="url(#engagementGradient)"
+                                        strokeWidth="3"
+                                        strokeDasharray={`${Math.min(100, Math.round(calculateEngagement(summary)))}, 100`}
+                                        strokeLinecap="round"
+                                    />
+                                    <defs>
+                                        <linearGradient id="engagementGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#3B82F6"/>
+                                            <stop offset="100%" stopColor="#1D4ED8"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-lg font-bold text-deep-purple-800">
+                                        {Math.min(100, Math.round(calculateEngagement(summary)))}%
+                                    </span>
+                                </div>
                             </div>
+                            <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Keterlibatan</p>
                         </div>
-                        <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Keterlibatan</p>
                     </div>
-                </div>
-            </div>
+                }
+            />
         </div>
     );
 }
