@@ -115,6 +115,7 @@ export interface UserPayload {
 type VisitData = Record<string, never>; // No additional data needed for visits
 
 interface MaterialAccessData {
+    title: string;
     material: string; // This is ID
 }
 
@@ -209,7 +210,7 @@ export interface PracticesResponse {
 }
 
 // TODO:
-//  - data loading with loaders
+//  - navbar with types here and Link
 //  - tracking users sessions, material access, practice attempts
 //  - 2d viz with equatrion, 2d and 3d viz with point
 //  - security best practices

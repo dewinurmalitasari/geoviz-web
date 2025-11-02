@@ -9,11 +9,12 @@ import {practicesService} from "@/services/practices-service.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import {useEffect, useMemo} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {BookOpenCheck, ChartColumn, ClipboardList, Eye} from "lucide-react";
+import {ArrowUpDown, BookOpenCheck, ChartColumn, ClipboardList, Eye} from "lucide-react";
 import type {ColumnDef} from "@tanstack/react-table";
 import {type Practice, ROUTES} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
@@ -81,7 +82,8 @@ function RouteComponent() {
         }
     }, [userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse, isStudent]);
 
-    // Column definitions TODO
+    // Column definitions TODO: Move to separate file and make it prettier
+    // TODO: Sorting and Filtering
     const practicesResponseColumns: ColumnDef<Practice>[] = useMemo(() => [
         {
             id: 'createdAt',
@@ -97,7 +99,19 @@ function RouteComponent() {
                 });
                 return formatter.format(date).replace(',', ' -');
             },
-            header: () => <div className="text-center font-bold">Waktu</div>,
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Waktu</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
             cell: ({getValue}) => {
                 return <div className="text-center">{getValue<string>()}</div>;
             },
@@ -105,7 +119,19 @@ function RouteComponent() {
         {
             id: 'code',
             accessorKey: 'code',
-            header: () => <div className="text-center font-bold">Kode Latihan</div>,
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Kode Latihan</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
             cell: ({row}) => <div className="text-center">{row.original.code}</div>,
         },
         {
@@ -114,7 +140,19 @@ function RouteComponent() {
                 const percentage = (row.score.correct / row.score.total) * 100;
                 return percentage.toFixed(0);
             },
-            header: () => <div className="text-center font-bold">Nilai</div>,
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Nilai</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
             cell: ({getValue}) => {
                 return <div className="text-center">{getValue<string>()}</div>;
             },
@@ -122,7 +160,19 @@ function RouteComponent() {
         {
             id: 'correctTotal',
             accessorFn: (row) => `${row.score.correct}/${row.score.total}`,
-            header: () => <div className="text-center font-bold">Benar/Total</div>,
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Benar/Total</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
             cell: ({getValue}) => {
                 return <div className="text-center">{getValue<string>()}</div>;
             },
@@ -144,7 +194,94 @@ function RouteComponent() {
                 );
             }
         }
+    ], []);
 
+    const statisticsColumns: ColumnDef<any>[] = useMemo(() => [
+        {
+            id: 'createdAt',
+            accessorFn: (row) => {
+                const date = new Date(row.createdAt);
+                const formatter = new Intl.DateTimeFormat('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                });
+                return formatter.format(date).replace(',', ' -');
+            },
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Waktu</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
+            cell: ({getValue}) => {
+                return <div className="text-center">{getValue<string>()}</div>;
+            },
+        },
+        {
+            id: 'type',
+            accessorKey: 'type',
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Tipe</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
+            cell: ({row}) => {
+                const type: String = row.original.type;
+                return <div className="text-center">{type.translateType()}</div>;
+            },
+        },
+        {
+            id: 'details',
+            accessorFn: (row) => {
+                switch (row.type) {
+                    case 'visit':
+                        return '-';
+                    case 'material':
+                        return row.data.title
+                    case 'practice_attempt':
+                        return row.data.code
+                    case 'practice_completed':
+                        return row.data.code
+                    default:
+                        return '-';
+                }
+            },
+            header: ({column}) => {
+                return (
+                    <div className="ml-10 flex flex-row justify-center items-center">
+                        <div className="font-bold">Detail</div>
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="cursor-pointer hover:bg-transparent hover:scale-103"
+                        >
+                            <ArrowUpDown className="h-4 w-4"/>
+                        </Button>
+                    </div>)
+            },
+            cell: ({getValue}) => {
+                return <div className="text-center">{getValue<string>()}</div>;
+            },
+        },
     ], []);
 
     return (
@@ -166,7 +303,12 @@ function RouteComponent() {
                     <GeoCard
                         icon={<ChartColumn/>}
                         title="Statistik Siswa"
-                        content={<></>}
+                        content={
+                            <DataTable
+                                columns={statisticsColumns}
+                                data={statisticsResponse?.statistics ?? []}
+                            />
+                        }
                         className="flex-1"
                     />
                 </div>

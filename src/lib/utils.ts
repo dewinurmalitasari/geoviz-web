@@ -9,6 +9,7 @@ declare global {
     interface String {
         toCapitalized(): string;
         translateRole(): string;
+        translateType(): string;
     }
 }
 
@@ -22,6 +23,21 @@ String.prototype.translateRole = function () {
             return 'Siswa';
         case 'teacher':
             return 'Guru';
+        default:
+            return this.toCapitalized();
+    }
+}
+
+String.prototype.translateType = function () {
+    switch (this.toLowerCase()) {
+        case 'visit':
+            return 'Kunjungi Situs';
+        case 'material':
+            return 'Akses Materi';
+        case 'practice_attempt':
+            return 'Latihan Dimulai';
+        case 'practice_completed':
+            return 'Latihan Selesai';
         default:
             return this.toCapitalized();
     }
