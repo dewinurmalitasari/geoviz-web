@@ -245,5 +245,4 @@ export interface MaterialPayload {
 //  - 2d viz with equatrion, 2d and 3d viz with point
 //  - security best practices
 //  - performance optimizations like preloading routes
-//  - animations and transitions between routes
 //  - table resize problem
