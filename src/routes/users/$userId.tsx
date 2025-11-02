@@ -7,7 +7,6 @@ import PageHeader from "@/components/root/page-header.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import {practicesService} from "@/services/practices-service.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
-import {useEffect} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import {BookOpenCheck, ChartColumn} from "lucide-react";
 import {DataTable} from "@/components/table/data-table.tsx";
@@ -70,15 +69,6 @@ export const Route = createFileRoute('/users/$userId')({
 function RouteComponent() {
     const isStudent = getAuthentication()?.user.role === 'student';
     const {userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse} = Route.useLoaderData();
-
-    useEffect(() => {
-        console.log('User Detail:', userResponse);
-        console.log('Practices:', practicesResponse);
-        if (!isStudent) {
-            console.log('Statistics:', statisticsResponse);
-            console.log('Statistics Summary:', statisticsSummaryResponse);
-        }
-    }, [userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse, isStudent]);
 
     // Column definitions
     const practicesResponseColumns = usePracticeColumns();

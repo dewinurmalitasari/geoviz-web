@@ -213,7 +213,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                 icon={<ChartPie/>}
                 title="Progress Keseluruhan"
                 content={
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div className="text-center">
                             <div className="relative inline-block">
                                 <svg className="w-24 h-24" viewBox="0 0 36 36">
@@ -232,7 +232,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                         fill="none"
                                         stroke="url(#materialGradient)"
                                         strokeWidth="3"
-                                        strokeDasharray={`${Math.min(100, Math.round((summary.totalMaterialsUnique / 20) * 100))}, 100`}
+                                        strokeDasharray={`${Math.min(100, Math.round((Object.keys(summary.materialAccessCount).length / summary.totalMaterialsUnique) * 100))}, 100`}
                                         strokeLinecap="round"
                                     />
                                     <defs>
@@ -244,11 +244,48 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-lg font-bold text-deep-purple-800">
-                                        {Math.min(100, Math.round((summary.totalMaterialsUnique / 20) * 100))}%
+                                        {Math.min(100, Math.round((Object.keys(summary.materialAccessCount).length / summary.totalMaterialsUnique) * 100))}%
                                     </span>
                                 </div>
                             </div>
                             <p className="mt-2 text-sm font-medium text-gray-600">Progress Materi</p>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="relative inline-block">
+                                <svg className="w-24 h-24" viewBox="0 0 36 36">
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#E5E7EB"
+                                        strokeWidth="3"
+                                    />
+                                    <path
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="url(#practiceAttemptGradient)"
+                                        strokeWidth="3"
+                                        strokeDasharray={`${Math.min(100, Math.round((Object.keys(summary.practiceCount).length / summary.totalPracticesUnique) * 100))}, 100`}
+                                        strokeLinecap="round"
+                                    />
+                                    <defs>
+                                        <linearGradient id="practiceAttemptGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#F59E0B"/>
+                                            <stop offset="100%" stopColor="#D97706"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-lg font-bold text-deep-purple-800">
+                                        {Math.min(100, Math.round((Object.keys(summary.practiceCount).length / summary.totalPracticesUnique) * 100))}%
+                                    </span>
+                                </div>
+                            </div>
+                            <p className="mt-2 text-sm font-medium text-gray-600">Progress Latihan</p>
                         </div>
 
                         <div className="text-center">
