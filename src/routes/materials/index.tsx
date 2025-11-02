@@ -4,7 +4,6 @@ import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {materialService} from "@/services/material-service.ts";
-import {useEffect} from "react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import {ROUTES} from "@/type.ts";
 import {Eye, Pen, Plus} from "lucide-react";
@@ -46,11 +45,6 @@ export const Route = createFileRoute('/materials/')({
 function RouteComponent() {
     const auth = getAuthentication()
     const {materials} = Route.useLoaderData();
-
-    // TODO: Remove this useEffect after development
-    useEffect(() => {
-        console.log(materials);
-    }, [materials]);
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
