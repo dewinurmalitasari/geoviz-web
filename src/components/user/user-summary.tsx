@@ -99,6 +99,8 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                     <div
                         key={index}
                         className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                        data-aos="zoom-in-up"
+                        data-aos-delay={(index % 3) * 100}
                     >
                         <div className={cn("h-1 bg-gradient-to-r", stat.gradient)}></div>
                         <div className="p-4">

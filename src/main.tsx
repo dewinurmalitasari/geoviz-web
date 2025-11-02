@@ -38,7 +38,7 @@ declare module '@tanstack/react-router' {
 
 // Initialize AOS (Animate On Scroll) library
 AOS.init({
-    duration: 500,
+    duration: 300,
     once: true
 });
 

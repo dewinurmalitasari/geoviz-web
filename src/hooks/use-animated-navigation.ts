@@ -22,7 +22,7 @@ export function useAnimatedNavigation() {
         });
 
         // Wait for animation to complete
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         // Navigate
         return navigate(options);
