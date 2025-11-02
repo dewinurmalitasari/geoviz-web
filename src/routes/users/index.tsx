@@ -1,10 +1,9 @@
 import {createFileRoute, useRouter} from '@tanstack/react-router'
-import {Eye, GraduationCap, Pen, Plus, Users} from "lucide-react";
+import {GraduationCap, Plus, Users} from "lucide-react";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {ROUTES, type User, type UsersResponse} from "@/type.ts";
+import {type User, type UsersResponse} from "@/type.ts";
 import {DataTable} from "@/components/table/data-table.tsx";
-import type {ColumnDef} from "@tanstack/react-table";
 import PageHeader from "@/components/root/page-header.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import {userService} from "@/services/user-service.ts";
@@ -12,9 +11,10 @@ import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {ApiError} from "@/lib/api-client.ts";
 import AddUserForm from "@/components/form/user/add-user-form.tsx";
-import {useMemo, useState} from "react";
+import {useState} from "react";
 import EditUserForm from "@/components/form/user/edit-user-form.tsx";
 import DeleteUserForm from "@/components/form/user/delete-user-form.tsx";
+import {useStudentColumns, useTeacherColumns} from "@/components/table/users";
 
 export const Route = createFileRoute('/users/')({
     component: RouteComponent,
@@ -65,91 +65,21 @@ function RouteComponent() {
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     // Table Columns Definition
-    const teacherColumns: ColumnDef<User>[] = useMemo(() => [
-        {
-            id: 'no',
-            header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row}) => {
-                const index = teachers?.users.findIndex(u => u._id === row.original._id) ?? -1;
-                return <div className="text-center">{(teachers?.users.length ?? 0) - index}</div>;
-            },
-        },
-        {
-            id: 'username',
-            accessorKey: 'username',
-            header: () => <div className="text-start font-bold">Username</div>,
-            cell: ({row}) => <div className="text-start">{row.original.username}</div>,
-        },
-        {
-            id: 'actions',
-            header: () => <div className="text-end font-bold pe-8">Aksi</div>,
-            cell: ({row}) => {
-                const user = row.original;
-
-                return (
-                    <div className="flex justify-end px-2">
-                        <GeoButton
-                            onClick={() => {
-                                setSelectedUser(user);
-                                setEditOpen(true);
-                            }}
-                            variant="secondary"
-                            className="h-[40px] w-[80px]"
-                        >
-                            <Pen/> Edit
-                        </GeoButton>
-                    </div>
-                );
-            }
+    const teacherColumns = useTeacherColumns({
+        teachers,
+        onEdit: (user) => {
+            setSelectedUser(user);
+            setEditOpen(true);
         }
-    ], [setSelectedUser, setEditOpen]);
+    });
 
-    const studentColumns: ColumnDef<User>[] = useMemo(() => [
-        {
-            id: 'no',
-            header: () => <div className="text-center font-bold">No</div>,
-            cell: ({row}) => {
-                const index = students?.users.findIndex(u => u._id === row.original._id) ?? -1;
-                return <div className="text-center">{(students?.users.length ?? 0) - index}</div>;
-            },
-        },
-        {
-            id: 'username',
-            accessorKey: 'username',
-            header: () => <div className="text-start font-bold">Username</div>,
-            cell: ({row}) => <div className="text-start">{row.original.username}</div>,
-        },
-        {
-            id: 'actions',
-            header: () => <div className="text-end font-bold pe-22">Aksi</div>,
-            cell: ({row}) => {
-                const user = row.original;
-
-                return (
-                    <div className="flex justify-end pe-4 space-x-4">
-                        <GeoButton
-                            to={ROUTES.users.userDetail(user._id)}
-                            variant="primary"
-                            className="h-[40px] w-[80px]"
-                        >
-                            <Eye/> Lihat
-                        </GeoButton>
-
-                        <GeoButton
-                            onClick={() => {
-                                setSelectedUser(user);
-                                setEditOpen(true);
-                            }}
-                            variant="secondary"
-                            className="h-[40px] w-[80px]"
-                        >
-                            <Pen/> Edit
-                        </GeoButton>
-                    </div>
-                );
-            }
+    const studentColumns = useStudentColumns({
+        students,
+        onEdit: (user) => {
+            setSelectedUser(user);
+            setEditOpen(true);
         }
-    ], [setSelectedUser, setEditOpen]);
+    });
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">

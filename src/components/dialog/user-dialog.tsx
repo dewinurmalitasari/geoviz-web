@@ -46,6 +46,7 @@ export default function UserDialog(
                 value={values.username??''}
                 onChange={(e) => setValues({...values, username: e.target.value})}
                 icon={<User2/>}
+                description="Username harus terdiri dari minimal 3 karakter."
             />
 
             <GeoInput
