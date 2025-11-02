@@ -190,7 +190,7 @@ export function useStatisticsColumns(): ColumnDef<any>[] {
         },
         {
             id: 'type',
-            accessorKey: 'type',
+            accessorFn: (row) => row.type.translateType(),
             header: ({column}) => (
                 <div className="ml-10 flex flex-row justify-center items-center">
                     <div className="font-bold">Tipe</div>

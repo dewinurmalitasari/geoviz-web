@@ -57,13 +57,16 @@ export function DataTable<TData, TValue>({columns, data, isLoading = false,}: Da
     return (
         <div className="overflow-hidden rounded-xl border border-deep-purple-200 dark:border-deep-purple-600 shadow-sm">
             <div
-                className="flex items-center py-4 px-4 bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600 border-b border-deep-purple-200 dark:border-deep-purple-500">
+                className="flex items-center justify-between py-4 px-4 bg-gradient-to-r from-deep-purple-50 to-geo-purple-100 dark:from-deep-purple-700 dark:to-deep-purple-600 border-b border-deep-purple-200 dark:border-deep-purple-500">
                 <Input
                     placeholder="Cari semua..."
                     value={globalFilter ?? ""}
                     onChange={(event) => setGlobalFilter(event.target.value)}
-                    className="max-w-sm border-deep-purple-200 dark:border-deep-purple-500 bg-white dark:bg-deep-purple-800 text-gray-700 dark:text-gray-200 focus-visible:ring-deep-purple-500 dark:focus-visible:ring-deep-purple-400"
+                    className="max-w-sm flex-1 border-deep-purple-200 dark:border-deep-purple-500 bg-white dark:bg-deep-purple-800 text-gray-700 dark:text-gray-200 focus-visible:ring-deep-purple-500 dark:focus-visible:ring-deep-purple-400"
                 />
+                <div className="text-sm font-medium text-deep-purple-700 dark:text-deep-purple-200 flex-1 ml-2 text-right">
+                    {table.getFilteredRowModel().rows.length} dari {data.length} entri
+                </div>
             </div>
 
             <Table className={isMobile ? "text-sm" : ""}>
