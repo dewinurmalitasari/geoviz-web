@@ -4,7 +4,7 @@ import {
     type StatisticResponse,
     type StatisticPayload,
     type StatisticsResponse,
-    type StatisticsSummaryResponse
+    type StatisticsSummaryResponse, type StatisticProgressResponse
 } from "@/type.ts";
 
 export const statisticsService = {
@@ -18,5 +18,9 @@ export const statisticsService = {
 
     getStatisticsSummary: (userId: string): Promise<StatisticsSummaryResponse> => {
         return api.get<StatisticsSummaryResponse>(API_ENDPOINTS.statistics.summaryWithId(userId));
+    },
+
+    getStatisticsProgress: (userId: string): Promise<StatisticProgressResponse> => {
+        return api.get<StatisticProgressResponse>(API_ENDPOINTS.statistics.progressWithId(userId));
     },
 };

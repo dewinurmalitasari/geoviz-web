@@ -1,8 +1,8 @@
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {type ProgressData, ROUTES} from "@/type.ts";
+import {ROUTES, type StatisticsProgress} from "@/type.ts";
 
 interface ProgressProps {
-    progress: ProgressData;
+    progress: StatisticsProgress;
     _id: string;
 }
 
@@ -31,17 +31,17 @@ export default function Progress({progress, _id}: ProgressProps) {
                             Materi Pembelajaran
                         </span>
                         <span className="text-deep-purple-700 font-bold text-sm md:text-base">
-                              {progress.material.percent}
+                              {Math.round(progress.completionRateMaterials)}%
                         </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                             className="bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 h-2.5 rounded-full transition-all duration-500 ease-out"
-                            style={{width: progress.material.percent}}
+                            style={{width: progress.completionRateMaterials + '%'}}
                         ></div>
                     </div>
                     <div className="mt-2 text-xs md:text-sm text-gray-500">
-                        {progress.material.accessed} dari {progress.material.total} materi selesai
+                        {progress.totalMaterialsAccessed} dari {progress.totalMaterialsAvailable} materi selesai
                     </div>
                 </div>
 
@@ -52,17 +52,17 @@ export default function Progress({progress, _id}: ProgressProps) {
                             Latihan Soal
                         </span>
                         <span className="text-deep-purple-700 font-bold text-sm md:text-base">
-                            {progress.practice.percent}
+                            {Math.round(progress.completionRatePractices)}%
                         </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                             className="bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 h-2.5 rounded-full transition-all duration-500 ease-out"
-                            style={{width: progress.practice.percent}}
+                            style={{width: progress.completionRatePractices + '%'}}
                         ></div>
                     </div>
                     <div className="mt-2 text-xs md:text-sm text-gray-500">
-                        {progress.practice.completed} dari {progress.practice.total} latihan selesai
+                        {progress.totalPracticesCompleted} dari {progress.totalPracticesAvailable} latihan selesai
                     </div>
                 </div>
             </div>

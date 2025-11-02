@@ -42,20 +42,6 @@ export interface User {
     role: 'admin' | 'student' | 'teacher',
 }
 
-// Progress Types
-export interface ProgressData {
-    material: {
-        total: number;
-        accessed: number;
-        percent: string
-    };
-    practice: {
-        total: number;
-        completed: number;
-        percent: string
-    };
-}
-
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {
@@ -78,6 +64,7 @@ export const API_ENDPOINTS = {
         base: `${API_BASE_URL}/statistics`,
         withId: (_id: string) => `${API_BASE_URL}/statistics/user/${_id}`,
         summaryWithId: (_id: string) => `${API_BASE_URL}/statistics/summary/user/${_id}`,
+        progressWithId: (_id: string) => `${API_BASE_URL}/statistics/progress/user/${_id}`,
     }
 } as const;
 
@@ -165,17 +152,25 @@ interface PracticeCount {
     completed: number;
 }
 
-export interface SummaryStatistics {
-    totalVisits: number;
+export interface StatisticsProgress {
     totalMaterialsAvailable: number;
     totalMaterialsAccessed: number;
-    totalPracticesAvailable: number;
-    totalPracticeAttempts: number;
+    totalPracticesAvailable: number
     totalPracticesCompleted: number;
-    materialAccessCount: Record<string, number>;
-    practiceCount: Record<string, PracticeCount>;
     completionRateMaterials: number;
     completionRatePractices: number;
+}
+
+export interface StatisticProgressResponse {
+    message: string;
+    progress: StatisticsProgress;
+}
+
+export interface SummaryStatistics extends StatisticsProgress {
+    totalVisits: number;
+    totalPracticeAttempts: number;
+    materialAccessCount: Record<string, number>;
+    practiceCount: Record<string, PracticeCount>;
 }
 
 export interface StatisticsSummaryResponse {

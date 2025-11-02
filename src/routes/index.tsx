@@ -8,7 +8,7 @@ import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {LoadingPage} from "@/components/root/loading-page.tsx";
 import {statisticsService} from "@/services/statistics-service.ts";
-import {type ProgressData, ROUTES, type StatisticsSummaryResponse} from "@/type.ts";
+import {ROUTES, type StatisticsProgress} from "@/type.ts";
 import PageHeader from "@/components/root/page-header.tsx";
 
 export const Route = createFileRoute('/')({
@@ -18,24 +18,8 @@ export const Route = createFileRoute('/')({
         const auth = getAuthentication();
         if (auth?.user.role !== 'student') return {}
 
-        const statisticsSummary: StatisticsSummaryResponse = await statisticsService.getStatisticsSummary(auth.user._id);
-
-        const progress: ProgressData = {
-            material: {
-                total: statisticsSummary.summary.totalMaterialsAvailable,
-                accessed: Object.keys(statisticsSummary.summary.materialAccessCount).length,
-                percent: statisticsSummary.summary.totalMaterialsAvailable === 0
-                    ? '0%'
-                    : `${((Object.keys(statisticsSummary.summary.materialAccessCount).length / statisticsSummary.summary.totalMaterialsAvailable) * 100).toFixed(2)}%`
-            },
-            practice: {
-                total: statisticsSummary.summary.totalPracticesAvailable,
-                completed: statisticsSummary.summary.totalPracticesCompleted,
-                percent: statisticsSummary.summary.totalPracticesAvailable === 0
-                    ? '0%'
-                    : `${((statisticsSummary.summary.totalPracticesCompleted / statisticsSummary.summary.totalPracticesAvailable) * 100).toFixed(2)}%`
-            }
-        }
+        const progressResponse = await statisticsService.getStatisticsProgress(auth.user._id);
+        const progress = progressResponse.progress;
 
         return {progress};
     },
@@ -125,7 +109,7 @@ function App() {
                 />
 
                 {/* Practice Card */}
-                {auth?.user.role === "student" &&
+                {progress &&
                     <GeoCard
                         icon={<Pencil/>}
                         title="Latihan Soal"
@@ -147,8 +131,8 @@ function App() {
 
             </div>
 
-            {auth?.user.role === "student" && (
-                <Progress progress={progress as ProgressData} _id={auth.user._id}/>
+            {(progress && auth?.user.role === "student" ) && (
+                <Progress progress={progress as StatisticsProgress} _id={auth.user._id}/>
             )}
         </div>
     )
