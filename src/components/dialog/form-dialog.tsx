@@ -39,7 +39,7 @@ export default function FormDialog(
         <Plus className="text-deep-purple-600 text-2xl"/>;
 
     const content = (
-        <div className="space-y-4 px-4 md:px-0 py-4">
+        <div className="space-y-4 px-4 md:px-0">
             {children}
         </div>
     );

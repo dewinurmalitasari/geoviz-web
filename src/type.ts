@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
     },
     practices: {
         base: `${API_BASE_URL}/practices`,
-        withId: (_id: string, noContent: boolean = false) => `${API_BASE_URL}/practices/user/${_id}?noContent=${noContent}`,
+        withId: (_id: string, noContent: boolean = false) => `${API_BASE_URL}/practices/user/${_id}${noContent ? '?noContent=true' : ''}`,
     },
     statistics: {
         base: `${API_BASE_URL}/statistics`,
