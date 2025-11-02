@@ -48,12 +48,11 @@ export const API_ENDPOINTS = {
         login: `${API_BASE_URL}/login`,
     },
     users: {
-        base: `${API_BASE_URL}/users`,
-        withRole: (role: string) => `${API_BASE_URL}/users?role=${role}`,
+        base: (role?: string) => `${API_BASE_URL}/users${role ? `?role=${role}` : ''}`,
         withId: (_id: string) => `${API_BASE_URL}/users/${_id}`,
     },
     materials: {
-        base: `${API_BASE_URL}/materials`,
+        base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials?${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
         withId: (_id: string) => `${API_BASE_URL}/materials/${_id}`,
     },
     practices: {
@@ -216,8 +215,8 @@ export interface Material {
     _id: string,
     title: string,
     description: string,
-    formula: string,
-    example: string,
+    formula?: string,
+    example?: string,
     createdAt: string,
     updatedAt: string,
 }

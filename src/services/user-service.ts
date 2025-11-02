@@ -3,10 +3,7 @@ import {API_ENDPOINTS, type DeleteResponse, type UserPayload, type UserResponse,
 
 export const userService = {
     getUsers: (role?: 'student' | 'teacher'): Promise<UsersResponse> => {
-        const endpoint = role
-            ? API_ENDPOINTS.users.withRole(role)
-            : API_ENDPOINTS.users.base;
-        return api.get<UsersResponse>(endpoint);
+        return api.get<UsersResponse>(API_ENDPOINTS.users.base(role));
     },
 
     getUser: (userId: string): Promise<UserResponse> => {
@@ -14,7 +11,7 @@ export const userService = {
     },
 
     createUser: (userData: UserPayload): Promise<UserResponse> => {
-        return api.post<UserResponse>(API_ENDPOINTS.users.base, userData);
+        return api.post<UserResponse>(API_ENDPOINTS.users.base(), userData);
     },
 
     updateUser: (userId: string, userData: UserPayload): Promise<UserResponse> => {

@@ -1,27 +1,24 @@
 import { api } from "@/lib/api-client.ts";
-import {API_ENDPOINTS, type DeleteResponse, type UserPayload, type UserResponse, type UsersResponse} from "@/type.ts";
+import {API_ENDPOINTS, type DeleteResponse, type MaterialPayload, type MaterialResponse, type MaterialsResponse} from "@/type.ts";
 
-export const userService = { // TODO
-    getUsers: (role?: 'student' | 'teacher'): Promise<UsersResponse> => {
-        const endpoint = role
-            ? API_ENDPOINTS.users.withRole(role)
-            : API_ENDPOINTS.users.base;
-        return api.get<UsersResponse>(endpoint);
+export const materialService = {
+    getMaterials: (noFormulaAndExample: boolean = false): Promise<MaterialsResponse> => {
+        return api.get<MaterialsResponse>(API_ENDPOINTS.materials.base(noFormulaAndExample));
     },
 
-    getUser: (userId: string): Promise<UserResponse> => {
-        return api.get<UserResponse>(API_ENDPOINTS.users.withId(userId));
+    getMaterial: (materialId: string): Promise<MaterialResponse> => {
+        return api.get<MaterialResponse>(API_ENDPOINTS.materials.withId(materialId));
     },
 
-    createUser: (userData: UserPayload): Promise<UserResponse> => {
-        return api.post<UserResponse>(API_ENDPOINTS.users.base, userData);
+    createMaterial: (materialData: MaterialPayload): Promise<MaterialResponse> => {
+        return api.post<MaterialResponse>(API_ENDPOINTS.materials.base(), materialData);
     },
 
-    updateUser: (userId: string, userData: UserPayload): Promise<UserResponse> => {
-        return api.put<UserResponse>(API_ENDPOINTS.users.withId(userId), userData);
+    updateMaterial: (materialId: string, materialData: MaterialPayload): Promise<MaterialResponse> => {
+        return api.put<MaterialResponse>(API_ENDPOINTS.materials.withId(materialId), materialData);
     },
 
-    deleteUser: (userId: string): Promise<DeleteResponse> => {
-        return api.delete<DeleteResponse>(API_ENDPOINTS.users.withId(userId));
+    deleteMaterial: (materialId: string): Promise<DeleteResponse> => {
+        return api.delete<DeleteResponse>(API_ENDPOINTS.materials.withId(materialId));
     },
 };
