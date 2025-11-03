@@ -5,10 +5,10 @@ import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
 import {toast} from "sonner";
 import {SquareKanban} from "lucide-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {
     type DilatationValue,
-    type Point,
+    type Point, type Point3D,
     type ReflectionValue,
     type RotationValue,
     type TranslationValue,
@@ -17,6 +17,11 @@ import {
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
 import {useVisualizationTabs} from "@/components/visualization/visualization-tabs.tsx";
+import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
+import Plot from "react-plotly.js";
+import {calculateRange} from "@/hooks/use-calculate-range.ts";
+import {PRESET_POINTS} from "@/lib/shape-preset.ts";
+import {get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -52,24 +57,49 @@ export const Route = createFileRoute('/visualizations/$visualizationType')({
 
 function RouteComponent() {
     const {visualizationType} = Route.useParams()
-    const [shapePoints, setShapePoints] = useState<Point[]>([])
+    const [shapePoints, setShapePoints] = useState<Point[]>(() => {
+        const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "pyramid" : "triangle";
+        return PRESET_POINTS[defaultKey] || [];
+    })
     const [translationValue, setTranslationValue] = useState<TranslationValue>({
         translateX: 2,
         translateY: 2,
         translateZ: 2
     })
     const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 2,})
-    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'x'})
+    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'radio_x_axis'})
     const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({
         axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
         k: 0
     })
 
+    const [plotData, setPlotData] = useState<any>()
+    const [plotLayout, setPlotLayout] = useState<any>(null)
+
     const handlePlotClick = (points: Point[]) => {
-        toast.success(`Plotting ${points.length} titik...`)
-        console.log("Plotting points:", points)
-        // TODO:Here you would typically send the points to your visualization engine
+        if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
+            // For 2D visualization
+            const {xRange, yRange} = calculateRange(points)
+            const newPlotData = get2DShapePlotData(points)
+            const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
+
+            setPlotData(newPlotData)
+            setPlotLayout(newPlotLayout)
+        } else {
+            // For 3D visualization
+            const {xRange, yRange, zRange} = calculateRange(points as Point3D[])
+            const newPlotData = get3DShapePlotData(points as Point3D[])
+            const newPlotLayout = get3DShapePlotLayout(xRange, yRange, zRange!)
+
+            setPlotData(newPlotData)
+            setPlotLayout(newPlotLayout)
+        }
     }
+
+    // Initialize plot on component mount
+    useEffect(() => {
+        handlePlotClick(shapePoints)
+    }, []) // Empty dependency array to run only on mount
 
     const handleStartVisualization = (transformationType: string) => {
         // Dilatation divide by zero check
@@ -115,18 +145,21 @@ function RouteComponent() {
                     <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
 
                         <div className="flex flex-col flex-2 space-y-4">
-                            {/* Visualization Canvas Area TODO: change and make this have a fixed height*/}
                             <div
-                                className="flex-3 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 flex items-center justify-center">
-                                <div className="text-center text-gray-500 dark:text-gray-400">
-                                    <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
-                                    <div className="text-sm">
-                                        {shapePoints.length > 0
-                                            ? `${shapePoints.length} titik siap untuk divisualisasikan`
-                                            : "Tambahkan titik untuk memulai visualisasi"
-                                        }
+                                className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-4 flex items-center justify-center">
+                                {shapePoints.length > 0 ? (
+                                    <Plot
+                                        data={plotData}
+                                        layout={plotLayout}
+                                        // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
+                                        className="h-full md:h-[80vh] w-full"
+                                    />
+                                ) : (
+                                    <div className="text-center text-gray-500 dark:text-gray-400">
+                                        <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
+                                        <div className="text-sm">Tambahkan titik untuk memulai visualisasi</div>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
                             {/*Transformation Input and Play*/}

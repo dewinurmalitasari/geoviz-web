@@ -68,7 +68,7 @@ export interface DilatationValue {
 
 export interface RotationValue {
     angle: number; // in degrees
-    axis?: 'x' | 'y' | 'z'; // used for 3D rotation
+    axis?: 'radio_x_axis' | 'radio_y_axis' | 'radio_z_axis'; // used for 3D rotation
 }
 
 export interface ReflectionValue {

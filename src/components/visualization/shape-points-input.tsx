@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
@@ -36,12 +36,6 @@ export default function ShapePointsInput(
         value,
         label
     }));
-
-    // Initialize parent state
-    useEffect(() => {
-        const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
-        onPointsChange?.(PRESET_POINTS[defaultKey] || []);
-    }, [onPointsChange, dimension]);
 
     const updatePoints = (newPoints: Point[]) => {
         setPoints(newPoints);
