@@ -53,7 +53,7 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title={material.title} description="Detail materi transformasi geometri" colorScheme="green"/>
+            <PageHeader title={material.title} description="Detail materi transformasi geometri" colorScheme="yellow"/>
 
             <GeoCard
                 icon={<BookOpen/>}

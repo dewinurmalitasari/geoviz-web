@@ -8,7 +8,7 @@ interface PageHeaderProps {
     description?: string;
     noBackButton?: boolean;
     additionalButtons?: React.ReactNode;
-    colorScheme?: 'purple' | 'blue' | 'green' | 'red' | 'orange' | 'teal';
+    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
 }
 
 const colorMap = {
@@ -28,22 +28,6 @@ const colorMap = {
         separatorFrom: "from-blue-400",
         separatorTo: "to-blue-600"
     },
-    green: {
-        from: "from-green-400",
-        to: "to-green-600",
-        textFrom: "from-green-600",
-        textTo: "to-green-800",
-        separatorFrom: "from-green-400",
-        separatorTo: "to-green-600"
-    },
-    red: {
-        from: "from-red-400",
-        to: "to-red-600",
-        textFrom: "from-red-600",
-        textTo: "to-red-800",
-        separatorFrom: "from-red-400",
-        separatorTo: "to-red-600"
-    },
     orange: {
         from: "from-orange-400",
         to: "to-orange-600",
@@ -59,6 +43,22 @@ const colorMap = {
         textTo: "to-teal-800",
         separatorFrom: "from-teal-400",
         separatorTo: "to-teal-600"
+    },
+    yellow: {
+        from: "from-yellow-400",
+        to: "to-yellow-600",
+        textFrom: "from-yellow-600",
+        textTo: "to-yellow-800",
+        separatorFrom: "from-yellow-400",
+        separatorTo: "to-yellow-600"
+    },
+    maroon: {
+        from: "from-rose-600",
+        to: "to-rose-800",
+        textFrom: "from-rose-700",
+        textTo: "to-rose-900",
+        separatorFrom: "from-rose-600",
+        separatorTo: "to-rose-800"
     },
 };
 

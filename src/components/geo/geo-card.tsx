@@ -9,7 +9,7 @@ interface GeoCardProps {
     titleButton?: ReactNode;
     className?: string;
     'data-aos-delay'?: number;
-    colorScheme?: 'purple' | 'blue' | 'green' | 'red' | 'orange' | 'teal';
+    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
 }
 
 const colorMap = {
@@ -25,18 +25,6 @@ const colorMap = {
         title: "text-blue-800",
         border: "border-blue-100"
     },
-    green: {
-        topLine: "from-green-400 to-green-600",
-        iconBg: "from-green-100 to-green-200",
-        title: "text-green-800",
-        border: "border-green-100"
-    },
-    red: {
-        topLine: "from-red-400 to-red-600",
-        iconBg: "from-red-100 to-red-200",
-        title: "text-red-800",
-        border: "border-red-100"
-    },
     orange: {
         topLine: "from-orange-400 to-orange-600",
         iconBg: "from-orange-100 to-orange-200",
@@ -48,6 +36,18 @@ const colorMap = {
         iconBg: "from-teal-100 to-teal-200",
         title: "text-teal-800",
         border: "border-teal-100"
+    },
+    yellow: {
+        topLine: "from-yellow-400 to-yellow-600",
+        iconBg: "from-yellow-100 to-yellow-200",
+        title: "text-yellow-800",
+        border: "border-yellow-100"
+    },
+    maroon: {
+        topLine: "from-rose-600 to-rose-800",
+        iconBg: "from-rose-100 to-rose-200",
+        title: "text-rose-800",
+        border: "border-rose-100"
     },
 };
 
