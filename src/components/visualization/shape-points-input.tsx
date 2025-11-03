@@ -28,6 +28,7 @@ export default function ShapePointsInput(
     }: ShapePointsInputProps) {
     const [points, setPoints] = useState<Point[]>(() => {
         const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
+        if (onPointsChange) onPointsChange(PRESET_POINTS[defaultKey] || []); // To initialize parent state
         return PRESET_POINTS[defaultKey] || [];
     });
     const [selectedPreset, setSelectedPreset] = useState<string>("custom");

@@ -5,10 +5,11 @@ import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
 import {toast} from "sonner";
-import {Play, SquareKanban} from "lucide-react";
+import {Play, Settings, SquareKanban, User} from "lucide-react";
 import {useState} from "react";
 import type {Point} from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
+import GeoTabs from "@/components/geo/geo-tabs.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -51,6 +52,53 @@ function RouteComponent() {
     const {visualizationType} = Route.useParams()
     const [shapePoints, setShapePoints] = useState<Point[]>([])
 
+    const tabs = [
+        {
+            value: "profile",
+            label: "Profile",
+            icon: <User size={16}/>,
+            content: (
+                <div className="p-4  rounded-lg border border-deep-purple-200">
+                    <h3 className="text-lg font-semibold">Profile Information</h3>
+                    <p>Manage your profile settings</p>
+                </div>
+            )
+        },
+        {
+            value: "settings",
+            label: "Settings",
+            icon: <Settings size={16}/>,
+            content: (
+                <div className="p-4  rounded-lg border border-deep-purple-200">
+                    <h3 className="text-lg font-semibold">Account Settings</h3>
+                    <p>Configure your preferences</p>
+                </div>
+            )
+        },
+        {
+            value: "settings1",
+            label: "Setting1",
+            icon: <Settings size={16}/>,
+            content: (
+                <div className="p-4  rounded-lg border border-deep-purple-200">
+                    <h3 className="text-lg font-semibold">Account Settings</h3>
+                    <p>Configure your preferences</p>
+                </div>
+            )
+        },
+        {
+            value: "settings2",
+            label: "Settings2",
+            icon: <Settings size={16}/>,
+            content: (
+                <div className="p-4  rounded-lg border border-deep-purple-200">
+                    <h3 className="text-lg font-semibold">Account Settings</h3>
+                    <p>Configure your preferences</p>
+                </div>
+            )
+        }
+    ];
+
     const handlePlotClick = (points: Point[]) => {
         if (points.length < 3) {
             toast.error("Minimal 3 titik diperlukan untuk membuat bangun")
@@ -84,23 +132,24 @@ function RouteComponent() {
             <GeoCard
                 content={
                     <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
-                        {/* Visualization Canvas Area TODO: change and make this have a fixed height*/}
-                        <div
-                            className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 flex-1 min-h-[400px] flex items-center justify-center">
-                            <div className="text-center text-gray-500 dark:text-gray-400">
-                                <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
-                                <div className="text-sm">
-                                    {shapePoints.length > 0
-                                        ? `${shapePoints.length} titik siap untuk divisualisasikan`
-                                        : "Tambahkan titik untuk memulai visualisasi"
-                                    }
+
+                        <div className="flex flex-col flex-2 space-y-4">
+                            {/* Visualization Canvas Area TODO: change and make this have a fixed height*/}
+                            <div
+                                className="flex-3 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 flex items-center justify-center">
+                                <div className="text-center text-gray-500 dark:text-gray-400">
+                                    <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
+                                    <div className="text-sm">
+                                        {shapePoints.length > 0
+                                            ? `${shapePoints.length} titik siap untuk divisualisasikan`
+                                            : "Tambahkan titik untuk memulai visualisasi"
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Controls Panel */}
-                        <div className="flex flex-col space-y-6 flex-1">
-                            <div className="flex flex-col space-y-2">
+                            {/*Transformation Input*/}
+                            <div className="flex flex-col space-y-6 flex-1">
                                 <GeoButton
                                     variant="primary"
                                     onClick={handleStartVisualization}
@@ -109,14 +158,26 @@ function RouteComponent() {
                                     <Play/> Mulai Visualisasi
                                 </GeoButton>
 
-                                <GeoButton
-                                    variant="secondary"
-                                    onClick={() => handlePlotClick(shapePoints)}
-                                    className="h-fit"
-                                >
-                                    <SquareKanban/> Plot Titik
-                                </GeoButton>
+                                <GeoTabs
+                                    defaultValue="profile"
+                                    tabs={tabs}
+                                    colorScheme="purple"
+                                    variant="pills"
+                                    fullWidth={true}
+                                />
                             </div>
+                        </div>
+
+
+                        {/* Plot Shape Input */}
+                        <div className="flex flex-col space-y-4 flex-1">
+                            <GeoButton
+                                variant="secondary"
+                                onClick={() => handlePlotClick(shapePoints)}
+                                className="h-fit"
+                            >
+                                <SquareKanban/> Plot Titik
+                            </GeoButton>
 
                             {/* Shape Points Input */}
                             <ShapePointsInput
