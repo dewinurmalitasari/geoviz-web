@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
@@ -27,7 +27,6 @@ export default function ShapePointsInput(
     }: ShapePointsInputProps) {
     const [points, setPoints] = useState<Point[]>(() => {
         const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
-        if (onPointsChange) onPointsChange(PRESET_POINTS[defaultKey] || []); // To initialize parent state
         return PRESET_POINTS[defaultKey] || [];
     });
     const [selectedPreset, setSelectedPreset] = useState<string>("custom");
@@ -37,6 +36,12 @@ export default function ShapePointsInput(
         value,
         label
     }));
+
+    // Initialize parent state
+    useEffect(() => {
+        const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
+        onPointsChange?.(PRESET_POINTS[defaultKey] || []);
+    }, [onPointsChange, dimension]);
 
     const updatePoints = (newPoints: Point[]) => {
         setPoints(newPoints);
@@ -80,7 +85,7 @@ export default function ShapePointsInput(
         // Allow empty, or digits with optional single decimal point and sign
         if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
             const newPoints = points.map((point, i) =>
-                i === index ? { ...point, [field]: value } : point
+                i === index ? {...point, [field]: value} : point
             );
 
             setSelectedPreset("custom");
