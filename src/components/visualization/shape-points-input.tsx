@@ -5,123 +5,12 @@ import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
 import {Minus, Plus, Shapes} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
-
-
-// TODO: Move definitions to a separate types file
-export interface Point2D {
-    x: number;
-    y: number;
-}
-
-export interface Point3D extends Point2D {
-    z: number;
-}
-
-export type Point = Point2D | Point3D;
-
-// 2D Shape Presets
-const PRESETS_2D = {
-    "custom": "Kustom",
-    "triangle": "Segitiga",
-    "square": "Persegi",
-    "rectangle": "Persegi Panjang",
-    "pentagon": "Segilima",
-    "hexagon": "Segienam",
-    "arrow": "Panah"
-} as const;
-
-// 3D Shape Presets
-const PRESETS_3D = {
-    "custom": "Kustom",
-    "cube": "Kubus",
-    "pyramid": "Piramida",
-    "prism": "Prisma Segitiga",
-    "plane": "Bidang 3D"
-} as const;
-
-// Preset point values
-const PRESET_POINTS: Record<string, Point[]> = {
-    // 2D Presets
-    "triangle": [
-        {x: 0, y: 0},
-        {x: 50, y: 0},
-        {x: 25, y: 50}
-    ],
-    "square": [
-        {x: 0, y: 0},
-        {x: 50, y: 0},
-        {x: 50, y: 50},
-        {x: 0, y: 50}
-    ],
-    "rectangle": [
-        {x: 0, y: 0},
-        {x: 80, y: 0},
-        {x: 80, y: 40},
-        {x: 0, y: 40}
-    ],
-    "pentagon": [
-        {x: 25, y: 0},
-        {x: 50, y: 20},
-        {x: 40, y: 50},
-        {x: 10, y: 50},
-        {x: 0, y: 20}
-    ],
-    "hexagon": [
-        {x: 20, y: 0},
-        {x: 40, y: 0},
-        {x: 50, y: 25},
-        {x: 40, y: 50},
-        {x: 20, y: 50},
-        {x: 10, y: 25}
-    ],
-    "arrow": [
-        {x: 0, y: 25},
-        {x: 30, y: 25},
-        {x: 30, y: 10},
-        {x: 50, y: 35},
-        {x: 30, y: 60},
-        {x: 30, y: 45},
-        {x: 0, y: 45}
-    ],
-
-    // 3D Presets
-    "cube": [
-        {x: 0, y: 0, z: 0},
-        {x: 50, y: 0, z: 0},
-        {x: 50, y: 50, z: 0},
-        {x: 0, y: 50, z: 0},
-        {x: 0, y: 0, z: 50},
-        {x: 50, y: 0, z: 50},
-        {x: 50, y: 50, z: 50},
-        {x: 0, y: 50, z: 50}
-    ],
-    "pyramid": [
-        {x: 25, y: 0, z: 25},  // Apex
-        {x: 0, y: 50, z: 0},   // Base corner 1
-        {x: 50, y: 50, z: 0},  // Base corner 2
-        {x: 50, y: 50, z: 50}, // Base corner 3
-        {x: 0, y: 50, z: 50}   // Base corner 4
-    ],
-    "prism": [
-        {x: 0, y: 0, z: 0},
-        {x: 50, y: 0, z: 0},
-        {x: 25, y: 0, z: 50},
-        {x: 0, y: 50, z: 0},
-        {x: 50, y: 50, z: 0},
-        {x: 25, y: 50, z: 50}
-    ],
-    "plane": [
-        {x: 0, y: 0, z: 0},
-        {x: 50, y: 0, z: 0},
-        {x: 50, y: 0, z: 50},
-        {x: 0, y: 0, z: 50}
-    ]
-};
+import type {Point, Point3D} from "@/type.ts";
+import {PRESET_POINTS, PRESETS_2D, PRESETS_3D} from "@/lib/shape-preset.ts";
 
 interface ShapePointsInputProps {
     onPointsChange?: (points: Point[]) => void;
     dimension?: "2d" | "3d";
-    initialPoints?: Point[];
     maxPoints?: number;
     minPoints?: number;
     className?: string;
@@ -132,13 +21,15 @@ export default function ShapePointsInput(
     {
         onPointsChange,
         dimension = "2d",
-        initialPoints = [{x: 0, y: 0}],
         maxPoints = 10,
         minPoints = 1,
         className,
         colorScheme = "purple"
     }: ShapePointsInputProps) {
-    const [points, setPoints] = useState<Point[]>(initialPoints);
+    const [points, setPoints] = useState<Point[]>(() => {
+        const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
+        return PRESET_POINTS[defaultKey] || [];
+    });
     const [selectedPreset, setSelectedPreset] = useState<string>("custom");
 
     const presets = dimension === "3d" ? PRESETS_3D : PRESETS_2D;
@@ -185,7 +76,7 @@ export default function ShapePointsInput(
         }
     };
 
-    const updatePoint = (index: number, field: keyof Point, value: string) => {
+    const updatePoint = (index: number, field: keyof Point | keyof Point3D, value: string) => {
         const numValue = parseFloat(value) || 0;
         const newPoints = points.map((point, i) =>
             i === index ? {...point, [field]: numValue} : point

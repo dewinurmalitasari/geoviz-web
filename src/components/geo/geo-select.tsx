@@ -107,11 +107,6 @@ export default function GeoSelect(
                     className="bg-white border-2 rounded-xl shadow-lg py-2"
                     position="popper"
                     style={{maxHeight}}
-                    // These props ensure proper viewport-aware positioning // TODO
-                    positionPopper={{
-                        position: "popper",
-                        sameWidth: true,
-                    }}
                 >
                     <div
                         className="overflow-y-auto overflow-x-hidden"

@@ -44,6 +44,18 @@ export interface User {
     role: 'admin' | 'student' | 'teacher',
 }
 
+// Visualization Types
+export interface Point2D {
+    x: number;
+    y: number;
+}
+
+export interface Point3D extends Point2D {
+    z: number;
+}
+
+export type Point = Point2D | Point3D;
+
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {

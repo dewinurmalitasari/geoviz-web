@@ -39,7 +39,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.visualizations.shape2d}>
+                        <GeoButton variant="primary" to={ROUTES.visualizations.shape3d}>
                             <ArrowRight className="w-4 h-4"/> Visualisasi Bangun 3D
                         </GeoButton>
                     }
@@ -54,7 +54,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.visualizations.shape2d}>
+                        <GeoButton variant="primary" to={ROUTES.visualizations.equation}>
                             <ArrowRight className="w-4 h-4"/> Visualisasi Persamaan
                         </GeoButton>
                     }

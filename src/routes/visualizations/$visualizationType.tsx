@@ -3,13 +3,48 @@ import {createFileRoute} from '@tanstack/react-router'
 import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import ShapePointsInput, {type Point} from "@/components/visualization/shape-points-input.tsx";
+import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
 import {toast} from "sonner";
 import {Play, SquareKanban} from "lucide-react";
 import {useState} from "react";
+import type {Point} from "@/type.ts";
+import {ErrorPage} from "@/components/root/error-page.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
+    beforeLoad: ({params}) => {
+        // If not in list of available visualizations, return not found
+        const availableVisualizations = [
+            'shape2d',
+            'shape3d',
+            'equation',
+        ];
+
+        if (!availableVisualizations.includes(params.visualizationType as string)) {
+            throw new Error('Not Found');
+        }
+    },
     component: RouteComponent,
+    errorComponent: ({error}) => {
+        if (error.message === 'Not Found') {
+            return (
+                <ErrorPage
+                    status={404}
+                    statusText="Not Found"
+                    title="Halaman Tidak ditemukan"
+                    message="Halaman yang Anda cari tidak ditemukan."
+                />
+            )
+        }
+
+        return (
+            <ErrorPage
+                status={500}
+                statusText="Internal Server Error"
+                title="Terjadi Kesalahan memuat data pengguna"
+                message={error.message || "Gagal memuat data pengguna."}
+            />
+        );
+    },
 })
 
 function RouteComponent() {
@@ -49,7 +84,7 @@ function RouteComponent() {
             <GeoCard
                 content={
                     <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
-                        {/* Visualization Canvas Area TODO: */}
+                        {/* Visualization Canvas Area TODO: change and make this have a fixed height*/}
                         <div
                             className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 flex-1 min-h-[400px] flex items-center justify-center">
                             <div className="text-center text-gray-500 dark:text-gray-400">
@@ -86,12 +121,7 @@ function RouteComponent() {
                             {/* Shape Points Input */}
                             <ShapePointsInput
                                 onPointsChange={(points) => setShapePoints(points)}
-                                dimension="2d"
-                                initialPoints={[
-                                    {x: 0, y: 0},
-                                    {x: 50, y: 0},
-                                    {x: 25, y: 50}
-                                ]}
+                                dimension={visualizationType === 'shape3d' ? '3d' : '2d'}
                                 maxPoints={8}
                                 minPoints={3}
                                 className="p-4 rounded-xl border border-deep-purple-200"
