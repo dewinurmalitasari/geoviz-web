@@ -150,7 +150,7 @@ function RouteComponent() {
 
             <GeoCard
                 content={
-                    <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
+                    <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
 
                         <div className="flex flex-col flex-2 space-y-4">
                             {/* Visualization Canvas Area TODO: change and make this have a fixed height*/}

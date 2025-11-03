@@ -1,4 +1,3 @@
-// shape-points-input.tsx
 import {useState} from "react";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
@@ -78,12 +77,28 @@ export default function ShapePointsInput(
     };
 
     const updatePoint = (index: number, field: keyof Point | keyof Point3D, value: string) => {
-        const numValue = parseFloat(value) || 0;
-        const newPoints = points.map((point, i) =>
-            i === index ? {...point, [field]: numValue} : point
-        );
-        setSelectedPreset("custom"); // Switch to custom when user modifies
-        updatePoints(newPoints);
+        // Allow empty, or digits with optional single decimal point and sign
+        if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
+            const newPoints = points.map((point, i) =>
+                i === index ? { ...point, [field]: value } : point
+            );
+
+            setSelectedPreset("custom");
+            setPoints(newPoints);
+
+            // Convert to numbers for parent callback, preventing undefined
+            const convertedPoints = newPoints.map(p => ({
+                x: typeof p.x === 'string' ? (p.x === '' ? 0 : parseFloat(p.x) || 0) : p.x,
+                y: typeof p.y === 'string' ? (p.y === '' ? 0 : parseFloat(p.y) || 0) : p.y,
+                ...(dimension === "3d" ? {
+                    z: typeof (p as any).z === 'string'
+                        ? ((p as any).z === '' ? 0 : parseFloat((p as any).z) || 0)
+                        : (p as any).z || 0
+                } : {})
+            }));
+
+            onPointsChange?.(convertedPoints);
+        }
     };
 
     const getPointLabel = (index: number) => {
@@ -115,14 +130,14 @@ export default function ShapePointsInput(
                         key={index}
                         className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
                     >
-                        <span className="font-semibold text-gray-700 dark:text-gray-300 min-w-6">
+                        <span className="font-semibold text-gray-700 dark:text-gray-300">
                             {getPointLabel(index)}
                         </span>
 
                         <div className="flex items-center gap-2 flex-1">
                             <GeoInput
                                 id={`point-${index}-x`}
-                                value={point.x.toString()}
+                                value={point.x.toString() === "" ? "0" : point.x.toString()}
                                 onChange={(e) => updatePoint(index, "x", e.target.value)}
                                 icon={<span className="text-xs font-bold">X</span>}
                                 className="flex-1"
@@ -130,7 +145,7 @@ export default function ShapePointsInput(
 
                             <GeoInput
                                 id={`point-${index}-y`}
-                                value={point.y.toString()}
+                                value={point.y.toString() === "" ? "0" : point.y.toString()}
                                 onChange={(e) => updatePoint(index, "y", e.target.value)}
                                 icon={<span className="text-xs font-bold">Y</span>}
                                 className="flex-1"
@@ -139,7 +154,7 @@ export default function ShapePointsInput(
                             {dimension === "3d" && (
                                 <GeoInput
                                     id={`point-${index}-z`}
-                                    value={(point as Point3D).z.toString()}
+                                    value={(point as Point3D).z.toString() === "" ? "0" : (point as Point3D).z.toString()}
                                     onChange={(e) => updatePoint(index, "z", e.target.value)}
                                     icon={<span className="text-xs font-bold">Z</span>}
                                     className="flex-1"
