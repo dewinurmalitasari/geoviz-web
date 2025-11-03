@@ -363,7 +363,7 @@ function RouteComponent() {
                                 onPointsChange={(points) => setShapePoints(points)}
                                 dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
                                 maxPoints={8}
-                                minPoints={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 4 : 3}
+                                minPoints={3}
                                 className="p-4 rounded-xl border border-deep-purple-200"
                             />
                         </div>
