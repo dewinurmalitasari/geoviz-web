@@ -79,6 +79,7 @@ function RouteComponent() {
             <PageHeader
                 title={isStudent ? 'Histori Latihan' : `Detail ${userResponse ? userResponse.user.username : 'Siswa'}`}
                 description={isStudent ? 'Informasi histori latihan soal.' : 'Informasi lengkap mengenai siswa.'}
+                colorScheme="teal"
             />
 
             <div className="flex flex-col flex-grow space-y-4">

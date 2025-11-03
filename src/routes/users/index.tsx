@@ -83,7 +83,7 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title="Manajemen Akun" description="Kelola akun pada platform GeoViz."/>
+            <PageHeader title="Manajemen Akun" description="Kelola akun pada platform GeoViz." colorScheme="teal"/>
 
             <div className="flex flex-col flex-grow xl:flex-row md:space-x-4 space-y-4 xl:space-y-0">
                 <GeoCard

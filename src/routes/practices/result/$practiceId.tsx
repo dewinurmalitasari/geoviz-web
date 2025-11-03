@@ -9,6 +9,6 @@ function RouteComponent() {
     const {practiceId} = Route.useParams()
 
     return <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-        <PageHeader title={`Hasil Latihan ${practiceId}`} description="Lihat hasil latihan soal yang telah dikerjakan"/>
+        <PageHeader title={`Hasil Latihan ${practiceId}`} description="Lihat hasil latihan soal yang telah dikerjakan" colorScheme="blue"/>
     </div>
 }

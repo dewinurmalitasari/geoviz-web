@@ -10,6 +10,7 @@ declare global {
         toCapitalized(): string;
         translateRole(): string;
         translateType(): string;
+        translateVisualizationType(): string;
     }
 }
 
@@ -38,6 +39,19 @@ String.prototype.translateType = function () {
             return 'Latihan Dimulai';
         case 'practice_completed':
             return 'Latihan Selesai';
+        default:
+            return this.toCapitalized();
+    }
+}
+
+String.prototype.translateVisualizationType = function () {
+    switch (this.toLowerCase()) {
+        case 'shape2d':
+            return 'Bangun 2D';
+        case 'shape3d':
+            return 'Bangun 3D';
+        case 'equation':
+            return 'Persamaan';
         default:
             return this.toCapitalized();
     }

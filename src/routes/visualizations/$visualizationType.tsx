@@ -12,7 +12,9 @@ function RouteComponent() {
     return <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
         <PageHeader
             title={`Visualisasi ${visualizationType.translateVisualizationType()}`}
-            description={`Visualisasi transformasi geometri pada ${visualizationType.translateVisualizationType().toLowerCase()}.`}/>
+            description={`Visualisasi transformasi geometri pada ${visualizationType.translateVisualizationType().toLowerCase()}.`}
+            colorScheme="orange"
+        />
 
         <div>
 

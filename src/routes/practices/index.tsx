@@ -24,7 +24,7 @@ export const Route = createFileRoute('/practices/')({
 function RouteComponent() {
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title="Latihan" description="Latihan soal untuk menguji pemahamanmu"/>
+            <PageHeader title="Latihan" description="Latihan soal untuk menguji pemahamanmu" colorScheme="blue"/>
         </div>
     );
 

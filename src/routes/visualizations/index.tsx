@@ -12,7 +12,7 @@ export const Route = createFileRoute('/visualizations/')({
 function RouteComponent() {
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title="Visualization" description="Visualisasi transformasi geometri"/>
+            <PageHeader title="Visualization" description="Visualisasi transformasi geometri" colorScheme="orange"/>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <GeoCard
