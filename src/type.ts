@@ -21,9 +21,7 @@ export const ROUTES = {
     },
     visualizations: {
         base: '/visualizations',
-        shape2d: '/visualizations/shape2d',
-        shape3d: '/visualizations/shape3d',
-        equation: '/visualizations/equation',
+        visualizationType: (visualizationType: string) => `/visualizations/${visualizationType}`,
     }
 } as const;
 
@@ -45,6 +43,19 @@ export interface User {
 }
 
 // Visualization Types
+export const VISUALIZATION_TYPES = {
+    SHAPE_2D: 'shape2d',
+    SHAPE_3D: 'shape3d',
+    EQUATION: 'equation',
+} as const;
+
+export const TRANSFORMATION_TYPES = {
+    TRANSLATION: 'translation',
+    DILATATION: 'dilatation',
+    ROTATION: 'rotation',
+    REFLECTION: 'reflection',
+} as const;
+
 export interface Point2D {
     x: number;
     y: number;

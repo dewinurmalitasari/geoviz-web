@@ -11,6 +11,7 @@ declare global {
         translateRole(): string;
         translateType(): string;
         translateVisualizationType(): string;
+        translateTransformationType(): string;
     }
 }
 
@@ -52,6 +53,21 @@ String.prototype.translateVisualizationType = function () {
             return 'Bangun 3D';
         case 'equation':
             return 'Persamaan';
+        default:
+            return this.toCapitalized();
+    }
+}
+
+String.prototype.translateTransformationType = function () {
+    switch (this.toLowerCase()) {
+        case 'translation':
+            return 'Translasi';
+        case 'dilatation':
+            return 'Dilatasi';
+        case 'rotation':
+            return 'Rotasi';
+        case 'reflection':
+            return 'Refleksi';
         default:
             return this.toCapitalized();
     }

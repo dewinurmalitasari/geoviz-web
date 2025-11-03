@@ -1,26 +1,20 @@
-// $visualizationType.tsx (updated)
 import {createFileRoute} from '@tanstack/react-router'
 import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
 import {toast} from "sonner";
-import {Play, Settings, SquareKanban, User} from "lucide-react";
-import {useState} from "react";
-import type {Point} from "@/type.ts";
+import {FlipHorizontal, Move, Play, RotateCw, SquareKanban, ZoomIn} from "lucide-react";
+import {useMemo, useState} from "react";
+import {type Point, TRANSFORMATION_TYPES, VISUALIZATION_TYPES} from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
-        // If not in list of available visualizations, return not found
-        const availableVisualizations = [
-            'shape2d',
-            'shape3d',
-            'equation',
-        ];
-
-        if (!availableVisualizations.includes(params.visualizationType as string)) {
+        // Check if visualizationType is valid by comparing with VISUALIZATION_TYPES
+        const validTypes = Object.values(VISUALIZATION_TYPES) as string[];
+        if (!validTypes.includes(params.visualizationType)) {
             throw new Error('Not Found');
         }
     },
@@ -52,53 +46,6 @@ function RouteComponent() {
     const {visualizationType} = Route.useParams()
     const [shapePoints, setShapePoints] = useState<Point[]>([])
 
-    const tabs = [
-        {
-            value: "profile",
-            label: "Profile",
-            icon: <User size={16}/>,
-            content: (
-                <div className="p-4  rounded-lg border border-deep-purple-200">
-                    <h3 className="text-lg font-semibold">Profile Information</h3>
-                    <p>Manage your profile settings</p>
-                </div>
-            )
-        },
-        {
-            value: "settings",
-            label: "Settings",
-            icon: <Settings size={16}/>,
-            content: (
-                <div className="p-4  rounded-lg border border-deep-purple-200">
-                    <h3 className="text-lg font-semibold">Account Settings</h3>
-                    <p>Configure your preferences</p>
-                </div>
-            )
-        },
-        {
-            value: "settings1",
-            label: "Setting1",
-            icon: <Settings size={16}/>,
-            content: (
-                <div className="p-4  rounded-lg border border-deep-purple-200">
-                    <h3 className="text-lg font-semibold">Account Settings</h3>
-                    <p>Configure your preferences</p>
-                </div>
-            )
-        },
-        {
-            value: "settings2",
-            label: "Settings2",
-            icon: <Settings size={16}/>,
-            content: (
-                <div className="p-4  rounded-lg border border-deep-purple-200">
-                    <h3 className="text-lg font-semibold">Account Settings</h3>
-                    <p>Configure your preferences</p>
-                </div>
-            )
-        }
-    ];
-
     const handlePlotClick = (points: Point[]) => {
         if (points.length < 3) {
             toast.error("Minimal 3 titik diperlukan untuk membuat bangun")
@@ -120,6 +67,78 @@ function RouteComponent() {
         console.log("Starting visualization with points:", shapePoints)
         // Start your visualization logic here
     }
+
+    const tabs = useMemo(() => [
+        {
+            value: TRANSFORMATION_TYPES.TRANSLATION,
+            label: TRANSFORMATION_TYPES.TRANSLATION.translateTransformationType(),
+            icon: <Move/>,
+            content: (
+                <div className="p-4 rounded-lg border border-deep-purple-200">
+                    TODO: {TRANSFORMATION_TYPES.TRANSLATION} Content
+                    <GeoButton
+                        variant="primary"
+                        onClick={handleStartVisualization}
+                        className="h-fit"
+                    >
+                        <Play/> Mulai Visualisasi
+                    </GeoButton>
+                </div>
+            )
+        },
+        {
+            value: TRANSFORMATION_TYPES.DILATATION,
+            label: TRANSFORMATION_TYPES.DILATATION.translateTransformationType(),
+            icon: <ZoomIn/>,
+            content: (
+                <div className="p-4 rounded-lg border border-deep-purple-200">
+                    TODO: Dilatation Content
+                    <GeoButton
+                        variant="primary"
+                        onClick={handleStartVisualization}
+                        className="h-fit"
+                    >
+                        <Play/> Mulai Visualisasi
+                    </GeoButton>
+                </div>
+            )
+        },
+        {
+            value: TRANSFORMATION_TYPES.ROTATION,
+            label: TRANSFORMATION_TYPES.ROTATION.translateTransformationType(),
+            icon: <RotateCw/>,
+            content: (
+                <div className="p-4 rounded-lg border border-deep-purple-200">
+                    TODO: {TRANSFORMATION_TYPES.ROTATION} Content
+                    <GeoButton
+                        variant="primary"
+                        onClick={handleStartVisualization}
+                        className="h-fit"
+                    >
+                        <Play/> Mulai Visualisasi
+                    </GeoButton>
+                </div>
+            )
+        },
+        {
+            value: TRANSFORMATION_TYPES.REFLECTION,
+            label: TRANSFORMATION_TYPES.REFLECTION.translateTransformationType(),
+            icon: <FlipHorizontal/>,
+            content: (
+                <div className="p-4 rounded-lg border border-deep-purple-200">
+                    TODO: {TRANSFORMATION_TYPES.REFLECTION} Content
+                    <GeoButton
+                        variant="primary"
+                        onClick={handleStartVisualization}
+                        className="h-fit"
+                    >
+                        <Play/> Mulai Visualisasi
+                    </GeoButton>
+                </div>
+            )
+        }
+    ], []);
+
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -148,24 +167,17 @@ function RouteComponent() {
                                 </div>
                             </div>
 
-                            {/*Transformation Input*/}
-                            <div className="flex flex-col space-y-6 flex-1">
-                                <GeoButton
-                                    variant="primary"
-                                    onClick={handleStartVisualization}
-                                    className="h-fit"
-                                >
-                                    <Play/> Mulai Visualisasi
-                                </GeoButton>
-
-                                <GeoTabs
-                                    defaultValue="profile"
-                                    tabs={tabs}
-                                    colorScheme="purple"
-                                    variant="pills"
-                                    fullWidth={true}
-                                />
-                            </div>
+                            {/*Transformation Input and Play*/}
+                            <GeoTabs
+                                defaultValue="translation"
+                                tabs={tabs}
+                                variant="pills"
+                                fullWidth={true}
+                                onValueChange={() => {
+                                    console.log("do Something on tab change")
+                                }}
+                                className="flex-1"
+                            />
                         </div>
 
 

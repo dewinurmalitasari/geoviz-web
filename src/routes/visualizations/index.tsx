@@ -2,7 +2,7 @@ import {createFileRoute} from '@tanstack/react-router'
 import PageHeader from "@/components/root/page-header.tsx";
 import {ArrowRight, Box, Radical, Square} from "lucide-react";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {ROUTES} from "@/type.ts";
+import {ROUTES, VISUALIZATION_TYPES} from "@/type.ts";
 import GeoCard from "@/components/geo/geo-card.tsx";
 
 export const Route = createFileRoute('/visualizations/')({
@@ -24,7 +24,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.visualizations.shape2d}>
+                        <GeoButton variant="primary" to={ROUTES.visualizations.visualizationType(VISUALIZATION_TYPES.SHAPE_2D)}>
                             <ArrowRight className="w-4 h-4"/> Visualisasi Bangun 2D
                         </GeoButton>
                     }
@@ -39,7 +39,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.visualizations.shape3d}>
+                        <GeoButton variant="primary" to={ROUTES.visualizations.visualizationType(VISUALIZATION_TYPES.SHAPE_3D)}>
                             <ArrowRight className="w-4 h-4"/> Visualisasi Bangun 3D
                         </GeoButton>
                     }
@@ -54,7 +54,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.visualizations.equation}>
+                        <GeoButton variant="primary" to={ROUTES.visualizations.visualizationType(VISUALIZATION_TYPES.EQUATION)}>
                             <ArrowRight className="w-4 h-4"/> Visualisasi Persamaan
                         </GeoButton>
                     }
