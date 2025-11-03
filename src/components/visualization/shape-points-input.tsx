@@ -52,9 +52,9 @@ export default function ShapePointsInput(
         setSelectedPreset(presetKey);
 
         if (presetKey === "custom") {
-            // Reset to a single point for custom mode
-            const defaultPoint = dimension === "3d" ? {x: 0, y: 0, z: 0} : {x: 0, y: 0};
-            updatePoints([defaultPoint]);
+            // Reset to default custom points
+            const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
+            updatePoints(PRESET_POINTS[defaultKey] || []);
         } else {
             // Apply preset points
             const presetPoints = PRESET_POINTS[presetKey] || [];
@@ -113,7 +113,7 @@ export default function ShapePointsInput(
     return (
         <div className={cn("space-y-4", className)}>
             <h3 className="text-xl font-bold text-center text-gray-800 dark:text-gray-200">
-                Input Titik Bangun
+                Masukkan Titik Bangun
             </h3>
 
             {/* Shape Preset Selector */}

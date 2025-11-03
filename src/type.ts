@@ -56,6 +56,26 @@ export const TRANSFORMATION_TYPES = {
     REFLECTION: 'reflection',
 } as const;
 
+export interface TranslationValue {
+    translateX: number;
+    translateY: number;
+    translateZ?: number; // Optional for 2D
+}
+
+export interface DilatationValue {
+    scaleFactor: number;
+}
+
+export interface RotationValue {
+    angle: number; // in degrees
+    axis?: 'x' | 'y' | 'z'; // used for 3D rotation
+}
+
+export interface ReflectionValue {
+    axis: 'origin' | 'x-axis' | 'y-axis' | 'line-y-x' | 'line-y-neg-x' | 'line-y-k' | 'line-x-k' | 'radio-xy-plane' | 'radio-yz-plane' | 'radio-xz-plane';
+    k?: number; // used when axis is 'line-y-k' or 'line-x-k'
+}
+
 export interface Point2D {
     x: number;
     y: number;

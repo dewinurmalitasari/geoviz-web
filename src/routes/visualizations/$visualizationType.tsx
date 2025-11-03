@@ -6,9 +6,18 @@ import ShapePointsInput from "@/components/visualization/shape-points-input.tsx"
 import {toast} from "sonner";
 import {FlipHorizontal, Move, Play, RotateCw, SquareKanban, ZoomIn} from "lucide-react";
 import {useMemo, useState} from "react";
-import {type Point, TRANSFORMATION_TYPES, VISUALIZATION_TYPES} from "@/type.ts";
+import {
+    type DilatationValue,
+    type Point,
+    type ReflectionValue,
+    type RotationValue,
+    TRANSFORMATION_TYPES,
+    type TranslationValue,
+    VISUALIZATION_TYPES
+} from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
+import GeoInput from "@/components/geo/geo-input.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -45,27 +54,30 @@ export const Route = createFileRoute('/visualizations/$visualizationType')({
 function RouteComponent() {
     const {visualizationType} = Route.useParams()
     const [shapePoints, setShapePoints] = useState<Point[]>([])
+    const [translationValue, setTranslationValue] = useState<TranslationValue>({
+        translateX: 2,
+        translateY: 2,
+        translateZ: 2
+    })
+    const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 2,})
+    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'x'})
+    const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({
+        axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis'
+    })
 
     const handlePlotClick = (points: Point[]) => {
-        if (points.length < 3) {
-            toast.error("Minimal 3 titik diperlukan untuk membuat bangun")
-            return
-        }
-
         toast.success(`Plotting ${points.length} titik...`)
         console.log("Plotting points:", points)
-        // Here you would typically send the points to your visualization engine
+        // TODO:Here you would typically send the points to your visualization engine
     }
 
-    const handleStartVisualization = () => {
-        if (shapePoints.length < 3) {
-            toast.error("Tambahkan minimal 3 titik terlebih dahulu")
-            return
-        }
-
+    const handleStartVisualization = (transformationType: string) => {
         toast.success("Memulai visualisasi...")
         console.log("Starting visualization with points:", shapePoints)
-        // Start your visualization logic here
+
+        console.log(transformationType)
+        console.log(translationValue, dilatationValue, rotationValue, reflectionAxis)
+        // TODO:Start your visualization logic here
     }
 
     const tabs = useMemo(() => [
@@ -74,15 +86,65 @@ function RouteComponent() {
             label: TRANSFORMATION_TYPES.TRANSLATION.translateTransformationType(),
             icon: <Move/>,
             content: (
-                <div className="p-4 rounded-lg border border-deep-purple-200">
-                    TODO: {TRANSFORMATION_TYPES.TRANSLATION} Content
-                    <GeoButton
-                        variant="primary"
-                        onClick={handleStartVisualization}
-                        className="h-fit"
-                    >
-                        <Play/> Mulai Visualisasi
-                    </GeoButton>
+                <div className="p-4 rounded-lg border border-deep-purple-200 space-y-2">
+                    <h3 className="text-lg font-bold">
+                        Masukkan Nilai Translasi
+                    </h3>
+
+                    <div className="flex items-center justify-between space-x-4">
+                        <div className="flex items-center space-x-4">
+                            <GeoInput
+                                id="translate-x"
+                                icon="X"
+                                value={translationValue.translateX.toString()}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    setTranslationValue({
+                                        ...translationValue,
+                                        translateX: isNaN(value) ? 0 : value
+                                    });
+                                }}
+                            />
+
+                            <GeoInput
+                                id="translate-y"
+                                icon="Y"
+                                value={translationValue.translateY.toString()}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    setTranslationValue({
+                                        ...translationValue,
+                                        translateY: isNaN(value) ? 0 : value
+                                    });
+                                }}
+                            />
+
+                            {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
+                                <GeoInput
+                                    id="translate-z"
+                                    icon="Z"
+                                    value={translationValue.translateZ?.toString() || '0'}
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setTranslationValue({
+                                            ...translationValue,
+                                            translateZ: isNaN(value) ? 0 : value
+                                        });
+                                    }}
+                                />
+                            )}
+                        </div>
+
+                        <GeoButton
+                            variant="primary"
+                            onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.TRANSLATION)}
+                            className="w-fit"
+                        >
+                            <Play/> Mulai Visualisasi
+                        </GeoButton>
+                    </div>
+
+                    {/*TODO: and check 3D is different*/}
                 </div>
             )
         },
@@ -91,15 +153,33 @@ function RouteComponent() {
             label: TRANSFORMATION_TYPES.DILATATION.translateTransformationType(),
             icon: <ZoomIn/>,
             content: (
-                <div className="p-4 rounded-lg border border-deep-purple-200">
-                    TODO: Dilatation Content
-                    <GeoButton
-                        variant="primary"
-                        onClick={handleStartVisualization}
-                        className="h-fit"
-                    >
-                        <Play/> Mulai Visualisasi
-                    </GeoButton>
+                <div className="p-4 rounded-lg border border-deep-purple-200 space-y-2">
+                    <h3 className="text-lg font-bold">
+                        Masukkan Nilai Dilatasi
+                    </h3>
+
+                    <div className="flex items-center justify-between space-x-4">
+                        <GeoInput
+                            id="scale-factor"
+                            icon="Faktor Skala"
+                            value={dilatationValue.scaleFactor.toString()}
+                            onChange={(e) => {
+                                const value = parseFloat(e.target.value);
+                                setDilatationValue({
+                                    ...dilatationValue,
+                                    scaleFactor: isNaN(value) ? 1 : value
+                                });
+                            }}
+                        />
+
+                        <GeoButton
+                            variant="primary"
+                            onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.DILATATION)}
+                            className="w-fit"
+                        >
+                            <Play/> Mulai Visualisasi
+                        </GeoButton>
+                    </div>
                 </div>
             )
         },
@@ -112,8 +192,8 @@ function RouteComponent() {
                     TODO: {TRANSFORMATION_TYPES.ROTATION} Content
                     <GeoButton
                         variant="primary"
-                        onClick={handleStartVisualization}
-                        className="h-fit"
+                        onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.ROTATION)}
+                        className="w-fit"
                     >
                         <Play/> Mulai Visualisasi
                     </GeoButton>
@@ -129,15 +209,15 @@ function RouteComponent() {
                     TODO: {TRANSFORMATION_TYPES.REFLECTION} Content
                     <GeoButton
                         variant="primary"
-                        onClick={handleStartVisualization}
-                        className="h-fit"
+                        onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.REFLECTION)}
+                        className="w-fit"
                     >
                         <Play/> Mulai Visualisasi
                     </GeoButton>
                 </div>
             )
         }
-    ], []);
+    ], [visualizationType, translationValue, dilatationValue, rotationValue, reflectionAxis, shapePoints])
 
 
     return (
@@ -173,9 +253,6 @@ function RouteComponent() {
                                 tabs={tabs}
                                 variant="pills"
                                 fullWidth={true}
-                                onValueChange={() => {
-                                    console.log("do Something on tab change")
-                                }}
                                 className="flex-1"
                             />
                         </div>
@@ -194,9 +271,9 @@ function RouteComponent() {
                             {/* Shape Points Input */}
                             <ShapePointsInput
                                 onPointsChange={(points) => setShapePoints(points)}
-                                dimension={visualizationType === 'shape3d' ? '3d' : '2d'}
+                                dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
                                 maxPoints={8}
-                                minPoints={3}
+                                minPoints={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 4 : 3}
                                 className="p-4 rounded-xl border border-deep-purple-200"
                             />
                         </div>
