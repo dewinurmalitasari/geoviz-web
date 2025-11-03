@@ -82,28 +82,20 @@ export default function ShapePointsInput(
     };
 
     const updatePoint = (index: number, field: keyof Point | keyof Point3D, value: string) => {
-        // Allow empty, or digits with optional single decimal point and sign
-        if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
-            const newPoints = points.map((point, i) =>
-                i === index ? {...point, [field]: value} : point
-            );
+        const numericValue = parseFloat(value);
+        if (isNaN(numericValue)) return;
 
-            setSelectedPreset("custom");
-            setPoints(newPoints);
-
-            // Convert to numbers for parent callback, preventing undefined
-            const convertedPoints = newPoints.map(p => ({
-                x: typeof p.x === 'string' ? (p.x === '' ? 0 : parseFloat(p.x) || 0) : p.x,
-                y: typeof p.y === 'string' ? (p.y === '' ? 0 : parseFloat(p.y) || 0) : p.y,
-                ...(dimension === "3d" ? {
-                    z: typeof (p as any).z === 'string'
-                        ? ((p as any).z === '' ? 0 : parseFloat((p as any).z) || 0)
-                        : (p as any).z || 0
-                } : {})
-            }));
-
-            onPointsChange?.(convertedPoints);
-        }
+        const newPoints = points.map((point, i) => {
+            if (i === index) {
+                return {
+                    ...point,
+                    [field]: numericValue
+                };
+            }
+            return point;
+        });
+        setSelectedPreset("custom"); // Switch to custom when user modifies
+        updatePoints(newPoints);
     };
 
     const getPointLabel = (index: number) => {
@@ -142,27 +134,30 @@ export default function ShapePointsInput(
                         <div className="flex items-center gap-2 flex-1">
                             <GeoInput
                                 id={`point-${index}-x`}
-                                value={point.x.toString() === "" ? "0" : point.x.toString()}
+                                value={point.x}
                                 onChange={(e) => updatePoint(index, "x", e.target.value)}
                                 icon={<span className="text-xs font-bold">X</span>}
                                 className="flex-1"
+                                type="number"
                             />
 
                             <GeoInput
                                 id={`point-${index}-y`}
-                                value={point.y.toString() === "" ? "0" : point.y.toString()}
+                                value={point.y}
                                 onChange={(e) => updatePoint(index, "y", e.target.value)}
                                 icon={<span className="text-xs font-bold">Y</span>}
                                 className="flex-1"
+                                type="number"
                             />
 
                             {dimension === "3d" && (
                                 <GeoInput
                                     id={`point-${index}-z`}
-                                    value={(point as Point3D).z.toString() === "" ? "0" : (point as Point3D).z.toString()}
+                                    value={(point as Point3D).z}
                                     onChange={(e) => updatePoint(index, "z", e.target.value)}
                                     icon={<span className="text-xs font-bold">Z</span>}
                                     className="flex-1"
+                                    type="number"
                                 />
                             )}
                         </div>

@@ -18,6 +18,7 @@ import {
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
+import GeoSelect from "@/components/geo/geo-select.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -62,8 +63,25 @@ function RouteComponent() {
     const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 2,})
     const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'x'})
     const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({
-        axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis'
+        axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
+        k: 0
     })
+    const reflectionOptions = visualizationType === VISUALIZATION_TYPES.SHAPE_3D
+        ? [
+            {value: 'radio-xy-plane', label: 'Bidang XY'},
+            {value: 'radio-xz-plane', label: 'Bidang XZ'},
+            {value: 'radio-yz-plane', label: 'Bidang YZ'},
+            {value: 'origin', label: 'Titik Asal'},
+        ]
+        : [
+            {value: 'origin', label: 'Sumbu Asal'},
+            {value: 'x-axis', label: 'Sumbu X'},
+            {value: 'y-axis', label: 'Sumbu Y'},
+            {value: 'line-y-x', label: 'Garis Y=X'},
+            {value: 'line-y-neg-x', label: 'Garis Y=-X'},
+            {value: 'line-y-k', label: 'Garis Y=K'},
+            {value: 'line-x-k', label: 'Garis X=K'},
+        ];
 
     const handlePlotClick = (points: Point[]) => {
         toast.success(`Plotting ${points.length} titik...`)
@@ -91,12 +109,12 @@ function RouteComponent() {
                         Masukkan Nilai Translasi
                     </h3>
 
-                    <div className="flex items-center justify-between space-x-4">
+                    <div className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
                         <div className="flex items-center space-x-4">
                             <GeoInput
                                 id="translate-x"
                                 icon="X"
-                                value={translationValue.translateX.toString()}
+                                value={translationValue.translateX}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
                                     setTranslationValue({
@@ -104,12 +122,13 @@ function RouteComponent() {
                                         translateX: isNaN(value) ? 0 : value
                                     });
                                 }}
+                                type="number"
                             />
 
                             <GeoInput
                                 id="translate-y"
                                 icon="Y"
-                                value={translationValue.translateY.toString()}
+                                value={translationValue.translateY}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
                                     setTranslationValue({
@@ -117,13 +136,14 @@ function RouteComponent() {
                                         translateY: isNaN(value) ? 0 : value
                                     });
                                 }}
+                                type="number"
                             />
 
                             {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
                                 <GeoInput
                                     id="translate-z"
                                     icon="Z"
-                                    value={translationValue.translateZ?.toString() || '0'}
+                                    value={translationValue?.translateZ || 0}
                                     onChange={(e) => {
                                         const value = parseFloat(e.target.value);
                                         setTranslationValue({
@@ -131,6 +151,7 @@ function RouteComponent() {
                                             translateZ: isNaN(value) ? 0 : value
                                         });
                                     }}
+                                    type="number"
                                 />
                             )}
                         </div>
@@ -138,13 +159,11 @@ function RouteComponent() {
                         <GeoButton
                             variant="primary"
                             onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.TRANSLATION)}
-                            className="w-fit"
+                            className="w-full md:w-fit"
                         >
                             <Play/> Mulai Visualisasi
                         </GeoButton>
                     </div>
-
-                    {/*TODO: and check 3D is different*/}
                 </div>
             )
         },
@@ -158,11 +177,11 @@ function RouteComponent() {
                         Masukkan Nilai Dilatasi
                     </h3>
 
-                    <div className="flex items-center justify-between space-x-4">
+                    <div className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
                         <GeoInput
                             id="scale-factor"
-                            icon="Faktor Skala"
-                            value={dilatationValue.scaleFactor.toString()}
+                            icon="Skala"
+                            value={dilatationValue.scaleFactor}
                             onChange={(e) => {
                                 const value = parseFloat(e.target.value);
                                 setDilatationValue({
@@ -170,12 +189,13 @@ function RouteComponent() {
                                     scaleFactor: isNaN(value) ? 1 : value
                                 });
                             }}
+                            type="number"
                         />
 
                         <GeoButton
                             variant="primary"
                             onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.DILATATION)}
-                            className="w-fit"
+                            className="w-full md:w-fit"
                         >
                             <Play/> Mulai Visualisasi
                         </GeoButton>
@@ -188,15 +208,52 @@ function RouteComponent() {
             label: TRANSFORMATION_TYPES.ROTATION.translateTransformationType(),
             icon: <RotateCw/>,
             content: (
-                <div className="p-4 rounded-lg border border-deep-purple-200">
-                    TODO: {TRANSFORMATION_TYPES.ROTATION} Content
-                    <GeoButton
-                        variant="primary"
-                        onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.ROTATION)}
-                        className="w-fit"
-                    >
-                        <Play/> Mulai Visualisasi
-                    </GeoButton>
+                <div className="p-4 rounded-lg border border-deep-purple-200 space-y-2">
+                    <h3 className="text-lg font-bold">
+                        Masukkan Nilai Rotasi
+                    </h3>
+
+                    <div className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
+                        <GeoInput
+                            id="angle"
+                            icon="Sudut"
+                            value={rotationValue.angle}
+                            onChange={(e) => {
+                                const value = parseFloat(e.target.value);
+                                setRotationValue({
+                                    ...rotationValue,
+                                    angle: isNaN(value) ? 0 : value
+                                });
+                            }}
+                            type="number"
+                        />
+
+                        {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
+                            <GeoSelect
+                                id="rotation-axis"
+                                value={rotationValue.axis || 'x'}
+                                onValueChange={(value) => {
+                                    setRotationValue({
+                                        ...rotationValue,
+                                        axis: value as RotationValue['axis']
+                                    });
+                                }}
+                                options={[
+                                    {value: 'x', label: 'Sumbu X'},
+                                    {value: 'y', label: 'Sumbu Y'},
+                                    {value: 'z', label: 'Sumbu Z'},
+                                ]}
+                            />
+                        )}
+
+                        <GeoButton
+                            variant="primary"
+                            onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.ROTATION)}
+                            className="w-full md:w-fit"
+                        >
+                            <Play/> Mulai Visualisasi
+                        </GeoButton>
+                    </div>
                 </div>
             )
         },
@@ -205,19 +262,52 @@ function RouteComponent() {
             label: TRANSFORMATION_TYPES.REFLECTION.translateTransformationType(),
             icon: <FlipHorizontal/>,
             content: (
-                <div className="p-4 rounded-lg border border-deep-purple-200">
-                    TODO: {TRANSFORMATION_TYPES.REFLECTION} Content
-                    <GeoButton
-                        variant="primary"
-                        onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.REFLECTION)}
-                        className="w-fit"
-                    >
-                        <Play/> Mulai Visualisasi
-                    </GeoButton>
+                <div className="p-4 rounded-lg border border-deep-purple-200 space-y-2">
+                    <h3 className="text-lg font-bold">
+                        Masukkan Nilai Refleksi
+                    </h3>
+
+                    <div className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
+                        <GeoSelect
+                            id="axis"
+                            value={reflectionAxis.axis || 'x'}
+                            onValueChange={(value) => {
+                                setReflectionAxis({
+                                    ...reflectionAxis,
+                                    axis: value as ReflectionValue['axis']
+                                });
+                            }}
+                            options={reflectionOptions}
+                        />
+
+                        {(reflectionAxis.axis === 'line-y-k' || reflectionAxis.axis === 'line-x-k') && (
+                            <GeoInput
+                                id="k-value"
+                                icon="K"
+                                value={reflectionAxis?.k || 0}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    setReflectionAxis({
+                                        ...reflectionAxis,
+                                        k: isNaN(value) ? 0 : value
+                                    });
+                                }}
+                                type="number"
+                            />
+                        )}
+
+                        <GeoButton
+                            variant="primary"
+                            onClick={() => handleStartVisualization(TRANSFORMATION_TYPES.REFLECTION)}
+                            className="w-full md:w-fit"
+                        >
+                            <Play/> Mulai Visualisasi
+                        </GeoButton>
+                    </div>
                 </div>
             )
         }
-    ], [visualizationType, translationValue, dilatationValue, rotationValue, reflectionAxis, shapePoints])
+    ], [visualizationType, translationValue, dilatationValue, rotationValue, reflectionAxis, shapePoints]);
 
 
     return (

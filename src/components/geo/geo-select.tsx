@@ -87,7 +87,7 @@ export default function GeoSelect(
                 <SelectTrigger
                     id={id}
                     className={cn(
-                        "w-full px-4 py-3 rounded-xl border-2 bg-white shadow-sm transition-all duration-200",
+                        "w-full px-4 py-3 rounded-lg border bg-white shadow-sm transition-all duration-200",
                         "hover:shadow-md focus:ring-2 focus:ring-opacity-20",
                         colors.trigger,
                         disabled && "opacity-50 cursor-not-allowed"
@@ -104,7 +104,7 @@ export default function GeoSelect(
                 </SelectTrigger>
 
                 <SelectContent
-                    className="bg-white border-2 rounded-xl shadow-lg py-2"
+                    className="bg-white border rounded-lg shadow-lg py-2"
                     position="popper"
                     style={{maxHeight}}
                 >

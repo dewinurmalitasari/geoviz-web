@@ -3,11 +3,12 @@ import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/
 import {useEffect, useRef, useState} from "react";
 import {Eye, EyeOff} from "lucide-react";
 import {Textarea} from "@/components/ui/textarea.tsx";
+import {cn} from "@/lib/utils.ts";
 
 interface GeoInputProps {
     id: string;
     label?: string;
-    value: string;
+    value: string | number;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     icon?: React.ReactNode;
     isPassword?: boolean;
@@ -18,6 +19,7 @@ interface GeoInputProps {
     resizable?: boolean;
     autoExpand?: boolean;
     className?: string;
+    type?: string;
 }
 
 export default function GeoInput(
@@ -34,7 +36,8 @@ export default function GeoInput(
         maxRows = 7,
         resizable = true,
         autoExpand = true,
-        className = ""
+        className = "",
+        type = "text",
     }: GeoInputProps) {
     const [showPassword, setShowPassword] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -77,7 +80,7 @@ export default function GeoInput(
     };
 
     return (
-        <Field className={className}>
+        <Field className={cn(className, 'border border-deep-purple-200 rounded-lg')}>
             {label &&
                 <FieldLabel htmlFor={id} className="font-bold text-md">
                     {label}
@@ -101,7 +104,7 @@ export default function GeoInput(
                     />
                 ) : (
                     <InputGroupInput
-                        type={showPassword ? 'text' : isPassword ? 'password' : 'text'}
+                        type={isPassword ? (showPassword ? 'text' : 'password') : type}
                         placeholder={`${label}...`}
                         value={value}
                         onChange={onChange}
