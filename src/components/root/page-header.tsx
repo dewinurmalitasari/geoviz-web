@@ -28,7 +28,7 @@ export default function PageHeader({title, description, noBackButton, additional
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     {!noBackButton &&
                         <GeoButton
-                            onClick={() => animatedNavigate({back: true})}
+                            onClick={() => animatedNavigate({}, true)}
                             variant="primary"
                             className="w-full sm:w-auto whitespace-nowrap"
                         >
