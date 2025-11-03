@@ -8,7 +8,10 @@ export const PRESETS_2D = {
     "rectangle": "Persegi Panjang",
     "pentagon": "Segilima",
     "hexagon": "Segienam",
-    "arrow": "Panah"
+    "arrow": "Panah",
+    "star": "Bintang",
+    "heart": "Hati",
+    "cross": "Tanda Plus"
 } as const;
 
 // 3D Shape Presets
@@ -17,7 +20,6 @@ export const PRESETS_3D = {
     "cube": "Kubus",
     "pyramid": "Piramida",
     "prism": "Prisma Segitiga",
-    "plane": "Bidang 3D"
 } as const;
 
 // Preset point values
@@ -41,19 +43,19 @@ export const PRESET_POINTS: Record<string, Point[]> = {
         {x: 1, y: 2}
     ],
     "pentagon": [
-        {x: 2, y: 1},
-        {x: 3, y: 2},
-        {x: 2, y: 3},
-        {x: 1, y: 3},
-        {x: 0, y: 2}
+        {x: 2.5, y: 1},    // Top
+        {x: 4, y: 2.3},    // Top right
+        {x: 3.2, y: 4},    // Bottom right
+        {x: 1.8, y: 4},    // Bottom left
+        {x: 1, y: 2.3}     // Top left
     ],
     "hexagon": [
-        {x: 1, y: 1},
-        {x: 2, y: 1},
+        {x: 1.5, y: 1},
+        {x: 2.5, y: 1},
         {x: 3, y: 2},
-        {x: 2, y: 3},
-        {x: 1, y: 3},
-        {x: 0, y: 2}
+        {x: 2.5, y: 3},
+        {x: 1.5, y: 3},
+        {x: 1, y: 2}
     ],
     "arrow": [
         {x: 1, y: 2},
@@ -63,6 +65,44 @@ export const PRESET_POINTS: Record<string, Point[]> = {
         {x: 2, y: 5},
         {x: 2, y: 4},
         {x: 1, y: 4}
+    ],
+    "star": [
+        {x: 2.5, y: 1},    // Top point
+        {x: 3, y: 3},      // Right top
+        {x: 5, y: 3},      // Right outer
+        {x: 3.5, y: 4},    // Right inner
+        {x: 4, y: 6},      // Bottom right
+        {x: 2.5, y: 5},    // Bottom center
+        {x: 1, y: 6},      // Bottom left
+        {x: 1.5, y: 4},    // Left inner
+        {x: 0, y: 3},      // Left outer
+        {x: 2, y: 3}       // Left top
+    ],
+    "heart": [
+        {x: 2.5, y: 1.5},
+        {x: 3, y: 1},
+        {x: 4, y: 1.5},
+        {x: 4, y: 2.5},
+        {x: 3.5, y: 3.5},
+        {x: 2.5, y: 4.5},
+        {x: 1.5, y: 3.5},
+        {x: 1, y: 2.5},
+        {x: 1, y: 1.5},
+        {x: 2, y: 1}
+    ],
+    "cross": [
+        {x: 2, y: 1},
+        {x: 3, y: 1},
+        {x: 3, y: 2},
+        {x: 4, y: 2},
+        {x: 4, y: 3},
+        {x: 3, y: 3},
+        {x: 3, y: 4},
+        {x: 2, y: 4},
+        {x: 2, y: 3},
+        {x: 1, y: 3},
+        {x: 1, y: 2},
+        {x: 2, y: 2}
     ],
 
     // 3D Presets

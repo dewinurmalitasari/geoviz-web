@@ -22,6 +22,7 @@ import Plot from "react-plotly.js";
 import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
+import {useIsMobile} from "@/hooks/use-mobile.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -57,6 +58,7 @@ export const Route = createFileRoute('/visualizations/$visualizationType')({
 
 function RouteComponent() {
     const {visualizationType} = Route.useParams()
+    const isMobile = useIsMobile();
     const [shapePoints, setShapePoints] = useState<Point[]>(() => {
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "pyramid" : "triangle";
         return PRESET_POINTS[defaultKey] || [];
@@ -80,9 +82,8 @@ function RouteComponent() {
         if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
             // For 2D visualization
             const {xRange, yRange} = calculateRange(points)
-            const newPlotData = get2DShapePlotData(points)
+            const newPlotData = get2DShapePlotData(points, isMobile)
             const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
-
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
         } else {
