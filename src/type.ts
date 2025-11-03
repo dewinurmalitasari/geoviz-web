@@ -21,7 +21,9 @@ export const ROUTES = {
     },
     visualizations: {
         base: '/visualizations',
-        visualizationType: (visualizationType: string) => `/visualizations/${visualizationType}`,
+        shape2d: '/visualizations/shape2d',
+        shape3d: '/visualizations/shape3d',
+        equation: '/visualizations/equation',
     }
 } as const;
 

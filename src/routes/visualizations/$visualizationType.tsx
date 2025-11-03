@@ -10,6 +10,12 @@ function RouteComponent() {
     const { visualizationType } = Route.useParams()
 
     return <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-        <PageHeader title={`Latihan ${visualizationType}`} description="Lakukan latihan soal sesuai instruksi"/>
+        <PageHeader
+            title={`Visualisasi ${visualizationType.translateVisualizationType()}`}
+            description={`Visualisasi transformasi geometri pada ${visualizationType.translateVisualizationType().toLowerCase()}.`}/>
+
+        <div>
+
+        </div>
     </div>
 }
