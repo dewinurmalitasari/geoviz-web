@@ -1,6 +1,7 @@
 import {createFileRoute, notFound} from '@tanstack/react-router'
 import {getAuthentication} from "@/lib/auth.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
+import PageHeader from "@/components/root/page-header.tsx";
 
 export const Route = createFileRoute('/practices/$practiceType')({
     loader: () => {
@@ -23,5 +24,7 @@ export const Route = createFileRoute('/practices/$practiceType')({
 function RouteComponent() {
     const { practiceType } = Route.useParams()
 
-    return <div>Hello "/practice/{practiceType}"!</div>
+    return <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
+        <PageHeader title={`Latihan ${practiceType}`} description="Lakukan latihan soal sesuai instruksi"/>
+    </div>
 }
