@@ -6,7 +6,7 @@ import {Textarea} from "@/components/ui/textarea.tsx";
 
 interface GeoInputProps {
     id: string;
-    label: string;
+    label?: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     icon?: React.ReactNode;
@@ -78,9 +78,11 @@ export default function GeoInput(
 
     return (
         <Field className={className}>
-            <FieldLabel htmlFor={id} className="font-bold text-md">
-                {label}
-            </FieldLabel>
+            {label &&
+                <FieldLabel htmlFor={id} className="font-bold text-md">
+                    {label}
+                </FieldLabel>
+            }
             <InputGroup id={id}>
                 {multiline ? (
                     <Textarea

@@ -15,6 +15,7 @@ interface GeoButtonProps {
     asChild?: boolean;
     to?: string;
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    disabled?: boolean;
 }
 
 const variantStyles = {
@@ -54,7 +55,8 @@ export default function GeoButton(
         className,
         asChild = false,
         to,
-        colorScheme = 'purple'
+        colorScheme = 'purple',
+        disabled
     }: GeoButtonProps) {
     const Comp = asChild ? Slot : Button;
     const animatedNavigate = useAnimatedNavigation();
@@ -78,7 +80,7 @@ export default function GeoButton(
                 className
             )}
             onClick={onClick}
-            disabled={isLoading}
+            disabled={isLoading || disabled}
             asChild={to ? true : asChild}
         >
             {to ? (

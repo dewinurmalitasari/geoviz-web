@@ -2,8 +2,8 @@ import type {ReactNode} from "react";
 import {cn} from "@/lib/utils.ts";
 
 interface GeoCardProps {
-    icon: ReactNode;
-    title: string;
+    icon?: ReactNode;
+    title?: string;
     content?: ReactNode;
     footer?: ReactNode;
     titleButton?: ReactNode;
@@ -67,7 +67,7 @@ export default function GeoCard(
     return (
         <div
             className={cn(
-                "bg-white rounded-2xl shadow-lg overflow-hidden card-hover w-full flex flex-col flex-grow",
+                "bg-white rounded-2xl shadow-lg overflow-hidden card-hover w-full flex flex-col",
                 colors.border,
                 className
             )}
@@ -80,18 +80,22 @@ export default function GeoCard(
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-0 flex-1">
-                            <div
-                                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${colors.iconBg} flex items-center justify-center mr-4 shrink-0`}>
-                                {icon}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <h2 className={cn(
-                                    "text-2xl font-extrabold line-clamp-2 break-words overflow-hidden",
-                                    colors.title
-                                )}>
-                                    {title}
-                                </h2>
-                            </div>
+                            {icon &&
+                                <div
+                                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${colors.iconBg} flex items-center justify-center mr-4 shrink-0`}>
+                                    {icon}
+                                </div>
+                            }
+                            {title &&
+                                <div className="min-w-0 flex-1">
+                                    <h2 className={cn(
+                                        "text-2xl font-extrabold line-clamp-2 break-words overflow-hidden",
+                                        colors.title
+                                    )}>
+                                        {title}
+                                    </h2>
+                                </div>
+                            }
                         </div>
 
                         {titleButton && <div>{titleButton}</div>}

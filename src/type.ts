@@ -242,9 +242,9 @@ export interface MaterialPayload {
 }
 
 // TODO:
-//  - navbar with types here and Link
 //  - tracking users sessions, material access, practice attempts
 //  - 2d viz with equatrion, 2d and 3d viz with point
+//  - plotly performance tracking displayed below the plot and detailed
 //  - security best practices
 //  - performance optimizations like preloading routes
 //  - table resize problem
