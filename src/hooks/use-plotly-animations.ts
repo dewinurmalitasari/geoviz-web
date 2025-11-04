@@ -51,12 +51,14 @@ export function usePlotlyAnimation(
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
+    const isAnimatingRef = useRef(false); // Track animation state outside React state
 
     const cancelAnimation = useCallback(() => {
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
             animationFrameRef.current = null;
         }
+        isAnimatingRef.current = false;
     }, []);
 
     useEffect(() => {
@@ -66,7 +68,11 @@ export function usePlotlyAnimation(
     }, [cancelAnimation]);
 
     const startAnimation = useCallback((transformationType: TransformationType) => {
-        cancelAnimation();
+        if (isAnimatingRef.current) {
+            cancelAnimation(); // Cancel any ongoing animation
+        }
+
+        isAnimatingRef.current = true; // Mark that an animation is starting
 
         const {translationValue, dilatationValue, rotationValue, reflectionAxis} = transformationValues;
 
@@ -84,10 +90,8 @@ export function usePlotlyAnimation(
             values: TranslationValue | DilatationValue | RotationValue | ReflectionValue
         ) => Point[];
 
-
         // 1. Set up variables based on 2D or 3D
         if (is3D) {
-            // Assign 3D-specific functions
             plotFn = (points, color) => get3DShapePlotData(points as Point3D[], color);
             transformationFn = (points, type, values) =>
                 calculate3DTransformedCoordinates(points as Point3D[], type as any, values);
@@ -110,11 +114,11 @@ export function usePlotlyAnimation(
                     values = reflectionAxis;
                     break;
                 default:
+                    isAnimatingRef.current = false;
                     return;
             }
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         } else {
-            // Assign 2D-specific functions
             plotFn = (points, color) => get2DShapePlotData(points as Point2D[], isMobile, color, true);
             transformationFn = (points, type, values) =>
                 calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
@@ -137,12 +141,13 @@ export function usePlotlyAnimation(
                     values = reflectionAxis;
                     break;
                 default:
+                    isAnimatingRef.current = false;
                     return;
             }
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         }
 
-        // 2. Calculate new layout to fit both shapes
+        // 2. Calculate new layout to fit both shapes (only once, before animation)
         const allPoints = [...shapePoints, ...transformedPoints];
         const {xRange, yRange, zRange} = calculateRange(allPoints, transformedPoints, isMobile? (transformationType === 'dilatation'? 0.2 : 0.5) : 1);
 
@@ -170,7 +175,6 @@ export function usePlotlyAnimation(
         } else {
             newLayout = get2DShapePlotLayout(finalXRange, finalYRange);
 
-            // Add reflection line trace for 2D plots
             if (transformationType === TRANSFORMATION_TYPES.REFLECTION) {
                 const axis = (values as ReflectionValue).axis;
                 const k = (values as ReflectionValue).k!;
@@ -202,11 +206,12 @@ export function usePlotlyAnimation(
                         type: 'scatter',
                         line: {color: 'green'},
                         showlegend: false
-                    } as PlotlyTrace); // Cast to full trace type
+                    } as PlotlyTrace);
                 }
             }
         }
 
+        // Set the layout only once before the animation starts
         setPlotLayout(newLayout);
 
         // 3. Start Animation
@@ -214,26 +219,25 @@ export function usePlotlyAnimation(
         const duration = transformationType === TRANSFORMATION_TYPES.ROTATION ? 1500 : 1000;
 
         const animate = (timestamp: number) => {
+            if (!isAnimatingRef.current) return; // Early return if animation was cancelled
+
             const elapsed = timestamp - startTime;
             let t = Math.min(elapsed / duration, 1);
 
             let intermediatePoints: Point[];
 
             if (transformationType === TRANSFORMATION_TYPES.ROTATION) {
-                // Interpolate angle for rotation
                 const startAngle = 0;
                 const endAngle = (values as RotationValue).angle;
                 const intermediateAngle = startAngle + (endAngle - startAngle) * t;
                 const intermediateValues = {...values, angle: intermediateAngle};
                 intermediatePoints = transformationFn(shapePoints, 'rotation', intermediateValues);
             } else {
-                // Linear interpolation
                 intermediatePoints = shapePoints.map((point, i) => {
                     const start = point;
                     const end = transformedPoints[i];
 
                     if (is3D) {
-                        // We are 3D
                         const start3D = start as Point3D;
                         const end3D = end as Point3D;
                         return {
@@ -242,7 +246,6 @@ export function usePlotlyAnimation(
                             z: start3D.z + (end3D.z - start3D.z) * t,
                         } as Point3D;
                     } else {
-                        // We are 2D
                         const start2D = start as Point2D;
                         const end2D = end as Point2D;
                         return {
@@ -254,14 +257,17 @@ export function usePlotlyAnimation(
             }
 
             const intermediateTraces = plotFn(intermediatePoints, transformedColor);
-            setPlotData([...originalTraces, ...intermediateTraces]);
+            // Batch the state update to avoid multiple renders
+            setPlotData(() => [...originalTraces, ...intermediateTraces]);
 
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
             } else {
+                // Final update
                 const finalTraces = plotFn(transformedPoints, transformedColor);
                 setPlotData([...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
+                isAnimatingRef.current = false;
             }
         };
 
@@ -278,5 +284,5 @@ export function usePlotlyAnimation(
         cancelAnimation
     ]);
 
-    return {startAnimation};
+    return {startAnimation, cancelAnimation};
 }
