@@ -3,7 +3,6 @@ import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/
 import {useEffect, useRef, useState} from "react";
 import {Eye, EyeOff} from "lucide-react";
 import {Textarea} from "@/components/ui/textarea.tsx";
-import {cn} from "@/lib/utils.ts";
 
 interface GeoInputProps {
     id: string;
@@ -80,13 +79,13 @@ export default function GeoInput(
     };
 
     return (
-        <Field className={cn(className, 'border border-deep-purple-200 rounded-lg')}>
+        <Field className={className}>
             {label &&
                 <FieldLabel htmlFor={id} className="font-bold text-md">
                     {label}
                 </FieldLabel>
             }
-            <InputGroup id={id}>
+            <InputGroup id={id} className="border border-deep-purple-200 rounded-lg">
                 {multiline ? (
                     <Textarea
                         ref={textareaRef}
