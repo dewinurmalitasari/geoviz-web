@@ -8,7 +8,7 @@ import {
     type TranslationValue
 } from "@/type.ts";
 
-export function useCalculate2DTransformedCoordinates(
+export function calculate2DTransformedCoordinates(
     points: Point2D[],
     type: 'translation' | 'dilatation' | 'rotation' | 'reflection',
     values: TranslationValue | DilatationValue | RotationValue | ReflectionValue

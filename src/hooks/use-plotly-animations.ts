@@ -7,7 +7,7 @@ import {
     type ReflectionValue,
     type RotationValue,
     type TranslationValue,
-    TRANSFORMATION_TYPES, // <-- Import this
+    TRANSFORMATION_TYPES,
     VISUALIZATION_TYPES
 } from '@/type.ts';
 import {calculateRange} from '@/hooks/use-calculate-range.ts';
@@ -15,10 +15,8 @@ import {get2DShapePlotData, get2DShapePlotLayout} from '@/hooks/use-2d-plot.ts';
 import {get3DShapePlotData, get3DShapePlotLayout} from '@/hooks/use-3d-plot.ts';
 import {
     calculate3DTransformedCoordinates,
-    useCalculate2DTransformedCoordinates
+    calculate2DTransformedCoordinates
 } from '@/hooks/use-calculate-transformation.ts';
-
-// --- Improved Types ---
 
 type PlotlyTrace = Record<string, any>;
 type PlotlyData = PlotlyTrace[];
@@ -117,9 +115,9 @@ export function usePlotlyAnimation(
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         } else {
             // Assign 2D-specific functions
-            plotFn = (points, color) => get2DShapePlotData(points as Point2D[], isMobile, color);
+            plotFn = (points, color) => get2DShapePlotData(points as Point2D[], isMobile, color, true);
             transformationFn = (points, type, values) =>
-                useCalculate2DTransformedCoordinates(points as Point2D[], type as any, values);
+                calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
 
             originalTraces = plotFn(shapePoints, 'blue');
             transformedColor = 'red';
@@ -146,7 +144,7 @@ export function usePlotlyAnimation(
 
         // 2. Calculate new layout to fit both shapes
         const allPoints = [...shapePoints, ...transformedPoints];
-        const {xRange, yRange, zRange} = calculateRange(allPoints);
+        const {xRange, yRange, zRange} = calculateRange(allPoints, transformedPoints, isMobile? (transformationType === 'dilatation'? 0.2 : 0.5) : 1);
 
         let newLayout: PlotlyLayout;
 
@@ -277,6 +275,7 @@ export function usePlotlyAnimation(
         setPlotData,
         setPlotLayout,
         setDilatationValue,
+        cancelAnimation
     ]);
 
     return {startAnimation};

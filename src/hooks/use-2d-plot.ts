@@ -3,7 +3,8 @@ import type {Point2D} from "@/type.ts";
 export function get2DShapePlotData(
     points: Point2D[],
     isMobile: boolean,
-    color = 'blue'
+    color = 'blue',
+    isAnimation: boolean = false,
 ) {
     if (points.length < 2) return [];
 
@@ -39,17 +40,12 @@ export function get2DShapePlotData(
     // Create labels for the points
     const labels = points.map((_, i) => String.fromCharCode(65 + i));
 
-    // Calculate bounds and center *once* outside the loop
-    const maxX = Math.max(...xValues);
-    const minX = Math.min(...xValues);
-    const maxY = Math.max(...yValues);
-    const minY = Math.min(...yValues);
-
-    const centerX = (maxX + minX) / 2;
-    const centerY = (maxY + minY) / 2;
+    // Calculate bounds and center inline
+    const centerX = (Math.max(...xValues) + Math.min(...xValues)) / 2;
+    const centerY = (Math.max(...yValues) + Math.min(...yValues)) / 2;
 
     // Calculate offset distance
-    const offset = isMobile ? 0.4 : 0.2;
+    const offset = isMobile ? (isAnimation? 0.8 : 0.4) : (isAnimation? 0.5 : 0.4);
 
     const textPositions = points.map((point) => {
         const dx = point.x - centerX;
@@ -74,7 +70,6 @@ export function get2DShapePlotData(
         return {x: point.x + xOffset, y: point.y + yOffset};
     });
 
-    // Create labels trace with offset positions
     const labelsTrace = {
         x: textPositions.map(pos => pos.x),
         y: textPositions.map(pos => pos.y),

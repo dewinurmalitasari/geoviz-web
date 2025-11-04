@@ -26,7 +26,7 @@ export default function ShapePointsInput(
         colorScheme = "purple"
     }: ShapePointsInputProps) {
     const [points, setPoints] = useState<Point[]>(() => {
-        const defaultKey = dimension === "3d" ? "pyramid" : "triangle";
+        const defaultKey = dimension === "3d" ? "cube" : "square";
         return PRESET_POINTS[defaultKey] || [];
     });
     const [selectedPreset, setSelectedPreset] = useState<string>("custom");
