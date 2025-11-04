@@ -1,5 +1,4 @@
-// use-3d-plot.ts
-import type { Point3D } from "@/type.ts";
+import type {Point3D} from "@/type.ts";
 
 export function get3DShapePlotData(
     points: Point3D[],
@@ -13,11 +12,6 @@ export function get3DShapePlotData(
 
     // Generate mesh data for the 3D shape
     const meshData = generateMeshDataFromPoints(points);
-
-    // Determine ranges for axes
-    const xRange: [number, number] = [Math.min(...xValues) - 10, Math.max(...xValues) + 10]; // Increase this number for longer xyz traces
-    const yRange: [number, number] = [Math.min(...yValues) - 10, Math.max(...yValues) + 10];
-    const zRange: [number, number] = [Math.min(...zValues) - 10, Math.max(...zValues) + 10];
 
     // Create the mesh trace
     const meshTrace = {
@@ -98,7 +92,68 @@ export function get3DShapePlotData(
         marker: {}
     };
 
-    // Create coordinate axes traces
+    return [meshTrace, pointsTrace, labelsTrace];
+}
+
+export function get3DShapePlotLayout(
+    xRange: [number, number],
+    yRange: [number, number],
+    zRange: [number, number]
+) {
+    return {
+        margin: {t: 0, l: 30, r: 30, b: 30},
+        scene: {
+            xaxis: {range: xRange, dtick: 1},
+            yaxis: {range: yRange, dtick: 1},
+            zaxis: {range: zRange, dtick: 1},
+            camera: {eye: {x: 0, y: -1.5, z: 1}},
+            aspectratio: {x: 1, y: 1, z: 1},
+        },
+        legend: {
+            x: 0.1,
+            y: 0.9,
+            traceorder: 'normal',
+            font: {
+                family: 'sans-serif',
+                size: 12,
+                color: '#000'
+            },
+            bgcolor: 'lightgray',
+            bordercolor: 'black',
+            borderwidth: 2
+        },
+    };
+}
+
+function generateMeshDataFromPoints(points: Point3D[]) {
+    const x = points.map(p => p.x);
+    const y = points.map(p => p.y);
+    const z = points.map(p => p.z);
+
+    let faces: number[][] = [];
+
+    // This creates all possible triangles between points
+    for (let i = 0; i < points.length; i++) {
+        for (let j = i + 1; j < points.length; j++) {
+            for (let k = j + 1; k < points.length; k++) {
+                faces.push([i, j, k]);
+            }
+        }
+    }
+
+    // Flatten the faces into i, j, k arrays for Plotly
+    const i = faces.map(f => f[0]);
+    const j = faces.map(f => f[1]);
+    const k = faces.map(f => f[2]);
+
+    return {x, y, z, i, j, k};
+}
+
+export function get3DAxisTraces(
+    xRange: [number, number],
+    yRange: [number, number],
+    zRange: [number, number]
+) {
     const xAxisTrace = {
         type: 'scatter3d',
         mode: 'lines',
@@ -138,58 +193,5 @@ export function get3DShapePlotData(
         name: 'Sumbu Z',
     };
 
-    return [meshTrace, pointsTrace, labelsTrace, xAxisTrace, yAxisTrace, zAxisTrace];
-}
-
-export function get3DShapePlotLayout(
-    xRange: [number, number],
-    yRange: [number, number],
-    zRange: [number, number]
-) {
-    return {
-        margin: { t: 0, l: 30, r: 30, b: 30 },
-        scene: {
-            xaxis: { range: xRange, dtick: 1 },
-            yaxis: { range: yRange, dtick: 1 },
-            zaxis: { range: zRange, dtick: 1 },
-            camera: { eye: { x: 0, y: -1.5, z: 1 } },
-            aspectratio: { x: 1, y: 1, z: 1 },
-        },
-        legend: {
-            x: 0.1,
-            y: 0.9,
-            traceorder: 'normal',
-            font: {
-                family: 'sans-serif',
-                size: 12,
-                color: '#000'
-            },
-            bgcolor: 'lightgray',
-            bordercolor: 'black',
-            borderwidth: 2
-        }
-    };}
-
-function generateMeshDataFromPoints(points: Point3D[]) {
-    const x = points.map(p => p.x);
-    const y = points.map(p => p.y);
-    const z = points.map(p => p.z);
-
-    let faces: number[][] = [];
-
-    // This creates all possible triangles between points
-    for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-            for (let k = j + 1; k < points.length; k++) {
-                faces.push([i, j, k]);
-            }
-        }
-    }
-
-    // Flatten the faces into i, j, k arrays for Plotly
-    const i = faces.map(f => f[0]);
-    const j = faces.map(f => f[1]);
-    const k = faces.map(f => f[2]);
-
-    return { x, y, z, i, j, k };
+    return [xAxisTrace, yAxisTrace, zAxisTrace];
 }

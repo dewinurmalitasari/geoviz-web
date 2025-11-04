@@ -6,16 +6,16 @@ import {
     type Point3D,
     type ReflectionValue,
     type RotationValue,
-    type TranslationValue,
     TRANSFORMATION_TYPES,
+    type TranslationValue,
     VISUALIZATION_TYPES
 } from '@/type.ts';
 import {calculateRange} from '@/hooks/use-calculate-range.ts';
 import {get2DShapePlotData, get2DShapePlotLayout} from '@/hooks/use-2d-plot.ts';
-import {get3DShapePlotData, get3DShapePlotLayout} from '@/hooks/use-3d-plot.ts';
+import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from '@/hooks/use-3d-plot.ts';
 import {
-    calculate3DTransformedCoordinates,
-    calculate2DTransformedCoordinates
+    calculate2DTransformedCoordinates,
+    calculate3DTransformedCoordinates
 } from '@/hooks/use-calculate-transformation.ts';
 
 type PlotlyTrace = Record<string, any>;
@@ -149,7 +149,11 @@ export function usePlotlyAnimation(
 
         // 2. Calculate new layout to fit both shapes (only once, before animation)
         const allPoints = [...shapePoints, ...transformedPoints];
-        const {xRange, yRange, zRange} = calculateRange(allPoints, transformedPoints, isMobile? (transformationType === 'dilatation'? 0.2 : 0.5) : 1);
+        const {
+            xRange,
+            yRange,
+            zRange
+        } = calculateRange(allPoints, transformedPoints, isMobile ? (transformationType === 'dilatation' ? 0.2 : 0.5) : 1);
 
         let newLayout: PlotlyLayout;
 
@@ -214,6 +218,8 @@ export function usePlotlyAnimation(
         // Set the layout only once before the animation starts
         setPlotLayout(newLayout);
 
+        const axisTraces = get3DAxisTraces(finalXRange, finalYRange, finalZRange as [number, number]);
+
         // 3. Start Animation
         const startTime = performance.now();
         const duration = transformationType === TRANSFORMATION_TYPES.ROTATION ? 1500 : 1000;
@@ -258,14 +264,14 @@ export function usePlotlyAnimation(
 
             const intermediateTraces = plotFn(intermediatePoints, transformedColor);
             // Batch the state update to avoid multiple renders
-            setPlotData(() => [...originalTraces, ...intermediateTraces]);
+            setPlotData([...axisTraces, ...originalTraces, ...intermediateTraces]);
 
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
             } else {
                 // Final update
                 const finalTraces = plotFn(transformedPoints, transformedColor);
-                setPlotData([...originalTraces, ...finalTraces]);
+                setPlotData([...axisTraces, ...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
                 isAnimatingRef.current = false;
             }

@@ -21,7 +21,7 @@ import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
 import Plot from "react-plotly.js";
 import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
-import {get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
+import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
 import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
 
@@ -100,6 +100,7 @@ function RouteComponent() {
             const {xRange, yRange} = calculateRange(points)
             const newPlotData = get2DShapePlotData(points, isMobile)
             const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
+
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
         } else {
@@ -107,8 +108,9 @@ function RouteComponent() {
             const {xRange, yRange, zRange} = calculateRange(points as Point3D[])
             const newPlotData = get3DShapePlotData(points as Point3D[])
             const newPlotLayout = get3DShapePlotLayout(xRange, yRange, zRange!)
+            const axisTrace = get3DAxisTraces(xRange, yRange, zRange!)
 
-            setPlotData(newPlotData)
+            setPlotData([...newPlotData, ...axisTrace])
             setPlotLayout(newPlotLayout)
         }
     }
