@@ -15,9 +15,9 @@ export function get3DShapePlotData(
     const meshData = generateMeshDataFromPoints(points);
 
     // Determine ranges for axes
-    const xRange: [number, number] = [Math.min(...xValues) - 1, Math.max(...xValues) + 1];
-    const yRange: [number, number] = [Math.min(...yValues) - 1, Math.max(...yValues) + 1];
-    const zRange: [number, number] = [Math.min(...zValues) - 1, Math.max(...zValues) + 1];
+    const xRange: [number, number] = [Math.min(...xValues) - 10, Math.max(...xValues) + 10]; // Increase this number for longer xyz traces
+    const yRange: [number, number] = [Math.min(...yValues) - 10, Math.max(...yValues) + 10];
+    const zRange: [number, number] = [Math.min(...zValues) - 10, Math.max(...zValues) + 10];
 
     // Create the mesh trace
     const meshTrace = {
@@ -51,10 +51,8 @@ export function get3DShapePlotData(
         showlegend: false
     };
 
-    // FIX: Create labels for the original points, not mesh vertices
     const labels = points.map((_, i) => String.fromCharCode(65 + i));
 
-    // FIX: Use the original points for label positioning, not mesh vertices
     const textPositions = points.map((point) => {
         const x = point.x;
         const y = point.y;
@@ -84,13 +82,12 @@ export function get3DShapePlotData(
         return `${vertical} ${horizontal}`;
     });
 
-    // FIX: Use original points for label coordinates
     const labelsTrace = {
         type: 'scatter3d',
         mode: 'text',
-        x: xValues, // Use original points x
-        y: yValues, // Use original points y
-        z: zValues, // Use original points z
+        x: xValues,
+        y: yValues,
+        z: zValues,
         text: labels,
         textposition: textPositions,
         textfont: {
@@ -98,6 +95,7 @@ export function get3DShapePlotData(
             color: 'black'
         },
         showlegend: false,
+        marker: {}
     };
 
     // Create coordinate axes traces
@@ -151,9 +149,9 @@ export function get3DShapePlotLayout(
     return {
         margin: { t: 0, l: 30, r: 30, b: 30 },
         scene: {
-            xaxis: { range: xRange, dtick: 1, scaleanchor: 'x', scaleratio: 1 },
-            yaxis: { range: yRange, dtick: 1, scaleanchor: 'x', scaleratio: 1 },
-            zaxis: { range: zRange, dtick: 1, scaleanchor: 'x', scaleratio: 1 },
+            xaxis: { range: xRange, dtick: 1 },
+            yaxis: { range: yRange, dtick: 1 },
+            zaxis: { range: zRange, dtick: 1 },
             camera: { eye: { x: 0, y: -1.5, z: 1 } },
             aspectratio: { x: 1, y: 1, z: 1 },
         },
@@ -179,7 +177,6 @@ function generateMeshDataFromPoints(points: Point3D[]) {
 
     let faces: number[][] = [];
 
-    // Use the same face generation logic as the original JavaScript version
     // This creates all possible triangles between points
     for (let i = 0; i < points.length; i++) {
         for (let j = i + 1; j < points.length; j++) {

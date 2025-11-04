@@ -194,7 +194,7 @@ export function useVisualizationTabs(
                         {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
                             <GeoSelect
                                 id="rotation-axis"
-                                value={rotationValue.axis || 'x'}
+                                value={rotationValue.axis || 'radio_x_axis'}
                                 onValueChange={(value) => {
                                     setRotationValue({
                                         ...rotationValue,
@@ -202,9 +202,9 @@ export function useVisualizationTabs(
                                     });
                                 }}
                                 options={[
-                                    {value: 'x', label: 'Sumbu X'},
-                                    {value: 'y', label: 'Sumbu Y'},
-                                    {value: 'z', label: 'Sumbu Z'},
+                                    {value: 'radio_x_axis', label: 'Sumbu X'},
+                                    {value: 'radio_y_axis', label: 'Sumbu Y'},
+                                    {value: 'radio_z_axis', label: 'Sumbu Z'},
                                 ]}
                             />
                         )}

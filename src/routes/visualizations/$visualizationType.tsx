@@ -3,12 +3,12 @@ import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
-import {toast} from "sonner";
 import {SquareKanban} from "lucide-react";
 import {useEffect, useState} from "react";
 import {
     type DilatationValue,
-    type Point, type Point3D,
+    type Point,
+    type Point3D,
     type ReflectionValue,
     type RotationValue,
     type TranslationValue,
@@ -23,6 +23,7 @@ import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
+import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -60,15 +61,15 @@ function RouteComponent() {
     const {visualizationType} = Route.useParams()
     const isMobile = useIsMobile();
     const [shapePoints, setShapePoints] = useState<Point[]>(() => {
-        const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "pyramid" : "triangle";
+        const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         return PRESET_POINTS[defaultKey] || [];
     })
     const [translationValue, setTranslationValue] = useState<TranslationValue>({
-        translateX: 2,
-        translateY: 2,
-        translateZ: 2
+        translateX: 3,
+        translateY: 3,
+        translateZ: 3
     })
-    const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 2,})
+    const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 4,})
     const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'radio_x_axis'})
     const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({
         axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
@@ -77,6 +78,21 @@ function RouteComponent() {
 
     const [plotData, setPlotData] = useState<any>()
     const [plotLayout, setPlotLayout] = useState<any>(null)
+
+    const {startAnimation} = usePlotlyAnimation({
+        shapePoints,
+        visualizationType,
+        isMobile,
+        transformationValues: {
+            translationValue,
+            dilatationValue,
+            rotationValue,
+            reflectionAxis
+        },
+        setPlotData,
+        setPlotLayout,
+        setDilatationValue
+    });
 
     const handlePlotClick = (points: Point[]) => {
         if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
@@ -111,12 +127,7 @@ function RouteComponent() {
             dilatationValue.scaleFactor = 1
         }
 
-        toast.success("Memulai visualisasi...")
-        console.log("Starting visualization with points:", shapePoints)
-
-        console.log(transformationType)
-        console.log(translationValue, dilatationValue, rotationValue, reflectionAxis)
-        // TODO:Start your visualization logic here
+        startAnimation(transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection');
     }
 
     const tabs = useVisualizationTabs({
@@ -130,7 +141,7 @@ function RouteComponent() {
         setRotationValue,
         reflectionAxis,
         setReflectionAxis,
-        onStartVisualization: handleStartVisualization,
+        onStartVisualization: handleStartVisualization
     })
 
     return (
