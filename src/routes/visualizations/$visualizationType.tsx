@@ -8,6 +8,8 @@ import {useEffect, useRef, useState} from "react";
 import {
     type DilatationValue,
     type PerformanceStats,
+    type PlotlyData,
+    type PlotlyLayout,
     type Point,
     type Point3D,
     type ReflectionValue,
@@ -18,7 +20,6 @@ import {
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
 import {useVisualizationTabs} from "@/components/visualization/visualization-tabs.tsx";
-import Plot from "react-plotly.js";
 import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
@@ -33,6 +34,7 @@ import {
     getPolarPlotData
 } from "@/hooks/use-equation-plot.ts";
 import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
+import PlotContainer from "@/components/plot/PlotContainer.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -90,14 +92,12 @@ function RouteComponent() {
         k: 0
     })
 
-    const [plotData, setPlotData] = useState<any>()
-    const [plotLayout, setPlotLayout] = useState<any>(null)
+    const [plotData, setPlotData] = useState<PlotlyData>()
+    const [plotLayout, setPlotLayout] = useState<PlotlyLayout>({})
 
     const [perfStats, setPerfStats] = useState<PerformanceStats | null>(null);
-    const [animationRenderTime, setAnimationRenderTime] = useState<number>(0);
-    const [initialRenderTime, setInitialRenderTime] = useState<number>(0);
-    const animationRenderStartRef = useRef(0);
     const initialRenderStartRef = useRef(0);
+    const animationRenderStartRef = useRef(0);
 
     const {startAnimation} = usePlotlyAnimation({
         shapePoints,
@@ -225,78 +225,14 @@ function RouteComponent() {
                     <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
 
                         <div className="flex flex-col flex-2 space-y-4">
-                            <div
-                                className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-4 flex items-center justify-center">
-                                {shapePoints.length > 0 ? (
-                                    <div className="flex flex-col w-full h-full">
-                                        <Plot
-                                            data={plotData}
-                                            layout={plotLayout}
-                                            // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
-                                            className="h-full md:h-[80vh] w-full"
-                                            onAfterPlot={() => {
-                                                const now = performance.now();
-
-                                                // Check for normal render
-                                                if (initialRenderStartRef.current > 0) {
-                                                    const duration = now - initialRenderStartRef.current;
-                                                    setInitialRenderTime(duration);
-                                                    initialRenderStartRef.current = 0; // Reset
-                                                }
-
-                                                // Check for animation frame render
-                                                if (animationRenderStartRef.current > 0) {
-                                                    const duration = now - animationRenderStartRef.current;
-                                                    setAnimationRenderTime(duration); // Update animation state
-                                                    animationRenderStartRef.current = 0; // Reset
-                                                }
-                                            }}
-                                        />
-
-                                        {/*TODO: Hide this somewhere*/}
-                                        {/* Performance Stats */}
-                                        {(initialRenderTime > 0 || perfStats) && (
-                                            <div className="flex flex-col gap-1 mt-2">
-                                                {initialRenderTime > 0 && (
-                                                    <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 rounded-lg text-sm font-medium">
-                                                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                                                        <span>Initial Render: <strong>{initialRenderTime.toFixed(2)}ms</strong></span>
-                                                    </div>
-                                                )}
-
-                                                {perfStats && (
-                                                    <div className="flex flex-wrap gap-2">
-                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-deep-purple-100 to-deep-purple-200 text-deep-purple-800 rounded-lg text-sm font-medium">
-                                                            <div className="w-2 h-2 bg-deep-purple-500 rounded-full"></div>
-                                                            <span>FPS: <strong>{perfStats.fps.toFixed(1)}</strong></span>
-                                                        </div>
-
-                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 rounded-lg text-sm font-medium">
-                                                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                            <span>Frame: <strong>{perfStats.frameTime.toFixed(2)}ms</strong></span>
-                                                        </div>
-
-                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-teal-100 to-teal-200 text-teal-800 rounded-lg text-sm font-medium">
-                                                            <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                                                            <span>JS Calc: <strong>{perfStats.calcTime.toFixed(2)}ms</strong></span>
-                                                        </div>
-
-                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-rose-100 to-rose-200 text-rose-800 rounded-lg text-sm font-medium">
-                                                            <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
-                                                            <span>Plotly Render: <strong>{animationRenderTime.toFixed(2)}ms</strong></span>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 dark:text-gray-400">
-                                        <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
-                                        <div className="text-sm">Tambahkan titik untuk memulai visualisasi</div>
-                                    </div>
-                                )}
-                            </div>
+                            <PlotContainer
+                                shapePoints={shapePoints}
+                                plotData={plotData || []}
+                                plotLayout={plotLayout}
+                                perfStats={perfStats!!}
+                                initialRenderStartRef={initialRenderStartRef}
+                                animationRenderStartRef={animationRenderStartRef}
+                            />
 
                             {/*TODO: Deal with equation transformation later...*/}
                             {/*Transformation Input and Play*/}

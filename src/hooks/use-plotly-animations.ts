@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {
-    type DilatationValue, type PerformanceStats,
+    type DilatationValue, type PerformanceStats, type PlotlyData, type PlotlyLayout, type PlotlyTrace,
     type Point,
     type Point2D,
     type Point3D,
@@ -18,9 +18,6 @@ import {
     calculate3DTransformedCoordinates
 } from '@/hooks/use-calculate-transformation.ts';
 
-type PlotlyTrace = Record<string, any>;
-type PlotlyData = PlotlyTrace[];
-type PlotlyLayout = Record<string, any>;
 
 type TransformationType = (typeof TRANSFORMATION_TYPES)[keyof typeof TRANSFORMATION_TYPES];
 
@@ -34,9 +31,9 @@ interface UsePlotlyAnimationProps {
         rotationValue: RotationValue;
         reflectionAxis: ReflectionValue;
     };
-    setPlotData: React.Dispatch<React.SetStateAction<PlotlyData>>;
-    setPlotLayout: React.Dispatch<React.SetStateAction<PlotlyLayout>>;
-    setDilatationValue: React.Dispatch<React.SetStateAction<DilatationValue>>;
+    setPlotData: (data: PlotlyData) => void;
+    setPlotLayout: (layout: PlotlyLayout) => void;
+    setDilatationValue: (a: DilatationValue) => void;
     onFrameTick: (stats: PerformanceStats | null) => void;
     renderStartRef: React.MutableRefObject<number>;
 }

@@ -87,6 +87,12 @@ export interface Point3D extends Point2D {
 
 export type Point = Point2D | Point3D;
 
+export type PlotlyTrace = Record<string, any>;
+
+export type PlotlyData = PlotlyTrace[];
+
+export type PlotlyLayout = Record<string, any>;
+
 // Performance Stats
 export interface PerformanceStats {
     frameTime: number;
