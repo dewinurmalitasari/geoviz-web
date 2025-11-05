@@ -10,6 +10,7 @@ import {useState} from "react";
 import EditMaterialForm from "@/components/form/material/edit-material-form.tsx";
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
+import {getAuthentication} from "@/lib/auth.ts";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -44,6 +45,7 @@ export const Route = createFileRoute('/materials/$materialId')({
 })
 
 function RouteComponent() {
+    const auth = getAuthentication();
     const router = useRouter();
     const navigate = useNavigate();
     const {material} = Route.useLoaderData();
@@ -102,7 +104,7 @@ function RouteComponent() {
                         )}
                     </div>
                 }
-                titleButton={
+                titleButton={auth?.user.role === 'admin' &&
                     <GeoButton
                         onClick={() => setEditOpen(true)}
                         variant="secondary"
