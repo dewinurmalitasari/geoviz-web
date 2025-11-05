@@ -14,6 +14,7 @@ interface ShapePointsInputProps {
     minPoints?: number;
     className?: string;
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    defaultPoints: Point[];
 }
 
 export default function ShapePointsInput(
@@ -23,12 +24,10 @@ export default function ShapePointsInput(
         maxPoints = 10,
         minPoints = 1,
         className,
-        colorScheme = "purple"
+        colorScheme = "purple",
+        defaultPoints
     }: ShapePointsInputProps) {
-    const [points, setPoints] = useState<Point[]>(() => {
-        const defaultKey = dimension === "3d" ? "cube" : "square";
-        return PRESET_POINTS[defaultKey] || [];
-    });
+    const [points, setPoints] = useState<Point[]>(defaultPoints);
     const [selectedPreset, setSelectedPreset] = useState<string>("custom");
 
     const presets = dimension === "3d" ? PRESETS_3D : PRESETS_2D;

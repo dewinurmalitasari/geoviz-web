@@ -24,6 +24,8 @@ import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
 import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
+import EquationInput from "@/components/visualization/equation-input.tsx";
+import {get2DEquationPlotData, get2DEquationPlotLayout} from "@/hooks/use-equation-plot.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -64,6 +66,8 @@ function RouteComponent() {
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         return PRESET_POINTS[defaultKey] || [];
     })
+    const [equations, setEquations] = useState<string[]>(['x^2'])
+
     const [translationValue, setTranslationValue] = useState<TranslationValue>({
         translateX: 3,
         translateY: 3,
@@ -94,8 +98,17 @@ function RouteComponent() {
         setDilatationValue
     });
 
-    const handlePlotClick = (points: Point[]) => {
-        if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
+    const handlePlotClick = (points: Point[], equations: string[]) => {
+        if (visualizationType === VISUALIZATION_TYPES.EQUATION) {
+            // For equation visualization
+            const xRange: [number, number] = [-10, 10];
+            const yRange: [number, number] = [-10, 10];
+            const newPlotData = get2DEquationPlotData(equations,xRange);
+            const newPlotLayout = get2DEquationPlotLayout(xRange, yRange);
+
+            setPlotData(newPlotData)
+            setPlotLayout(newPlotLayout)
+        } else if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
             // For 2D visualization
             const {xRange, yRange} = calculateRange(points)
             const newPlotData = get2DShapePlotData(points, isMobile)
@@ -117,7 +130,7 @@ function RouteComponent() {
 
     // Initialize plot on component mount
     useEffect(() => {
-        handlePlotClick(shapePoints)
+        handlePlotClick(shapePoints, equations)
     }, []) // Empty dependency array to run only on mount
 
     const handleStartVisualization = (transformationType: string) => {
@@ -191,20 +204,34 @@ function RouteComponent() {
                         <div className="flex flex-col space-y-4 flex-1">
                             <GeoButton
                                 variant="secondary"
-                                onClick={() => handlePlotClick(shapePoints)}
+                                onClick={() => handlePlotClick(shapePoints, equations)}
                                 className="h-fit"
                             >
                                 <SquareKanban/> Plot Titik
                             </GeoButton>
 
                             {/* Shape Points Input */}
-                            <ShapePointsInput
-                                onPointsChange={(points) => setShapePoints(points)}
-                                dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
-                                maxPoints={8}
-                                minPoints={3}
-                                className="p-4 rounded-xl border border-deep-purple-200"
-                            />
+                            {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
+                                <ShapePointsInput
+                                    onPointsChange={(points) => setShapePoints(points)}
+                                    dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
+                                    maxPoints={8}
+                                    minPoints={3}
+                                    defaultPoints={shapePoints}
+                                    className="p-4 rounded-xl border border-deep-purple-200"
+                                />
+                            }
+
+                            {/* Equation Input*/}
+                            {visualizationType === VISUALIZATION_TYPES.EQUATION &&
+                                <EquationInput
+                                    onEquationsChange={(equations) => setEquations(equations)}
+                                    maxEquations={5}
+                                    minEquations={1}
+                                    defaultEquations={equations}
+                                    className="p-4 rounded-xl border border-deep-purple-200"
+                                />
+                            }
                         </div>
                     </div>
                 }
