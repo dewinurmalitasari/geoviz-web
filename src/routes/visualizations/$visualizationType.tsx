@@ -31,6 +31,7 @@ import {
     getParametricPlotData,
     getPolarPlotData
 } from "@/hooks/use-equation-plot.ts";
+import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -119,7 +120,7 @@ function RouteComponent() {
             // Call the correct plot function based on the state type
             switch (equations.type) {
                 case 'explicit':
-                    newPlotData = get2DEquationPlotData(equations.equations, xRange);
+                    newPlotData = get2DEquationPlotData(equations.equations, [-100, 100]); // Fix x-range for better view
                     // Standard layout is fine
                     break;
 
@@ -151,14 +152,21 @@ function RouteComponent() {
 
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
-        } else {
+        } else if (visualizationType === VISUALIZATION_TYPES.SHAPE_3D) {
             // For 3D visualization
-            const {xRange, yRange, zRange} = calculateRange(points as Point3D[])
+            const {xRange, yRange, zRange} = calculateRange(points)
             const newPlotData = get3DShapePlotData(points as Point3D[])
             const newPlotLayout = get3DShapePlotLayout(xRange, yRange, zRange!)
             const axisTrace = get3DAxisTraces(xRange, yRange, zRange!)
 
             setPlotData([...newPlotData, ...axisTrace])
+            setPlotLayout(newPlotLayout)
+        } else {
+            // For 2D visualization
+            const {xRange, yRange} = calculateRange(points)
+            const newPlotData = get2DShapePlotData(points, isMobile)
+            const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
+            setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
         }
     }

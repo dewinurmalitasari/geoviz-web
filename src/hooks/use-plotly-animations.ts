@@ -160,6 +160,7 @@ export function usePlotlyAnimation(
         let finalXRange = xRange;
         let finalYRange = yRange;
         let finalZRange = zRange;
+        let axisTraces: PlotlyData = [];
 
         if (is3D) {
             const xSpan = xRange[1] - xRange[0];
@@ -176,6 +177,8 @@ export function usePlotlyAnimation(
             finalZRange = [zCenter - maxSpan / 2, zCenter + maxSpan / 2];
 
             newLayout = get3DShapePlotLayout(finalXRange, finalYRange, finalZRange);
+
+            axisTraces = get3DAxisTraces(finalXRange, finalYRange, finalZRange as [number, number]);
         } else {
             newLayout = get2DShapePlotLayout(finalXRange, finalYRange);
 
@@ -217,8 +220,6 @@ export function usePlotlyAnimation(
 
         // Set the layout only once before the animation starts
         setPlotLayout(newLayout);
-
-        const axisTraces = get3DAxisTraces(finalXRange, finalYRange, finalZRange as [number, number]);
 
         // 3. Start Animation
         const startTime = performance.now();
