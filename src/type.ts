@@ -87,6 +87,13 @@ export interface Point3D extends Point2D {
 
 export type Point = Point2D | Point3D;
 
+// Performance Stats
+export interface PerformanceStats {
+    frameTime: number;
+    fps: number;
+    calcTime: number;
+}
+
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {

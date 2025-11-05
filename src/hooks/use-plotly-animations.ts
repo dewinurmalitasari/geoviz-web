@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {
-    type DilatationValue,
+    type DilatationValue, type PerformanceStats,
     type Point,
     type Point2D,
     type Point3D,
@@ -37,6 +37,8 @@ interface UsePlotlyAnimationProps {
     setPlotData: React.Dispatch<React.SetStateAction<PlotlyData>>;
     setPlotLayout: React.Dispatch<React.SetStateAction<PlotlyLayout>>;
     setDilatationValue: React.Dispatch<React.SetStateAction<DilatationValue>>;
+    onFrameTick: (stats: PerformanceStats | null) => void;
+    renderStartRef: React.MutableRefObject<number>;
 }
 
 export function usePlotlyAnimation(
@@ -47,11 +49,16 @@ export function usePlotlyAnimation(
         transformationValues,
         setPlotData,
         setPlotLayout,
-        setDilatationValue
+        setDilatationValue,
+        onFrameTick,
+        renderStartRef
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
     const isAnimatingRef = useRef(false); // Track animation state outside React state
+
+    const lastFrameTimeRef = useRef(performance.now());
+    const lastStatUpdateTimeRef = useRef(0);
 
     const cancelAnimation = useCallback(() => {
         if (animationFrameRef.current) {
@@ -59,6 +66,7 @@ export function usePlotlyAnimation(
             animationFrameRef.current = null;
         }
         isAnimatingRef.current = false;
+        onFrameTick(null);
     }, []);
 
     useEffect(() => {
@@ -225,8 +233,18 @@ export function usePlotlyAnimation(
         const startTime = performance.now();
         const duration = transformationType === TRANSFORMATION_TYPES.ROTATION ? 1500 : 1000;
 
+        lastFrameTimeRef.current = performance.now();
+        lastStatUpdateTimeRef.current = 0;
+
         const animate = (timestamp: number) => {
             if (!isAnimatingRef.current) return; // Early return if animation was cancelled
+
+            const now = performance.now();
+            const frameTime = now - lastFrameTimeRef.current;
+            const fps = 1000 / frameTime;
+            lastFrameTimeRef.current = now;
+
+            const calcStartTime = performance.now();
 
             const elapsed = timestamp - startTime;
             let t = Math.min(elapsed / duration, 1);
@@ -264,8 +282,16 @@ export function usePlotlyAnimation(
             }
 
             const intermediateTraces = plotFn(intermediatePoints, transformedColor);
+            const calcTime = performance.now() - calcStartTime;
+            renderStartRef.current = performance.now();
+
             // Batch the state update to avoid multiple renders
             setPlotData([...axisTraces, ...originalTraces, ...intermediateTraces]);
+
+            if (now - lastStatUpdateTimeRef.current > 100) {
+                onFrameTick({frameTime, fps, calcTime});
+                lastStatUpdateTimeRef.current = now;
+            }
 
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
@@ -288,7 +314,9 @@ export function usePlotlyAnimation(
         setPlotData,
         setPlotLayout,
         setDilatationValue,
-        cancelAnimation
+        cancelAnimation,
+        onFrameTick,
+        renderStartRef
     ]);
 
     return {startAnimation, cancelAnimation};

@@ -4,9 +4,10 @@ import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
 import {SquareKanban} from "lucide-react";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     type DilatationValue,
+    type PerformanceStats,
     type Point,
     type Point3D,
     type ReflectionValue,
@@ -92,6 +93,12 @@ function RouteComponent() {
     const [plotData, setPlotData] = useState<any>()
     const [plotLayout, setPlotLayout] = useState<any>(null)
 
+    const [perfStats, setPerfStats] = useState<PerformanceStats | null>(null);
+    const [animationRenderTime, setAnimationRenderTime] = useState<number>(0);
+    const [initialRenderTime, setInitialRenderTime] = useState<number>(0);
+    const animationRenderStartRef = useRef(0);
+    const initialRenderStartRef = useRef(0);
+
     const {startAnimation} = usePlotlyAnimation({
         shapePoints,
         visualizationType,
@@ -104,7 +111,11 @@ function RouteComponent() {
         },
         setPlotData,
         setPlotLayout,
-        setDilatationValue
+        setDilatationValue,
+        onFrameTick: (stats) => {
+            setPerfStats(stats);
+        },
+        renderStartRef: animationRenderStartRef,
     });
 
     const handlePlotClick = (points: Point[], equations: EquationState) => {
@@ -166,6 +177,8 @@ function RouteComponent() {
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
         }
+
+        initialRenderStartRef.current = performance.now();
     }
 
     // Initialize plot on component mount
@@ -215,12 +228,50 @@ function RouteComponent() {
                             <div
                                 className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-4 flex items-center justify-center">
                                 {shapePoints.length > 0 ? (
-                                    <Plot
-                                        data={plotData}
-                                        layout={plotLayout}
-                                        // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
-                                        className="h-full md:h-[80vh] w-full"
-                                    />
+                                    <div className="flex flex-col w-full h-full">
+                                        <Plot
+                                            data={plotData}
+                                            layout={plotLayout}
+                                            // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
+                                            className="h-full md:h-[80vh] w-full"
+                                            onAfterPlot={() => {
+                                                const now = performance.now();
+
+                                                // Check for normal render
+                                                if (initialRenderStartRef.current > 0) {
+                                                    const duration = now - initialRenderStartRef.current;
+                                                    setInitialRenderTime(duration);
+                                                    initialRenderStartRef.current = 0; // Reset
+                                                }
+
+                                                // Check for animation frame render
+                                                if (animationRenderStartRef.current > 0) {
+                                                    const duration = now - animationRenderStartRef.current;
+                                                    setAnimationRenderTime(duration); // Update animation state
+                                                    animationRenderStartRef.current = 0; // Reset
+                                                }
+                                            }}
+                                        />
+
+                                        {initialRenderTime > 0 && (
+                                            <div
+                                                className={`p-2 ${perfStats ? 'bg-gray-800' : 'bg-gray-900'} text-white dark:bg-gray-800 font-mono text-xs ${perfStats ? 'rounded-t-lg' : 'rounded-b-lg -mt-4'} relative z-10`}
+                                            >
+                                                <span>Plot Render Time: {initialRenderTime.toFixed(2)}ms</span>
+                                            </div>
+                                        )}
+
+                                        {perfStats && (
+                                            <div
+                                                className={`p-2 bg-gray-900 text-white dark:bg-gray-800 font-mono text-xs ${initialRenderTime > 0 ? 'rounded-b-lg' : 'rounded-b-lg -mt-4'} relative z-10`}
+                                            >
+                                                <span>FPS: {perfStats.fps.toFixed(1)}</span>
+                                                <span className="ml-4">Frame: {perfStats.frameTime.toFixed(2)}ms</span>
+                                                <span className="ml-4">JS Calc: {perfStats.calcTime.toFixed(2)}ms</span>
+                                                <span className="ml-4">Plotly Render: {animationRenderTime.toFixed(2)}ms</span>
+                                            </div>
+                                        )}
+                                    </div>
                                 ) : (
                                     <div className="text-center text-gray-500 dark:text-gray-400">
                                         <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
