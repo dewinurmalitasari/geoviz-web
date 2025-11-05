@@ -17,15 +17,20 @@ import {
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
 import {useVisualizationTabs} from "@/components/visualization/visualization-tabs.tsx";
-import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
 import Plot from "react-plotly.js";
 import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
 import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
-import EquationInput from "@/components/visualization/equation-input.tsx";
-import {get2DEquationPlotData, get2DEquationPlotLayout} from "@/hooks/use-equation-plot.ts";
+import EquationInput, {type EquationState} from "@/components/visualization/equation-input.tsx";
+import {
+    get2DEquationPlotData,
+    get2DEquationPlotLayout,
+    getImplicitPlotData,
+    getParametricPlotData,
+    getPolarPlotData
+} from "@/hooks/use-equation-plot.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -52,8 +57,8 @@ export const Route = createFileRoute('/visualizations/$visualizationType')({
             <ErrorPage
                 status={500}
                 statusText="Internal Server Error"
-                title="Terjadi Kesalahan memuat data pengguna"
-                message={error.message || "Gagal memuat data pengguna."}
+                title="Terjadi Kesalahan memuat visualisasi"
+                message={error.message || "Gagal memuat visualisasi."}
             />
         );
     },
@@ -66,7 +71,10 @@ function RouteComponent() {
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         return PRESET_POINTS[defaultKey] || [];
     })
-    const [equations, setEquations] = useState<string[]>(['x^2'])
+    const [equations, setEquations] = useState<EquationState>({
+        type: 'explicit',
+        equations: ['x^2']
+    });
 
     const [translationValue, setTranslationValue] = useState<TranslationValue>({
         translateX: 3,
@@ -98,21 +106,48 @@ function RouteComponent() {
         setDilatationValue
     });
 
-    const handlePlotClick = (points: Point[], equations: string[]) => {
+    const handlePlotClick = (points: Point[], equations: EquationState) => {
         if (visualizationType === VISUALIZATION_TYPES.EQUATION) {
             // For equation visualization
             const xRange: [number, number] = [-10, 10];
             const yRange: [number, number] = [-10, 10];
-            const newPlotData = get2DEquationPlotData(equations,xRange);
-            const newPlotLayout = get2DEquationPlotLayout(xRange, yRange);
 
-            setPlotData(newPlotData)
-            setPlotLayout(newPlotLayout)
-        } else if (visualizationType !== VISUALIZATION_TYPES.SHAPE_3D) {
-            // For 2D visualization
-            const {xRange, yRange} = calculateRange(points)
-            const newPlotData = get2DShapePlotData(points, isMobile)
-            const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
+            let newPlotData: any = [];
+            // Start with the base layout
+            let newPlotLayout: any = get2DEquationPlotLayout(xRange, yRange);
+
+            // Call the correct plot function based on the state type
+            switch (equations.type) {
+                case 'explicit':
+                    newPlotData = get2DEquationPlotData(equations.equations, xRange);
+                    // Standard layout is fine
+                    break;
+
+                case 'parametric':
+                    // Define a default t-range (can be made configurable later)
+                    const tRange: [number, number] = [-10, 10];
+                    const data = getParametricPlotData(equations.x, equations.y, tRange);
+                    if (data) newPlotData = [data];
+                    // Force 1:1 aspect ratio
+                    newPlotLayout.yaxis.scaleanchor = 'x';
+                    break;
+
+                case 'polar':
+                    // Define a default theta-range
+                    const thetaRange: [number, number] = [0, 2 * Math.PI];
+                    const polarData = getPolarPlotData(equations.r, thetaRange);
+                    if (polarData) newPlotData = [polarData];
+                    // Force 1:1 aspect ratio
+                    newPlotLayout.yaxis.scaleanchor = 'x';
+                    break;
+
+                case 'implicit':
+                    const implicitData = getImplicitPlotData(equations.fxy, xRange, yRange);
+                    if (implicitData) newPlotData = [implicitData];
+                    // Force 1:1 aspect ratio
+                    newPlotLayout.yaxis.scaleanchor = 'x';
+                    break;
+            }
 
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
@@ -225,10 +260,10 @@ function RouteComponent() {
                             {/* Equation Input*/}
                             {visualizationType === VISUALIZATION_TYPES.EQUATION &&
                                 <EquationInput
-                                    onEquationsChange={(equations) => setEquations(equations)}
+                                    equationState={equations}
+                                    onEquationStateChange={(newState: EquationState) => setEquations(newState)}
                                     maxEquations={5}
                                     minEquations={1}
-                                    defaultEquations={equations}
                                     className="p-4 rounded-xl border border-deep-purple-200"
                                 />
                             }
