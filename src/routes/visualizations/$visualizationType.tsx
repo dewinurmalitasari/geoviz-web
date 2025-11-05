@@ -134,7 +134,7 @@ function RouteComponent() {
 
                 case 'parametric':
                     // Define a default t-range (can be made configurable later)
-                    const tRange: [number, number] = [-10, 10];
+                    const tRange: [number, number] = [-100, 100]; // Wide t-range for better visibility
                     const data = getParametricPlotData(equations.x, equations.y, tRange);
                     if (data) newPlotData = [data];
                     // Force 1:1 aspect ratio
@@ -143,7 +143,7 @@ function RouteComponent() {
 
                 case 'polar':
                     // Define a default theta-range
-                    const thetaRange: [number, number] = [0, 2 * Math.PI];
+                    const thetaRange: [number, number] = [0, 4 * Math.PI]; // 0 to 4π for better visibility
                     const polarData = getPolarPlotData(equations.r, thetaRange);
                     if (polarData) newPlotData = [polarData];
                     // Force 1:1 aspect ratio
@@ -151,7 +151,7 @@ function RouteComponent() {
                     break;
 
                 case 'implicit':
-                    const implicitData = getImplicitPlotData(equations.fxy, xRange, yRange);
+                    const implicitData = getImplicitPlotData(equations.fxy, [-100, 100], [-100, 100]);
                     if (implicitData) newPlotData = [implicitData];
                     // Force 1:1 aspect ratio
                     newPlotLayout.yaxis.scaleanchor = 'x';

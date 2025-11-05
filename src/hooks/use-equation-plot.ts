@@ -4,7 +4,7 @@ import {type EvalFunction, parse} from 'mathjs';
 import type {Data} from 'plotly.js';
 
 // The number of points to calculate for each line.
-const PLOT_RESOLUTION = 1000;
+const PLOT_RESOLUTION = 10000;
 
 /**
  * [EXISTING FUNCTION - UNCHANGED]

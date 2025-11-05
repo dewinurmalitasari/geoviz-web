@@ -28,6 +28,7 @@ function RouteComponent() {
                             <ArrowRight className="w-4 h-4"/> Visualisasi Bangun 2D
                         </GeoButton>
                     }
+                    data-aos-delay={100}
                 />
 
                 <GeoCard
@@ -43,6 +44,7 @@ function RouteComponent() {
                             <ArrowRight className="w-4 h-4"/> Visualisasi Bangun 3D
                         </GeoButton>
                     }
+                    data-aos-delay={200}
                 />
 
                 <GeoCard
@@ -58,6 +60,7 @@ function RouteComponent() {
                             <ArrowRight className="w-4 h-4"/> Visualisasi Persamaan
                         </GeoButton>
                     }
+                    data-aos-delay={300}
                 />
             </div>
         </div>
