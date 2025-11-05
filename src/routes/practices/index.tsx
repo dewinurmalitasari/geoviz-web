@@ -49,7 +49,7 @@ function RouteComponent() {
 
                 <GeoCard
                     icon={<span className="font-bold text-2xl">2</span>}
-                    title="Nilai Transformasi"
+                    title="Tentukan Nilai Transformasi"
                     content={
                         <p className="text-gray-600 mb-6 text-sm md:text-base">
                             Latih kemampuanmu dalam mennentukan nilai transformasi geometri.
