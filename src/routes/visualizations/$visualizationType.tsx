@@ -114,14 +114,11 @@ function RouteComponent() {
             const yRange: [number, number] = [-10, 10];
 
             let newPlotData: any = [];
-            // Start with the base layout
             let newPlotLayout: any = get2DEquationPlotLayout(xRange, yRange);
 
-            // Call the correct plot function based on the state type
             switch (equations.type) {
                 case 'explicit':
-                    newPlotData = get2DEquationPlotData(equations.equations, [-100, 100]); // Fix x-range for better view
-                    // Standard layout is fine
+                    newPlotData = get2DEquationPlotData(equations.equations, [-100, 100]); // Wide x-range for better visibility
                     break;
 
                 case 'parametric':
@@ -232,14 +229,17 @@ function RouteComponent() {
                                 )}
                             </div>
 
+                            {/*TODO: Deal with equation transformation later...*/}
                             {/*Transformation Input and Play*/}
-                            <GeoTabs
-                                defaultValue="translation"
-                                tabs={tabs}
-                                variant="pills"
-                                fullWidth={true}
-                                className="flex-1"
-                            />
+                            {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
+                                <GeoTabs
+                                    defaultValue="translation"
+                                    tabs={tabs}
+                                    variant="pills"
+                                    fullWidth={true}
+                                    className="flex-1"
+                                />
+                            }
                         </div>
 
 
