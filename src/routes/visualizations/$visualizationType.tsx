@@ -254,13 +254,13 @@ function RouteComponent() {
                                         />
 
                                         {/*TODO: Hide this somewhere*/}
-                                        {/* Performance Stats - Styled to match theme */}
+                                        {/* Performance Stats */}
                                         {(initialRenderTime > 0 || perfStats) && (
                                             <div className="flex flex-col gap-1 mt-2">
                                                 {initialRenderTime > 0 && (
                                                     <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 rounded-lg text-sm font-medium">
                                                         <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                                                        <span>Plot Render Time: <strong>{initialRenderTime.toFixed(2)}ms</strong></span>
+                                                        <span>Initial Render: <strong>{initialRenderTime.toFixed(2)}ms</strong></span>
                                                     </div>
                                                 )}
 
@@ -270,14 +270,17 @@ function RouteComponent() {
                                                             <div className="w-2 h-2 bg-deep-purple-500 rounded-full"></div>
                                                             <span>FPS: <strong>{perfStats.fps.toFixed(1)}</strong></span>
                                                         </div>
+
                                                         <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 rounded-lg text-sm font-medium">
                                                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                                                             <span>Frame: <strong>{perfStats.frameTime.toFixed(2)}ms</strong></span>
                                                         </div>
+
                                                         <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-teal-100 to-teal-200 text-teal-800 rounded-lg text-sm font-medium">
                                                             <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
                                                             <span>JS Calc: <strong>{perfStats.calcTime.toFixed(2)}ms</strong></span>
                                                         </div>
+
                                                         <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-rose-100 to-rose-200 text-rose-800 rounded-lg text-sm font-medium">
                                                             <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
                                                             <span>Plotly Render: <strong>{animationRenderTime.toFixed(2)}ms</strong></span>
