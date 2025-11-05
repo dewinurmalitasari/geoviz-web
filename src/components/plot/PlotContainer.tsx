@@ -40,14 +40,14 @@ export default function PlotContainer(
                             if (initialRenderStartRef.current > 0) {
                                 const duration = now - initialRenderStartRef.current;
                                 setInitialRenderTime(duration);
-                                initialRenderStartRef.current = 0; // Reset
+                                initialRenderStartRef.current = 0;
                             }
 
                             // Check for animation frame render
                             if (animationRenderStartRef.current > 0) {
                                 const duration = now - animationRenderStartRef.current;
                                 setAnimationRenderTime(duration); // Update animation state
-                                animationRenderStartRef.current = 0; // Reset
+                                animationRenderStartRef.current = 0;
                             }
                         }}
                     />

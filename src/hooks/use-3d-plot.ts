@@ -66,12 +66,12 @@ export function get3DShapePlotData(
 
         // Determine horizontal position
         let horizontal = 'center';
-        if (x === maxX) horizontal = 'right';
-        else if (x === minX) horizontal = 'left';
+        if (x === maxX) horizontal = 'center'; // Orig right
+        else if (x === minX) horizontal = 'center'; // Orig left
 
         // For points at extreme Y values, adjust if not already at extremes in X or Z
-        if (y === maxY && horizontal === 'center') horizontal = 'right';
-        if (y === minY && horizontal === 'center') horizontal = 'left';
+        if (y === maxY && horizontal === 'center') horizontal = 'center'; // Orig right
+        if (y === minY && horizontal === 'center') horizontal = 'center'; // Orig left
 
         return `${vertical} ${horizontal}`;
     });
