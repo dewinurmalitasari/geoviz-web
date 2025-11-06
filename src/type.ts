@@ -100,6 +100,12 @@ export interface PerformanceStats {
     calcTime: number;
 }
 
+// Practice Types
+export const PRACTICE_TYPES = {
+    IDENTIFY: 'identify',
+    DETERMINE_VALUE: 'determine_value',
+} as const;
+
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {

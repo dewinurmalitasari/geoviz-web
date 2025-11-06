@@ -5,7 +5,7 @@ import {ErrorPage} from "@/components/root/error-page.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import {ArrowRight} from "lucide-react";
 import GeoButton from "@/components/geo/geo-button.tsx";
-import {ROUTES} from "@/type.ts";
+import {PRACTICE_TYPES, ROUTES} from "@/type.ts";
 
 export const Route = createFileRoute('/practices/')({
     loader: () => {
@@ -40,7 +40,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.practices.base}>
+                        <GeoButton variant="primary" to={ROUTES.practices.practiceType(PRACTICE_TYPES.IDENTIFY)}>
                             <ArrowRight className="w-4 h-4"/> Latihan Identifikasi
                         </GeoButton>
                     }
@@ -56,7 +56,7 @@ function RouteComponent() {
                         </p>
                     }
                     footer={
-                        <GeoButton variant="primary" to={ROUTES.practices.base}>
+                        <GeoButton variant="primary" to={ROUTES.practices.practiceType(PRACTICE_TYPES.DETERMINE_VALUE)}>
                             <ArrowRight className="w-4 h-4"/> Latihan Nilai Transformasi
                         </GeoButton>
                     }

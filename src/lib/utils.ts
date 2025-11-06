@@ -1,17 +1,23 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import {type ClassValue, clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+    return twMerge(clsx(inputs))
 }
 
 declare global {
     interface String {
         toCapitalized(): string;
+
         translateRole(): string;
+
         translateType(): string;
+
         translateVisualizationType(): string;
+
         translateTransformationType(): string;
+
+        translatePracticeType(): string;
     }
 }
 
@@ -68,6 +74,18 @@ String.prototype.translateTransformationType = function () {
             return 'Rotasi';
         case 'reflection':
             return 'Refleksi';
+        default:
+            return this.toCapitalized();
+    }
+}
+
+String.prototype.translatePracticeType = function () {
+    // TODO: Match with PRACTICE_TYPES in the future
+    switch (this.toLowerCase()) {
+        case 'identify':
+            return 'Identifikasi';
+        case 'determine_value':
+            return 'Tentukan Nilai';
         default:
             return this.toCapitalized();
     }
