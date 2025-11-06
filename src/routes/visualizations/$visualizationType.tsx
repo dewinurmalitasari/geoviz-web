@@ -92,7 +92,7 @@ function RouteComponent() {
         k: 0
     })
 
-    const [plotData, setPlotData] = useState<PlotlyData>()
+    const [plotData, setPlotData] = useState<PlotlyData>([])
     const [plotLayout, setPlotLayout] = useState<PlotlyLayout>({})
 
     const [perfStats, setPerfStats] = useState<PerformanceStats | null>(null);

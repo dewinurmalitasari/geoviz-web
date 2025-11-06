@@ -192,9 +192,9 @@ export function usePlotlyAnimation(
                 const k = (values as ReflectionValue).k!;
                 let lineTrace: Partial<PlotlyTrace> | null = null
 
-                const lineRangeMultiplier = 2;
-                const xLineRange = [xRange[0] * lineRangeMultiplier, xRange[1] * lineRangeMultiplier];
-                const yLineRange = [yRange[0] * lineRangeMultiplier, yRange[1] * lineRangeMultiplier];
+                const lineRangeMultiplier = 10;
+                const xLineRange = [-xRange[1] * lineRangeMultiplier, xRange[1] * lineRangeMultiplier];
+                const yLineRange = [-yRange[1] * lineRangeMultiplier, yRange[1] * lineRangeMultiplier];
 
                 switch (axis) {
                     case 'line-y-x':
