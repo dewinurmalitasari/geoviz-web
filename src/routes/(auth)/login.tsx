@@ -5,6 +5,7 @@ import {toast} from "sonner";
 import {authService} from "@/services/auth-service.ts";
 import {setAuthentication} from "@/lib/auth.ts";
 import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
+import he from "he";
 
 export const Route = createFileRoute('/(auth)/login')({
     component: RouteComponent,
@@ -33,7 +34,7 @@ function RouteComponent() {
                 data.token
             );
 
-            toast.success(`Selamat Datang! ${data.user.username}`);
+            toast.success(`Selamat Datang! ${he.decode(data.user.username)}`);
             animatedNavigate({to: '/'});
         } catch (error) {
             toast.error('Gagal Login: ' + (error as Error).message);

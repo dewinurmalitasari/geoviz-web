@@ -11,6 +11,7 @@ import EditMaterialForm from "@/components/form/material/edit-material-form.tsx"
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
+import he from "he";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -62,11 +63,11 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title={material.title} description="Detail materi transformasi geometri" colorScheme="yellow"/>
+            <PageHeader title={he.decode(material.title)} description="Detail materi transformasi geometri" colorScheme="yellow"/>
 
             <GeoCard
                 icon={<BookOpen/>}
-                title={material.title}
+                title={he.decode(material.title)}
                 content={
                     <div className="space-y-6">
                         {/* YouTube Videos Section */}
@@ -101,7 +102,7 @@ function RouteComponent() {
                                 <h3 className="text-lg font-semibold text-deep-purple-700">Deskripsi</h3>
                             </div>
                             <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border-l-4 border-deep-purple-300 whitespace-pre-line">
-                                {material.description}
+                                {he.decode(material.description)}
                             </p>
                         </div>
 
@@ -114,7 +115,7 @@ function RouteComponent() {
                                 </div>
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                     <p className="font-mono text-lg text-gray-800 text-center font-medium whitespace-pre-line">
-                                        {material.formula}
+                                        {he.decode(material.formula)}
                                     </p>
                                 </div>
                             </div>
@@ -129,7 +130,7 @@ function RouteComponent() {
                                 </div>
                                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                                     <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {material.example}
+                                        {he.decode(material.example)}
                                     </p>
                                 </div>
                             </div>

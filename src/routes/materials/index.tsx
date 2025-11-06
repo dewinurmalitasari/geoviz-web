@@ -14,6 +14,7 @@ import EditMaterialForm from "@/components/form/material/edit-material-form.tsx"
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import AddMaterialForm from "@/components/form/material/add-material-form.tsx";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
+import he from "he";
 
 export const Route = createFileRoute('/materials/')({
     component: RouteComponent,
@@ -84,10 +85,10 @@ function RouteComponent() {
                     <GeoCard
                         key={index}
                         icon={<span className="font-bold text-2xl">{index + 1}</span>}
-                        title={material.title}
+                        title={he.decode(material.title)}
                         content={
                             <p className="line-clamp-3 break-words overflow-hidden">
-                                {material.description}
+                                {he.decode(material.description)}
                             </p>
                         }
                         footer={

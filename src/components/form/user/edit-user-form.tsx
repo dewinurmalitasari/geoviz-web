@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import type {User, UserPayload} from "@/type.ts";
 import {toast} from "sonner";
 import {userService} from "@/services/user-service.ts";
+import he from "he";
 
 interface EditUserFormProps {
     open: boolean;
@@ -15,13 +16,13 @@ interface EditUserFormProps {
 export default function EditUserForm({open, setOpen, user, onSuccess, onDeleteClick}: EditUserFormProps) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [values, setValues] = useState<UserPayload>({
-        username: user.username,
+        username: he.decode(user.username),
     });
 
     // Reset form values when user changes
     useEffect(() => {
         setValues({
-            username: user.username,
+            username: he.decode(user.username),
         });
     }, [user]);
 
@@ -33,9 +34,13 @@ export default function EditUserForm({open, setOpen, user, onSuccess, onDeleteCl
 
         setIsProcessing(true);
         try {
-            const data = await userService.updateUser(user._id, values);
+            const sanitizedValues = {
+                ...values,
+                username: he.encode(values.username),
+            };
+            const data = await userService.updateUser(user._id, sanitizedValues);
 
-            toast.success(`Pengguna "${data.user.username}" berhasil diperbarui!`);
+            toast.success(`Pengguna "${he.decode(data.user.username)}" berhasil diperbarui!`);
             onSuccess();
             setOpen(false);
         } catch (error) {

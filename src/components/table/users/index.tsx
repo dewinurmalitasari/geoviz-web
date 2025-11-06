@@ -3,6 +3,7 @@ import type {ColumnDef} from '@tanstack/react-table';
 import {Eye, Pen} from 'lucide-react';
 import GeoButton from '@/components/geo/geo-button.tsx';
 import {ROUTES, type User, type UsersResponse} from '@/type.ts';
+import he from "he";
 
 interface TeacherColumnsProps {
     teachers: UsersResponse | null;
@@ -28,7 +29,7 @@ export function useTeacherColumns({teachers, onEdit}: TeacherColumnsProps): Colu
             id: 'username',
             accessorKey: 'username',
             header: () => <div className="text-start font-bold">Username</div>,
-            cell: ({row}) => <div className="text-start">{row.original.username}</div>,
+            cell: ({row}) => <div className="text-start">{he.decode(row.original.username)}</div>,
         },
         {
             id: 'actions',
@@ -66,7 +67,7 @@ export function useStudentColumns({students, onEdit}: StudentColumnsProps): Colu
             id: 'username',
             accessorKey: 'username',
             header: () => <div className="text-start font-bold">Username</div>,
-            cell: ({row}) => <div className="text-start">{row.original.username}</div>,
+            cell: ({row}) => <div className="text-start">{he.decode(row.original.username)}</div>,
         },
         {
             id: 'actions',

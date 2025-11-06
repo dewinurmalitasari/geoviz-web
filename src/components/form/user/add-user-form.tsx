@@ -3,6 +3,7 @@ import {useState} from "react";
 import type {UserPayload} from "@/type.ts";
 import {toast} from "sonner";
 import {userService} from "@/services/user-service.ts";
+import he from "he";
 
 interface AddUserFormProps {
     trigger: React.ReactNode
@@ -27,9 +28,13 @@ export default function AddUserForm({trigger, role, onSuccess}: AddUserFormProps
 
         setIsProcessing(true);
         try {
-            const data = await userService.createUser(values);
+            const sanitizedValues = {
+                ...values,
+                username: he.encode(values.username),
+            };
+            const data = await userService.createUser(sanitizedValues);
 
-            toast.success(`Pengguna "${data.user.username}" berhasil ditambahkan!`);
+            toast.success(`Pengguna "${he.decode(data.user.username)}" berhasil ditambahkan!`);
             setValues({
                 username: '',
                 password: '',

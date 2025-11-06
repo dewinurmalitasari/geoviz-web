@@ -1,6 +1,7 @@
 import LogoutButton from "@/components/auth/logout-button.tsx";
 import {Link} from "@tanstack/react-router";
 import {ROUTES} from "@/type.ts";
+import he from "he";
 
 interface HeaderProps {
     username?: string;
@@ -34,7 +35,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                             <p className="text-gray-500 text-xs md:text-sm font-medium">Halo,</p>
                             <div className="flex items-center gap-2">
                                 <p className="font-bold text-deep-purple-700 text-sm md:text-base bg-gradient-to-r from-deep-purple-600 to-purple-600 bg-clip-text text-transparent">
-                                    {username}
+                                    {he.decode(username)}
                                 </p>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-100 text-deep-purple-800 border border-deep-purple-200">
                                     {role?.translateRole()}
@@ -83,7 +84,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                                 <p className="text-gray-500 text-xs font-medium">Halo,</p>
                                 <div className="flex items-center gap-2">
                                     <p className="font-bold text-deep-purple-700 text-sm truncate max-w-[150px]">
-                                        {username}
+                                        {he.decode(username)}
                                     </p>
                                 </div>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">

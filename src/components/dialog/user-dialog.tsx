@@ -2,6 +2,7 @@ import {KeyRound, User2} from "lucide-react";
 import type {UserPayload} from "@/type.ts";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import FormDialog from "@/components/dialog/form-dialog.tsx";
+import he from "he";
 
 interface UserDialogProps {
     open?: boolean;
@@ -38,7 +39,7 @@ export default function UserDialog(
             onOpenChange={onOpenChange}
             isProcessing={isProcessing}
             isEdit={isEdit}
-            title={isEdit ? `Edit ${toEditUsername}` : `Tambah Akun ${role === 'teacher' ? 'Guru' : 'Siswa'}`}
+            title={isEdit ? `Edit ${he.decode(toEditUsername!)}` : `Tambah Akun ${role === 'teacher' ? 'Guru' : 'Siswa'}`}
             icon={<User2/>}
             onSubmit={onClick}
             onDelete={onDeleteClick}
@@ -47,7 +48,7 @@ export default function UserDialog(
             <GeoInput
                 id="username"
                 label="Username"
-                value={values.username??''}
+                value={he.decode(values.username??'')}
                 onChange={(e) => setValues({...values, username: e.target.value})}
                 icon={<User2/>}
                 description="Username harus unik dan terdiri dari minimal 3 karakter."

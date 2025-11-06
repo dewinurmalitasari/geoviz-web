@@ -1,10 +1,11 @@
-import {FileText, Type, Link, Plus, Minus} from "lucide-react";
+import {FileText, Link, Minus, Plus, Type} from "lucide-react";
 import type {MaterialPayload} from "@/type.ts";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import FormDialog from "@/components/dialog/form-dialog.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {cn} from "@/lib/utils.ts";
+import he from "he";
 
 interface MaterialDialogProps {
     open?: boolean;
@@ -101,7 +102,7 @@ export default function MaterialDialog(
             onOpenChange={onOpenChange}
             isProcessing={isProcessing}
             isEdit={isEdit}
-            title={isEdit ? `Edit ${toEditTitle}` : 'Tambah Materi'}
+            title={isEdit ? `Edit ${he.decode(toEditTitle!)}` : 'Tambah Materi'}
             icon={<FileText/>}
             onSubmit={onClick}
             onDelete={onDeleteClick}
@@ -112,7 +113,7 @@ export default function MaterialDialog(
                     <GeoInput
                         id="title"
                         label="Judul"
-                        value={values.title ?? ''}
+                        value={he.decode(values.title ?? '')}
                         onChange={(e) => setValues({...values, title: e.target.value})}
                         icon={<Type/>}
                     />
@@ -120,7 +121,7 @@ export default function MaterialDialog(
                     <GeoInput
                         id="description"
                         label="Deskripsi"
-                        value={values.description ?? ''}
+                        value={he.decode(values.description ?? '')}
                         onChange={(e) => setValues({...values, description: e.target.value})}
                         multiline
                         minRows={3}
@@ -130,7 +131,7 @@ export default function MaterialDialog(
                     <GeoInput
                         id="formula"
                         label="Rumus"
-                        value={values.formula ?? ''}
+                        value={he.decode(values.formula ?? '')}
                         onChange={(e) => setValues({...values, formula: e.target.value})}
                         multiline
                         minRows={3}
@@ -140,7 +141,7 @@ export default function MaterialDialog(
                     <GeoInput
                         id="example"
                         label="Contoh"
-                        value={values.example ?? ''}
+                        value={he.decode(values.example ?? '')}
                         onChange={(e) => setValues({...values, example: e.target.value})}
                         multiline
                         minRows={3}
@@ -163,9 +164,9 @@ export default function MaterialDialog(
                                     <GeoInput
                                         id={`youtube-${index}`}
                                         label={`Video ${index + 1}`}
-                                        value={link}
+                                        value={he.decode(link)}
                                         onChange={(e) => handleYoutubeLinkChange(index, e.target.value)}
-                                        icon={<Link className="w-4 h-4 text-gray-500" />}
+                                        icon={<Link className="w-4 h-4 text-gray-500"/>}
                                         className="flex-1"
                                         description="format https://www.youtube.com/watch?v=VIDEO_ID"
                                     />
@@ -175,7 +176,7 @@ export default function MaterialDialog(
                                         disabled={(values.youtubeLinks || []).length <= 0}
                                         className="h-9 w-9 p-0 shrink-0"
                                     >
-                                        <Minus className="w-4 h-4" />
+                                        <Minus className="w-4 h-4"/>
                                     </GeoButton>
                                 </div>
                             ))}
@@ -187,8 +188,9 @@ export default function MaterialDialog(
                             disabled={(values.youtubeLinks || []).length >= maxYoutubeLinks}
                             className="w-full"
                         >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Tambah Link YouTube {(values.youtubeLinks || []).length >= maxYoutubeLinks && `(Maks: ${maxYoutubeLinks})`}
+                            <Plus className="w-4 h-4 mr-2"/>
+                            Tambah Link
+                            YouTube {(values.youtubeLinks || []).length >= maxYoutubeLinks && `(Maks: ${maxYoutubeLinks})`}
                         </GeoButton>
                     </div>
 
@@ -208,9 +210,9 @@ export default function MaterialDialog(
                                     <GeoInput
                                         id={`image-${index}`}
                                         label={`Gambar ${index + 1}`}
-                                        value={link}
+                                        value={he.decode(link)}
                                         onChange={(e) => handleImageLinkChange(index, e.target.value)}
-                                        icon={<Link className="w-4 h-4 text-gray-500" />}
+                                        icon={<Link className="w-4 h-4 text-gray-500"/>}
                                         className="flex-1"
                                         description="format https://example.com/image.jpg"
                                     />
@@ -220,7 +222,7 @@ export default function MaterialDialog(
                                         disabled={(values.imageLinks || []).length <= 0}
                                         className="h-9 w-9 p-0 shrink-0"
                                     >
-                                        <Minus className="w-4 h-4" />
+                                        <Minus className="w-4 h-4"/>
                                     </GeoButton>
                                 </div>
                             ))}
@@ -232,8 +234,9 @@ export default function MaterialDialog(
                             disabled={(values.imageLinks || []).length >= maxImageLinks}
                             className="w-full"
                         >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Tambah Link Gambar {(values.imageLinks || []).length >= maxImageLinks && `(Maks: ${maxImageLinks})`}
+                            <Plus className="w-4 h-4 mr-2"/>
+                            Tambah Link
+                            Gambar {(values.imageLinks || []).length >= maxImageLinks && `(Maks: ${maxImageLinks})`}
                         </GeoButton>
                     </div>
                 </div>

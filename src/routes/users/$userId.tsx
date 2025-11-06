@@ -12,6 +12,7 @@ import {BookOpenCheck, ChartColumn} from "lucide-react";
 import {DataTable} from "@/components/table/data-table.tsx";
 import {usePracticeColumns, useStatisticsColumns} from "@/components/table/users/$userId.tsx";
 import UserSummary from "@/components/user/user-summary.tsx";
+import he from "he";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
@@ -77,7 +78,7 @@ function RouteComponent() {
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader
-                title={isStudent ? 'Histori Latihan' : `Detail ${userResponse ? userResponse.user.username : 'Siswa'}`}
+                title={isStudent ? 'Histori Latihan' : `Detail ${userResponse ? he.decode(userResponse.user.username) : 'Siswa'}`}
                 description={isStudent ? 'Informasi histori latihan soal.' : 'Informasi lengkap mengenai siswa.'}
                 colorScheme="teal"
             />

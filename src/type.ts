@@ -309,6 +309,6 @@ export interface MaterialPayload {
 // TODO:
 //  - tracking users sessions, material access, practice attempts
 //  - plotly performance tracking displayed below the plot and detailed
-//  - security best practices
+//  - security best practices, use he to sanitize inputs in every form
 //  - performance optimizations like preloading routes
 //  - table resize problem

@@ -2,6 +2,7 @@ import {KeyRound, LogIn, User} from 'lucide-react';
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
+import he from "he";
 
 interface LoginProps {
     username: string;
@@ -24,8 +25,8 @@ export function Login({username, setUsername, password, setPassword, onLoginClic
                         <GeoInput
                             id="username"
                             label="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={he.decode(username)}
+                            onChange={(e) => setUsername(he.encode(e.target.value))}
                             icon={<User/>}
                         />
 
