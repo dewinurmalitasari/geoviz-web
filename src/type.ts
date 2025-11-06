@@ -111,7 +111,6 @@ export const API_ENDPOINTS = {
     },
     materials: {
         base: `${API_BASE_URL}/materials`,
-        // base: (noFormulaAndExample: boolean = false) => `${API_BASE_URL}/materials${noFormulaAndExample ? '?noFormulaAndExample=true' : ''}`,
         withId: (_id: string) => `${API_BASE_URL}/materials/${_id}`,
     },
     practices: {
@@ -276,6 +275,8 @@ export interface Material {
     description: string,
     formula?: string,
     example?: string,
+    youtubeLinks?: string[],
+    imageLinks?: string[],
     createdAt: string,
     updatedAt: string,
 }
@@ -295,6 +296,8 @@ export interface MaterialPayload {
     description?: string,
     formula?: string,
     example?: string,
+    youtubeLinks?: string[],
+    imageLinks?: string[],
 }
 
 // TODO:

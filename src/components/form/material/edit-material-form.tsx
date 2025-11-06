@@ -19,6 +19,8 @@ export default function EditMaterialForm({open, setOpen, material, onSuccess, on
         description: material.description,
         formula: material.formula,
         example: material.example,
+        youtubeLinks: material.youtubeLinks,
+        imageLinks: material.imageLinks,
     });
 
     // Reset form values when material changes
@@ -28,6 +30,8 @@ export default function EditMaterialForm({open, setOpen, material, onSuccess, on
             description: material.description,
             formula: material.formula,
             example: material.example,
+            youtubeLinks: material.youtubeLinks,
+            imageLinks: material.imageLinks,
         });
     }, [material]);
 

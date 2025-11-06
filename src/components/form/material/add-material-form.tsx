@@ -17,6 +17,8 @@ export default function AddMaterialForm({trigger, onSuccess}: AddMaterialFormPro
         description: '',
         formula: '',
         example: '',
+        youtubeLinks: [],
+        imageLinks: [],
     });
 
     const onAddClick = async () => {
@@ -35,6 +37,8 @@ export default function AddMaterialForm({trigger, onSuccess}: AddMaterialFormPro
                 description: '',
                 formula: '',
                 example: '',
+                youtubeLinks: [],
+                imageLinks: [],
             });
             onSuccess();
             setOpen(false);
