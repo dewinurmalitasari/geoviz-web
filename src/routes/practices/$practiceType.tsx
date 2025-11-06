@@ -1,8 +1,8 @@
 import {createFileRoute, notFound} from '@tanstack/react-router'
 import {getAuthentication} from "@/lib/auth.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
-import PageHeader from "@/components/root/page-header.tsx";
 import {PRACTICE_TYPES} from "@/type.ts";
+import IdentifyPractice from "@/components/practice/identify-practice.tsx";
 
 export const Route = createFileRoute('/practices/$practiceType')({
     beforeLoad: ({params}) => {
@@ -51,9 +51,15 @@ export const Route = createFileRoute('/practices/$practiceType')({
 })
 
 function RouteComponent() {
-    const { practiceType } = Route.useParams()
+    const {practiceType} = Route.useParams()
 
-    return <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-        <PageHeader title={`Latihan ${practiceType.translatePracticeType()}`} description="Lakukan latihan soal sesuai instruksi" colorScheme="blue"/>
-    </div>
+    // TODO: Update to render based on practiceType
+    switch (practiceType) {
+        case PRACTICE_TYPES.IDENTIFY:
+            return <IdentifyPractice/>
+        case PRACTICE_TYPES.DETERMINE_VALUE:
+            return <div>TODO</div> // TODO: This guy should display the transforation type and ask for value
+        default:
+            return null;
+    }
 }

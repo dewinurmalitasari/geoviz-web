@@ -95,9 +95,9 @@ export default function PlotContainer(
                     )}
                 </div>
             ) : (
-                <div className="text-center text-gray-500 dark:text-gray-400">
+                <div className="text-center">
                     <div className="text-lg font-semibold mb-2">Area Visualisasi</div>
-                    <div className="text-sm">Tambahkan titik untuk memulai visualisasi</div>
+                    <div className="text-sm">Tempat untuk menampilkan visualisasi transformasi geometri.</div>
                 </div>
             )}
         </div>
