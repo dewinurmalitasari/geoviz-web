@@ -19,6 +19,7 @@ interface GeoInputProps {
     autoExpand?: boolean;
     className?: string;
     type?: string;
+    min?: number;
 }
 
 export default function GeoInput(
@@ -37,6 +38,7 @@ export default function GeoInput(
         autoExpand = true,
         className = "",
         type = "text",
+        min,
     }: GeoInputProps) {
     const [showPassword, setShowPassword] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -107,6 +109,7 @@ export default function GeoInput(
                         placeholder={`${label}...`}
                         value={value}
                         onChange={onChange}
+                        min={min}
                     />
                 )}
 

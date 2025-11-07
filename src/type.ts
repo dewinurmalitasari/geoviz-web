@@ -106,6 +106,11 @@ export const PRACTICE_TYPES = {
     DETERMINE_VALUE: 'determine_value',
 } as const;
 
+export interface IdentifyPracticeAnswer {
+    correctAnswer: 'translation' | 'dilatation' | 'rotation' | 'reflection';
+    userAnswer: 'translation' | 'dilatation' | 'rotation' | 'reflection';
+}
+
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {

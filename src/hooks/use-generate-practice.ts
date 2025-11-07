@@ -39,7 +39,7 @@ export function useGeneratePracticeTypeAndValue() {
 
     const generateDilatationValue = (): DilatationValue => {
         // Range: -3 to 3, excluding 0 and 1
-        const possibleValues = [2, 3];
+        const possibleValues = [-3, -2, 2, 3];
         const randomIndex = Math.floor(Math.random() * possibleValues.length);
         return {scaleFactor: possibleValues[randomIndex]};
     };
@@ -85,6 +85,10 @@ export function useGeneratePracticeTypeAndValue() {
 }
 
 export function useGeneratePracticeShape() {
+    // Configuration for offset generation
+    const MIN_OFFSET_MAGNITUDE = 3; // Minimum distance from origin
+    const MAX_OFFSET_MAGNITUDE = 5; // Maximum distance from origin
+
     const generateRandomShape = () => {
         // Simple 2D shapes without complex ones
         const simpleShapes = ['triangle', 'square', 'rectangle', 'pentagon', 'hexagon'] as const;
@@ -114,10 +118,9 @@ export function useGeneratePracticeShape() {
     };
 
     const generateNonZeroOffset = (): number => {
-        // Generate offset that avoids zero and covers all quadrants
-        // Range: -8 to -3 or 3 to 8 (avoiding -2 to 2 range)
+        // Generate offset that avoids zero range and covers all quadrants
         const isNegative = Math.random() < 0.5;
-        const magnitude = Math.floor(Math.random() * 6) + 3; // 3 to 8
+        const magnitude = Math.floor(Math.random() * (MAX_OFFSET_MAGNITUDE - MIN_OFFSET_MAGNITUDE + 1)) + MIN_OFFSET_MAGNITUDE;
         return isNegative ? -magnitude : magnitude;
     };
 

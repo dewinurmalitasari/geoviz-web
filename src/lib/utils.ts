@@ -17,6 +17,8 @@ declare global {
 
         translateTransformationType(): string;
 
+        translateTransformationTypeReverse(): string;
+
         translatePracticeType(): string;
     }
 }
@@ -76,6 +78,21 @@ String.prototype.translateTransformationType = function () {
             return 'Refleksi';
         default:
             return this.toCapitalized();
+    }
+}
+
+String.prototype.translateTransformationTypeReverse = function () {
+    switch (this.toLowerCase()) {
+        case 'translasi':
+            return 'translation';
+        case 'dilatasi':
+            return 'dilatation';
+        case 'rotasi':
+            return 'rotation';
+        case 'refleksi':
+            return 'reflection';
+        default:
+            return this.toLowerCase();
     }
 }
 
