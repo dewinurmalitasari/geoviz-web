@@ -1,60 +1,229 @@
 import LogoutButton from "@/components/auth/logout-button.tsx";
 import {Link} from "@tanstack/react-router";
-import {ROUTES} from "@/type.ts";
+import {PRACTICE_TYPES, ROUTES, VISUALIZATION_TYPES} from "@/type.ts";
 import he from "he";
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu.tsx";
+import {cn} from "@/lib/utils";
+import { useAnimatedNavigation } from "@/hooks/use-animated-navigation";
 
 interface HeaderProps {
     username?: string;
     role?: string;
 }
 
-export default function Header({ username = "Pengguna", role = "Student" }: HeaderProps) {
+// Role-based navigation items configuration
+const getNavigationItems = (role?: string) => {
+    const baseItems = [
+        {
+            title: "Beranda",
+            href: ROUTES.home,
+            roles: ['admin', 'student', 'teacher'], // All roles can access home
+        },
+        {
+            title: "Pengguna",
+            href: ROUTES.users.base,
+            roles: ['admin', 'teacher'], // Only admin and teacher can access users
+        },
+        {
+            title: "Materi",
+            href: ROUTES.materials.base,
+            roles: ['admin', 'student', 'teacher'], // All roles can access materials
+        },
+        {
+            title: "Latihan",
+            roles: ['student'], // Only students can access practices
+            // @ts-ignore TS6133
+            items: Object.entries(PRACTICE_TYPES).map(([key, value]) => ({
+                title: value.translatePracticeType(),
+                href: ROUTES.practices.practiceType(value),
+                description: `Latihan ${value.translatePracticeType().toLowerCase()} transformasi geometri`,
+            })),
+        },
+        {
+            title: "Visualisasi",
+            roles: ['admin', 'student', 'teacher'], // All roles can access visualizations
+            // @ts-ignore TS6133
+            items: Object.entries(VISUALIZATION_TYPES).map(([key, value]) => ({
+                title: value.translateVisualizationType(),
+                href: ROUTES.visualizations.visualizationType(value),
+                description: `Visualisasi transformasi geometri ${getVisualizationDescription(value)}`,
+            })),
+        },
+    ];
+
+    // Filter items based on user role
+    return baseItems.filter(item => item.roles.includes(role || 'student'));
+};
+
+// Helper function to get visualization descriptions
+function getVisualizationDescription(type: string): string {
+    switch (type) {
+        case VISUALIZATION_TYPES.SHAPE_2D:
+            return "pada bentuk 2 dimensi";
+        case VISUALIZATION_TYPES.SHAPE_3D:
+            return "pada bentuk 3 dimensi";
+        case VISUALIZATION_TYPES.EQUATION:
+            return "melalui persamaan";
+        default:
+            return "";
+    }
+}
+
+const ListItem = ({title, href, description}: { title: string; href: string; description: string }) => {
+    const animatedNavigate = useAnimatedNavigation();
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        animatedNavigate({ to: href });
+    };
+
     return (
-        <header className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 md:px-8" data-aos="fade-down">
+        <li>
+            <NavigationMenuLink asChild>
+                <a
+                    href={`#${href}`}
+                    onClick={handleClick}
+                    className={cn(
+                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200",
+                        "hover:bg-gradient-to-r hover:from-deep-purple-100 hover:to-purple-100 hover:text-deep-purple-900 hover:shadow-md",
+                        "focus:bg-deep-purple-50 focus:text-deep-purple-900",
+                        "border border-transparent hover:border-deep-purple-200",
+                        "transform hover:scale-105 origin-center",
+                        "cursor-pointer"
+                    )}
+                >
+                    <div className="text-sm font-medium leading-none">{title}</div>
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        {description}
+                    </p>
+                </a>
+            </NavigationMenuLink>
+        </li>
+    );
+};
+
+export default function Header({username = "Pengguna", role = "student"}: HeaderProps) {
+    const navigationItems = getNavigationItems(role);
+    const animatedNavigate = useAnimatedNavigation();
+
+    const handleNavigationClick = (href: string) => (e: React.MouseEvent) => {
+        e.preventDefault();
+        animatedNavigate({ to: href });
+    };
+
+    return (
+        <header
+            className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 lg:px-8 relative z-50"
+            data-aos="fade-down">
             <div className="container mx-auto">
-                {/* Desktop Layout (md and above) */}
-                <div className="hidden md:flex items-center justify-between gap-4">
-                    {/* Logo and Title */}
-                    <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
-                            <img src="favicon.svg" alt="Logo" className="w-6 h-6 md:w-7 md:h-7"/>
-                        </div>
-                        <div className="min-w-0">
-                            <h1 className="text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
-                                GeoViz
-                            </h1>
-                            <p className="text-gray-600 text-xs md:text-sm truncate lg:block">
-                                Aplikasi Pembelajaran Transformasi Geometri
-                            </p>
-                        </div>
-                    </Link>
+                {/* Desktop Layout (lg and above) */}
+                <div className="hidden lg:flex items-center justify-between gap-4">
+                    {/* Logo and Title - Keep using regular Link */}
+                    <div className="flex items-center gap-8">
+                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-shrink-0" onClick={handleNavigationClick(ROUTES.home)}>
+                            <div
+                                className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
+                                <img src="favicon.svg" alt="Logo" className="w-6 h-6 md:w-7 md:h-7"/>
+                            </div>
+                            <div className="min-w-0">
+                                <h1 className="text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
+                                    GeoViz
+                                </h1>
+                                <p className="text-gray-600 text-xs md:text-sm truncate lg:block">
+                                    Aplikasi Pembelajaran Transformasi Geometri
+                                </p>
+                            </div>
+                        </Link>
+
+                        {/* Navigation Menu - Use animated navigation */}
+                        <NavigationMenu className="flex-1 max-w-2xl relative z-50">
+                            <NavigationMenuList>
+                                {navigationItems.map((item, index) => (
+                                    <NavigationMenuItem key={index}>
+                                        {item.items ? (
+                                            <>
+                                                <NavigationMenuTrigger className={cn(
+                                                    "bg-transparent text-deep-purple-700 font-medium relative z-50",
+                                                    "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
+                                                    "data-[state=open]:bg-gradient-to-r data-[state=open]:from-deep-purple-50 data-[state=open]:to-purple-50 data-[state=open]:text-deep-purple-900",
+                                                    "border border-transparent hover:border-deep-purple-200 data-[state=open]:border-deep-purple-200",
+                                                    "transition-all duration-200 transform hover:scale-105",
+                                                    "shadow-sm hover:shadow-md data-[state=open]:shadow-md cursor-pointer"
+                                                )}>
+                                                    {item.title}
+                                                </NavigationMenuTrigger>
+                                                <NavigationMenuContent className="relative z-[100]">
+                                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] cursor-pointer">
+                                                        {item.items.map((subItem, subIndex) => (
+                                                            <ListItem
+                                                                key={subIndex}
+                                                                title={subItem.title}
+                                                                href={subItem.href}
+                                                                description={subItem.description}
+                                                            />
+                                                        ))}
+                                                    </ul>
+                                                </NavigationMenuContent>
+                                            </>
+                                        ) : (
+                                            <a
+                                                href={`#${item.href}`}
+                                                onClick={handleNavigationClick(item.href!)}
+                                                className={cn(
+                                                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-all duration-200",
+                                                    "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
+                                                    "focus:bg-deep-purple-50 focus:text-deep-purple-900",
+                                                    "text-deep-purple-700",
+                                                    "border border-transparent hover:border-deep-purple-200",
+                                                    "transform hover:scale-105",
+                                                    "shadow-sm hover:shadow-md",
+                                                    "cursor-pointer"
+                                                )}
+                                            >
+                                                {item.title}
+                                            </a>
+                                        )}
+                                    </NavigationMenuItem>
+                                ))}
+                            </NavigationMenuList>
+                        </NavigationMenu>
+                    </div>
 
                     {/* User Profile */}
-                    <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="flex items-center gap-4 flex-shrink-0 relative z-50">
                         <div className="text-right">
                             <p className="text-gray-500 text-xs md:text-sm font-medium">Halo,</p>
                             <div className="flex items-center gap-2">
                                 <p className="font-bold text-deep-purple-700 text-sm md:text-base bg-gradient-to-r from-deep-purple-600 to-purple-600 bg-clip-text text-transparent">
                                     {he.decode(username)}
                                 </p>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-100 text-deep-purple-800 border border-deep-purple-200">
+                                <span
+                                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-100 text-deep-purple-800 border border-deep-purple-200">
                                     {role?.translateRole()}
                                 </span>
                             </div>
                         </div>
                         <div className="w-24">
-                            <LogoutButton />
+                            <LogoutButton/>
                         </div>
                     </div>
                 </div>
 
-                {/* Mobile Layout (less than md) */}
-                <div className="md:hidden flex flex-col gap-4">
+                {/* Mobile Layout (less than lg) */}
+                <div className="lg:hidden flex flex-col gap-4">
                     {/* Top Row - Logo/Title */}
                     <div className="flex items-start justify-between gap-4">
-                        {/* Logo and Title */}
-                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
+                        {/* Logo and Title - Keep using regular Link */}
+                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-1" onClick={handleNavigationClick(ROUTES.home)}>
+                            <div
+                                className="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
                                 <img src="favicon.svg" alt="Logo" className="w-6 h-6"/>
                             </div>
                             <div className="min-w-0">
@@ -68,12 +237,67 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                         </Link>
                     </div>
 
+                    {/* Navigation Menu for Mobile - Use animated navigation */}
+                    <NavigationMenu className="w-full relative z-[60]">
+                        <NavigationMenuList className="flex-wrap justify-center gap-1">
+                            {navigationItems.map((item, index) => (
+                                <NavigationMenuItem key={index}>
+                                    {item.items ? (
+                                        <>
+                                            <NavigationMenuTrigger className={cn(
+                                                "bg-transparent text-deep-purple-700 font-medium text-xs h-8 px-3 relative z-[60]",
+                                                "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
+                                                "data-[state=open]:bg-gradient-to-r data-[state=open]:from-deep-purple-50 data-[state=open]:to-purple-50 data-[state=open]:text-deep-purple-900",
+                                                "border border-transparent hover:border-deep-purple-200 data-[state=open]:border-deep-purple-200",
+                                                "transition-all duration-200 transform hover:scale-105",
+                                                "shadow-sm hover:shadow-md data-[state=open]:shadow-md"
+                                            )}>
+                                                {item.title}
+                                            </NavigationMenuTrigger>
+                                            <NavigationMenuContent className="relative z-[70]">
+                                                <ul className="grid w-[300px] gap-3 p-4">
+                                                    {item.items.map((subItem, subIndex) => (
+                                                        <ListItem
+                                                            key={subIndex}
+                                                            title={subItem.title}
+                                                            href={subItem.href}
+                                                            description={subItem.description}
+                                                        />
+                                                    ))}
+                                                </ul>
+                                            </NavigationMenuContent>
+                                        </>
+                                    ) : (
+                                        <a
+                                            href={`#${item.href}`}
+                                            onClick={handleNavigationClick(item.href!)}
+                                            className={cn(
+                                                "group inline-flex h-8 items-center justify-center rounded-md bg-transparent px-3 py-2 text-xs font-medium transition-all duration-200",
+                                                "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
+                                                "focus:bg-deep-purple-50 focus:text-deep-purple-900",
+                                                "text-deep-purple-700",
+                                                "border border-transparent hover:border-deep-purple-200",
+                                                "transform hover:scale-105",
+                                                "shadow-sm hover:shadow-md",
+                                                "cursor-pointer"
+                                            )}
+                                        >
+                                            {item.title}
+                                        </a>
+                                    )}
+                                </NavigationMenuItem>
+                            ))}
+                        </NavigationMenuList>
+                    </NavigationMenu>
+
                     {/* Bottom Row - User Details and Logout Button */}
-                    <div className="flex items-center justify-between gap-3 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm">
+                    <div
+                        className="flex items-center justify-between gap-3 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm relative z-40">
                         {/* User Details */}
                         <div className="flex items-center gap-3 flex-1">
                             {/* User Avatar */}
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-deep-purple-500 to-purple-600 flex items-center justify-center shadow-md">
+                            <div
+                                className="w-10 h-10 rounded-full bg-gradient-to-br from-deep-purple-500 to-purple-600 flex items-center justify-center shadow-md">
                                 <span className="text-white font-bold text-sm">
                                     {username.charAt(0).toUpperCase()}
                                 </span>
@@ -87,7 +311,8 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
                                         {he.decode(username)}
                                     </p>
                                 </div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
+                                <span
+                                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
                                     {role?.translateRole()}
                                 </span>
                             </div>
@@ -95,7 +320,7 @@ export default function Header({ username = "Pengguna", role = "Student" }: Head
 
                         {/* Logout Button */}
                         <div className="w-28">
-                            <LogoutButton />
+                            <LogoutButton/>
                         </div>
                     </div>
                 </div>
