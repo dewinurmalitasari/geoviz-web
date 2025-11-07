@@ -46,7 +46,6 @@ export function useVisualizationTabs(
             {value: 'radio-xy-plane', label: 'Bidang XY'},
             {value: 'radio-xz-plane', label: 'Bidang XZ'},
             {value: 'radio-yz-plane', label: 'Bidang YZ'},
-            {value: 'origin', label: 'Titik Asal'},
         ]
         : [
             {value: 'origin', label: 'Sumbu Asal'},

@@ -126,7 +126,7 @@ export function usePlotlyAnimation(
             }
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         } else {
-            plotFn = (points, color) => get2DShapePlotData(points as Point2D[], isMobile, color, true);
+            plotFn = (points, color) => get2DShapePlotData(points as Point2D[], isMobile, color);
             transformationFn = (points, type, values) =>
                 calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
 

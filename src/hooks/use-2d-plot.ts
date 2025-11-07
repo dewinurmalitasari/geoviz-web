@@ -4,7 +4,6 @@ export function get2DShapePlotData(
     points: Point2D[],
     isMobile: boolean,
     color = 'blue',
-    isAnimation: boolean = false,
 ) {
     if (points.length < 2) return [];
 
@@ -45,7 +44,7 @@ export function get2DShapePlotData(
     const centerY = (Math.max(...yValues) + Math.min(...yValues)) / 2;
 
     // Calculate offset distance
-    const offset = isMobile ? (isAnimation? 0.8 : 0.4) : (isAnimation? 0.5 : 0.4);
+    const offset = isMobile ? 0.6 : 0.4;
 
     const textPositions = points.map((point) => {
         const dx = point.x - centerX;
@@ -92,11 +91,11 @@ export function get2DShapePlotLayout(
         dragmode: 'pan',
         xaxis: {
             range: xRange,
-            dtick: 1
+            // dtick: 1
         },
         yaxis: {
             range: yRange,
-            dtick: 1,
+            // dtick: 1,
             scaleanchor: 'x'
         }
     };
