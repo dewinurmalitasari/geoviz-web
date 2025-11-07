@@ -111,6 +111,12 @@ export interface IdentifyPracticeAnswer {
     userAnswer: 'translation' | 'dilatation' | 'rotation' | 'reflection';
 }
 
+export interface DetermineValuePracticeAnswer {
+    transformationType: 'translation' | 'dilatation' | 'rotation' | 'reflection';
+    userValues: TranslationValue | DilatationValue | RotationValue | ReflectionValue;
+    correctValues: TranslationValue | DilatationValue | RotationValue | ReflectionValue;
+}
+
 // API Endpoints
 export const API_ENDPOINTS = {
     auth: {
@@ -248,54 +254,30 @@ export interface StatisticsSummaryResponse {
 }
 
 // Practice Types
-export interface IdentifyPracticeContent {
-    answers: IdentifyPracticeAnswer[];
-}
-
-export interface DetermineValuePracticeContent {
-    values: any[]; // TODO: Define specific type later
-}
-
-export interface DefaultPracticeContent {
-    data: any;
-}
-
-// Map practice codes to their content types
-export interface PracticeContentMap {
-    identify: IdentifyPracticeContent;
-    determine_value: DetermineValuePracticeContent;
-    default: DefaultPracticeContent;
-}
-
-interface BasePractice {
+interface Practice {
     _id: string;
     score: {
         correct: number;
         total: number;
     };
+    content: {
+        answers: IdentifyPracticeAnswer[] | DetermineValuePracticeAnswer[];
+    }
     user: string;
     createdAt: string;
     updatedAt: string;
 }
 
-export type Practice<T extends keyof PracticeContentMap = keyof PracticeContentMap> =
-    BasePractice & {
-    code: T extends 'default' ? string : T;
-    content: T extends keyof PracticeContentMap ? PracticeContentMap[T] : DefaultPracticeContent;
-};
-
-interface BasePracticePayload {
+export interface PracticePayload{
+    code: string;
     score: {
         correct: number;
         total: number;
     };
+    content: {
+        answers: IdentifyPracticeAnswer[] | DetermineValuePracticeAnswer[];
+    }
 }
-
-export type PracticePayload<T extends keyof PracticeContentMap = keyof PracticeContentMap> =
-    BasePracticePayload & {
-    code: T extends 'default' ? string : T;
-    content: T extends keyof PracticeContentMap ? PracticeContentMap[T] : DefaultPracticeContent;
-};
 
 export interface PracticeResponse {
     message: string,

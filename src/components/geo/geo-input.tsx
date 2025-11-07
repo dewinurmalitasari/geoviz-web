@@ -20,6 +20,7 @@ interface GeoInputProps {
     className?: string;
     type?: string;
     min?: number;
+    disabled?: boolean;
 }
 
 export default function GeoInput(
@@ -39,6 +40,7 @@ export default function GeoInput(
         className = "",
         type = "text",
         min,
+        disabled = false,
     }: GeoInputProps) {
     const [showPassword, setShowPassword] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -102,6 +104,7 @@ export default function GeoInput(
                             minHeight: `${minRows * 1.5}rem`,
                             maxHeight: `${maxRows * 1.5}rem`,
                         }}
+                        disabled={disabled}
                     />
                 ) : (
                     <InputGroupInput
@@ -110,6 +113,7 @@ export default function GeoInput(
                         value={value}
                         onChange={onChange}
                         min={min}
+                        disabled={disabled}
                     />
                 )}
 

@@ -3,6 +3,7 @@ import {getAuthentication} from "@/lib/auth.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import {PRACTICE_TYPES} from "@/type.ts";
 import IdentifyPractice from "@/components/practice/identify-practice.tsx";
+import DeterminePractice from "@/components/practice/determine-practice.tsx";
 
 export const Route = createFileRoute('/practices/$practiceType')({
     beforeLoad: ({params}) => {
@@ -58,7 +59,7 @@ function RouteComponent() {
         case PRACTICE_TYPES.IDENTIFY:
             return <IdentifyPractice/>
         case PRACTICE_TYPES.DETERMINE_VALUE:
-            return <div>TODO</div> // TODO: This guy should display the transforation type and ask for value
+            return <DeterminePractice/>
         default:
             return null;
     }
