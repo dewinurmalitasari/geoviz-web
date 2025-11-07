@@ -215,7 +215,7 @@ export function usePlotlyAnimation(
                     originalTraces.push({
                         ...lineTrace,
                         mode: 'lines',
-                        type: 'scatter',
+                        type: 'scattergl',
                         line: {color: 'green'},
                         showlegend: false
                     } as PlotlyTrace);

@@ -20,7 +20,7 @@ export function get2DShapePlotData(
         x: closedX,
         y: closedY,
         mode: 'lines',
-        type: 'scatter',
+        type: 'scattergl',
         line: {color: color, width: 3},
         name: 'Shape',
         showlegend: false
@@ -31,7 +31,7 @@ export function get2DShapePlotData(
         x: xValues,
         y: yValues,
         mode: 'markers',
-        type: 'scatter',
+        type: 'scattergl',
         marker: {color: color, size: 10},
         name: 'Points',
         showlegend: false
@@ -74,7 +74,7 @@ export function get2DShapePlotData(
         x: textPositions.map(pos => pos.x),
         y: textPositions.map(pos => pos.y),
         mode: 'text',
-        type: 'scatter',
+        type: 'scattergl',
         text: labels,
         textfont: {size: 16, color: 'black'},
         showlegend: false,
