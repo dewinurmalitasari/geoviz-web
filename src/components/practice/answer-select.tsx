@@ -63,7 +63,7 @@ export default function AnswerSelect(
         onAnswerSelect,
         selectedAnswer,
         disabled = false,
-        colorScheme = "blue",
+        colorScheme = "purple",
         showResult = false
     }: AnswerSelectProps) {
     const colors = colorMap[colorScheme];
