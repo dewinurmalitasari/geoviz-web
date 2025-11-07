@@ -254,8 +254,9 @@ export interface StatisticsSummaryResponse {
 }
 
 // Practice Types
-interface Practice {
+export interface Practice {
     _id: string;
+    code: string;
     score: {
         correct: number;
         total: number;
