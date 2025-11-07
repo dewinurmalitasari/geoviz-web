@@ -42,7 +42,6 @@ export const Route = createFileRoute('/materials/$materialId')({
             />
         );
     }
-
 })
 
 function RouteComponent() {

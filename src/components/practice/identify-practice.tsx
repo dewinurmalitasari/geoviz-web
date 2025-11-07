@@ -184,18 +184,20 @@ export default function IdentifyPractice() {
                 content={
                     <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
                         <div className="flex-2">
-                            <PlotContainer
-                                shapePoints={shapePoints}
-                                plotData={plotData || []}
-                                plotLayout={plotLayout}
-                                perfStats={perfStats!!}
-                                initialRenderStartRef={initialRenderStartRef}
-                                animationRenderStartRef={animationRenderStartRef}
-                            />
+                            {started &&
+                                <PlotContainer
+                                    shapePoints={shapePoints}
+                                    plotData={plotData || []}
+                                    plotLayout={plotLayout}
+                                    perfStats={perfStats!!}
+                                    initialRenderStartRef={initialRenderStartRef}
+                                    animationRenderStartRef={animationRenderStartRef}
+                                />
+                            }
 
                             {!started && (
                                 <div
-                                    className="flex flex-col items-center justify-center space-y-6 mt-8 p-6 bg-slate-50 rounded-lg border border-slate-200">
+                                    className="flex flex-col items-center justify-center space-y-6 p-6 bg-slate-50 rounded-lg border border-slate-200">
                                     <div className="text-center space-y-2">
                                         <h3 className="text-xl font-semibold text-slate-800">
                                             Siap Memulai Latihan?

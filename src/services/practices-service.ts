@@ -12,6 +12,10 @@ export const practicesService = {
     },
 
     getPractices: (userId: string, noContent: boolean = false): Promise<PracticesResponse> => {
-        return api.get<PracticesResponse>(API_ENDPOINTS.practices.withId(userId, noContent));
+        return api.get<PracticesResponse>(API_ENDPOINTS.practices.withUserId(userId, noContent));
     },
+
+    getPractice: (practiceId: string): Promise<PracticeResponse> => {
+        return api.get<PracticeResponse>(API_ENDPOINTS.practices.withId(practiceId));
+    }
 };
