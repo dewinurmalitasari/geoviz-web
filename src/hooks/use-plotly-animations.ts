@@ -36,6 +36,7 @@ interface UsePlotlyAnimationProps {
     setDilatationValue: (a: DilatationValue) => void;
     onFrameTick: (stats: PerformanceStats | null) => void;
     renderStartRef: React.MutableRefObject<number>;
+    targetFps?: number;
 }
 
 export function usePlotlyAnimation(
@@ -48,7 +49,8 @@ export function usePlotlyAnimation(
         setPlotLayout,
         setDilatationValue,
         onFrameTick,
-        renderStartRef
+        renderStartRef,
+        targetFps = 30
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
@@ -226,7 +228,30 @@ export function usePlotlyAnimation(
         // Set the layout only once before the animation starts
         setPlotLayout(newLayout);
 
-        // 3. Start Animation
+        // 3. Precompute deltas for performance
+        const deltas = shapePoints.map((point, i) => {
+            const start = point;
+            const end = transformedPoints[i];
+
+            if (is3D) {
+                const start3D = start as Point3D;
+                const end3D = end as Point3D;
+                return {
+                    x: end3D.x - start3D.x,
+                    y: end3D.y - start3D.y,
+                    z: end3D.z - start3D.z,
+                } as Point3D;
+            } else {
+                const start2D = start as Point2D;
+                const end2D = end as Point2D;
+                return {
+                    x: end2D.x - start2D.x,
+                    y: end2D.y - start2D.y,
+                } as Point2D;
+            }
+        });
+
+        // 4. Start Animation
         const startTime = performance.now();
         const duration = transformationType === TRANSFORMATION_TYPES.ROTATION ? 1500 : 1000;
 
@@ -238,6 +263,14 @@ export function usePlotlyAnimation(
 
             const now = performance.now();
             const frameTime = now - lastFrameTimeRef.current;
+            const targetFrameTime = 10 / targetFps; // Aim for slightly higher than target FPS
+
+            // Throttle FPS - skip frame if we're rendering too fast
+            if (frameTime < targetFrameTime) {
+                animationFrameRef.current = requestAnimationFrame(animate);
+                return;
+            }
+
             const fps = 1000 / frameTime;
             lastFrameTimeRef.current = now;
 
@@ -255,24 +288,24 @@ export function usePlotlyAnimation(
                 const intermediateValues = {...values, angle: intermediateAngle};
                 intermediatePoints = transformationFn(shapePoints, 'rotation', intermediateValues);
             } else {
+                // Use precomputed deltas for better performance
                 intermediatePoints = shapePoints.map((point, i) => {
-                    const start = point;
-                    const end = transformedPoints[i];
+                    const delta = deltas[i];
 
                     if (is3D) {
-                        const start3D = start as Point3D;
-                        const end3D = end as Point3D;
+                        const point3D = point as Point3D;
+                        const delta3D = delta as Point3D;
                         return {
-                            x: start3D.x + (end3D.x - start3D.x) * t,
-                            y: start3D.y + (end3D.y - start3D.y) * t,
-                            z: start3D.z + (end3D.z - start3D.z) * t,
+                            x: point3D.x + delta3D.x * t,
+                            y: point3D.y + delta3D.y * t,
+                            z: point3D.z + delta3D.z * t,
                         } as Point3D;
                     } else {
-                        const start2D = start as Point2D;
-                        const end2D = end as Point2D;
+                        const point2D = point as Point2D;
+                        const delta2D = delta as Point2D;
                         return {
-                            x: start2D.x + (end2D.x - start2D.x) * t,
-                            y: start2D.y + (end2D.y - start2D.y) * t,
+                            x: point2D.x + delta2D.x * t,
+                            y: point2D.y + delta2D.y * t,
                         } as Point2D;
                     }
                 });
@@ -313,7 +346,8 @@ export function usePlotlyAnimation(
         setDilatationValue,
         cancelAnimation,
         onFrameTick,
-        renderStartRef
+        renderStartRef,
+        targetFps
     ]);
 
     return {startAnimation, cancelAnimation};
