@@ -15,6 +15,7 @@ import DeleteMaterialForm from "@/components/form/material/delete-material-form.
 import AddMaterialForm from "@/components/form/material/add-material-form.tsx";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
 import he from "he";
+import {statisticsService} from "@/services/statistics-service.ts";
 
 export const Route = createFileRoute('/materials/')({
     component: RouteComponent,
@@ -95,8 +96,19 @@ function RouteComponent() {
                             <div className="flex flex-col items-center justify-between gap-2">
                                 <GeoButton
                                     to={ROUTES.materials.materialDetail(material._id)}
-                                    variant="primary"
-                                >
+                                    onClick={async () => {
+                                        // Record statistic for material view
+                                        if (auth?.user.role !== 'student') return;
+
+                                        await statisticsService.recordStatistic({
+                                            type: "material",
+                                            data: {
+                                                title: material.title,
+                                                material: material._id,
+                                            },
+                                        });
+                                    }}
+                                    variant="primary">
                                     <Eye/> Lihat
                                 </GeoButton>
 
@@ -113,7 +125,7 @@ function RouteComponent() {
                                 }
                             </div>
                         }
-                        data-aos-delay={isMobile? 0 : ((index % 4) * 100)}
+                        data-aos-delay={isMobile ? 0 : ((index % 4) * 100)}
                     />
                 ))}
             </div>

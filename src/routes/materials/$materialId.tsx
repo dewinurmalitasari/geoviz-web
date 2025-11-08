@@ -12,7 +12,6 @@ import DeleteMaterialForm from "@/components/form/material/delete-material-form.
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import he from "he";
-import {statisticsService} from "@/services/statistics-service.ts";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -20,19 +19,6 @@ export const Route = createFileRoute('/materials/$materialId')({
     loader: async ({params}) => {
         const materialResponse = await materialService.getMaterial(params.materialId);
         const material = materialResponse.material;
-
-        // Record statistic for material view
-        const auth = getAuthentication();
-        if (auth?.user.role === 'student') {
-            await statisticsService.recordStatistic({
-                type: "material",
-                data: {
-                    title: material.title,
-                    material: material._id,
-                }
-            })
-        }
-
         return {material};
     },
     errorComponent: ({error}) => {

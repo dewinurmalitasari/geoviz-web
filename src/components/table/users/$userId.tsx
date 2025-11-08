@@ -237,9 +237,9 @@ export function useStatisticsColumns(): ColumnDef<any>[] {
                     case 'material':
                         return row.data.title;
                     case 'practice_attempt':
-                        return row.data.code;
+                        return row.data.code.translatePracticeType();
                     case 'practice_completed':
-                        return row.data.code;
+                        return row.data.code.translatePracticeType();
                     default:
                         return '-';
                 }
