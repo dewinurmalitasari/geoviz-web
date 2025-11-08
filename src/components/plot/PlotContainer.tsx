@@ -10,8 +10,6 @@ interface PlotContainerProps {
     perfStats: PerformanceStats
     initialRenderStartRef: React.MutableRefObject<number>;
     animationRenderStartRef: React.MutableRefObject<number>;
-    fixedAspectRatio: boolean;
-    setFixedAspectRatio: (value: boolean) => void;
 }
 
 export default function PlotContainer(
