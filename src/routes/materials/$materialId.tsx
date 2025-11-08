@@ -5,13 +5,14 @@ import {ApiError} from "@/lib/api-client.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
 import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {BookOpen, Calculator, Lightbulb, Pen, Video, Image} from "lucide-react";
+import {BookOpen, Calculator, Image, Lightbulb, Pen, Video} from "lucide-react";
 import {useState} from "react";
 import EditMaterialForm from "@/components/form/material/edit-material-form.tsx";
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import he from "he";
+import {statisticsService} from "@/services/statistics-service.ts";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -19,6 +20,19 @@ export const Route = createFileRoute('/materials/$materialId')({
     loader: async ({params}) => {
         const materialResponse = await materialService.getMaterial(params.materialId);
         const material = materialResponse.material;
+
+        // Record statistic for material view
+        const auth = getAuthentication();
+        if (auth?.user.role === 'student') {
+            await statisticsService.recordStatistic({
+                type: "material",
+                data: {
+                    title: material.title,
+                    material: material._id,
+                }
+            })
+        }
+
         return {material};
     },
     errorComponent: ({error}) => {
@@ -62,7 +76,8 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title={he.decode(material.title)} description="Detail materi transformasi geometri" colorScheme="yellow"/>
+            <PageHeader title={he.decode(material.title)} description="Detail materi transformasi geometri"
+                        colorScheme="yellow"/>
 
             <GeoCard
                 icon={<BookOpen/>}

@@ -194,8 +194,8 @@ interface PracticeCompletedData {
 }
 
 export type StatisticPayload =
-    | { type: 'visits'; data: VisitData }
-    | { type: 'material_access'; data: MaterialAccessData }
+    | { type: 'visit'; data: VisitData }
+    | { type: 'material'; data: MaterialAccessData }
     | { type: 'practice_attempt'; data: PracticeAttemptData }
     | { type: 'practice_completed'; data: PracticeCompletedData };
 

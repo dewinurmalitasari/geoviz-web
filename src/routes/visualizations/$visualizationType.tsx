@@ -172,7 +172,7 @@ function RouteComponent() {
         } else {
             // For 2D visualization
             const {xRange, yRange} = calculateRange(points)
-            const newPlotData = get2DShapePlotData(points, isMobile)
+            const newPlotData = get2DShapePlotData(points)
             const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)

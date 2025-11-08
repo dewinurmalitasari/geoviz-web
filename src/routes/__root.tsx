@@ -10,6 +10,7 @@ import type {QueryClient} from '@tanstack/react-query'
 import {Toaster} from "@/components/ui/sonner.tsx";
 import {PUBLIC_ROUTES} from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
+import {statisticsService} from "@/services/statistics-service.ts";
 
 interface MyRouterContext {
     queryClient: QueryClient
@@ -99,5 +100,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 message={error.message || "Terjadi kesalahan."}
             />
         );
+    },
+    loader: async () => {
+        const auth = getAuthentication();
+        if (auth?.user.role !== 'student') return
+
+        if (typeof window !== 'undefined') {
+            const hasRecorded = sessionStorage.getItem('visit-recorded');
+            if (!hasRecorded) {
+                await statisticsService.recordStatistic({type: 'visit', data: {}})
+                sessionStorage.setItem('visit-recorded', 'true');
+            }
+        }
+        return
     }
 })

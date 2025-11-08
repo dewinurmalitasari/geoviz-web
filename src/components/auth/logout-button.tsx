@@ -11,6 +11,7 @@ export default function LogoutButton() {
 
     const onLogoutClick = () => {
         clearAuthentication();
+        sessionStorage.removeItem('visit-recorded'); // TODO: Remove this if want to track only tab
         animatedNavigate({to: '/login'}, false);
     };
 

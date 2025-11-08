@@ -29,8 +29,11 @@ import GeoInput from "@/components/geo/geo-input.tsx";
 import {practicesService} from "@/services/practices-service.ts";
 import {toast} from "sonner";
 import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
+import {statisticsService} from "@/services/statistics-service.ts";
+import {getAuthentication} from "@/lib/auth.ts";
 
 export default function DeterminePractice() {
+    const auth = getAuthentication();
     const isMobile = useIsMobile();
     const animatedNavigate = useAnimatedNavigation();
 
@@ -115,7 +118,7 @@ export default function DeterminePractice() {
         setShapePoints(points)
 
         const {xRange, yRange} = calculateRange(points)
-        const newPlotData = get2DShapePlotData(points, isMobile)
+        const newPlotData = get2DShapePlotData(points)
         const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
         setPlotData(newPlotData)
         setPlotLayout(newPlotLayout)
@@ -225,6 +228,18 @@ export default function DeterminePractice() {
         }
     }
 
+    const handleRecordStatistic = async () => {
+        if (auth?.user.role !== 'student') return
+
+        // Record statistic for identify practice attempt
+        await statisticsService.recordStatistic({
+            type: "practice_attempt",
+            data: {
+                code: 'determine_value',
+            }
+        })
+    }
+
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader
@@ -307,6 +322,7 @@ export default function DeterminePractice() {
                                         <GeoButton
                                             variant="primary"
                                             onClick={() => {
+                                                handleRecordStatistic()
                                                 handleGenerate()
                                                 setStarted(true)
                                             }}

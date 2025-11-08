@@ -2,7 +2,6 @@ import type {Point2D} from "@/type.ts";
 
 export function get2DShapePlotData(
     points: Point2D[],
-    isMobile: boolean,
     color = 'blue',
 ) {
     if (points.length < 2) return [];
@@ -37,45 +36,17 @@ export function get2DShapePlotData(
     };
 
     // Create labels for the points
-    const labels = points.map((_, i) => String.fromCharCode(65 + i));
-
-    // Calculate bounds and center inline
-    const centerX = (Math.max(...xValues) + Math.min(...xValues)) / 2;
-    const centerY = (Math.max(...yValues) + Math.min(...yValues)) / 2;
-
-    // Calculate offset distance
-    const offset = isMobile ? 0.6 : 0.4;
-
-    const textPositions = points.map((point) => {
-        const dx = point.x - centerX;
-        const dy = point.y - centerY;
-
-        let xOffset = 0;
-        let yOffset = 0;
-
-        if (dx === 0 && dy === 0) {
-            yOffset = offset;
-        } else {
-            const magnitude = Math.sqrt(dx * dx + dy * dy);
-            xOffset = (dx / magnitude) * offset;
-            yOffset = (dy / magnitude) * offset;
-        }
-
-        if (points.length > 6) {
-            xOffset = xOffset * 2;
-            yOffset = yOffset * 2;
-        }
-
-        return {x: point.x + xOffset, y: point.y + yOffset};
-    });
-
     const labelsTrace = {
-        x: textPositions.map(pos => pos.x),
-        y: textPositions.map(pos => pos.y),
+        x: xValues,
+        y: yValues.map((y) => {
+            // Determine if point is in upper or lower half based on actual y values
+            const midY = (Math.min(...yValues) + Math.max(...yValues)) / 2;
+            return y > midY ? y + 0.4 : y - 0.4;
+        }),
         mode: 'text',
         type: 'scattergl',
-        text: labels,
-        textfont: {size: 16, color: 'black'},
+        text: points.map((_, i) => String.fromCharCode(65 + i)), // A, B, C, etc.
+        textfont: { size: 14, color: 'black' },
         showlegend: false,
     };
 
@@ -91,11 +62,11 @@ export function get2DShapePlotLayout(
         dragmode: 'pan',
         xaxis: {
             range: xRange,
-            // dtick: 1
+            dtick: xRange[1] > 20 ? 5 : 1,
         },
         yaxis: {
             range: yRange,
-            // dtick: 1,
+            dtick: yRange[1] > 20 ? 5 : 1,
             scaleanchor: 'x'
         }
     };

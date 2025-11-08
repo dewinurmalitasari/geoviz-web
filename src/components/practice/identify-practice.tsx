@@ -29,8 +29,11 @@ import GeoInput from "@/components/geo/geo-input.tsx";
 import {practicesService} from "@/services/practices-service.ts";
 import {toast} from "sonner";
 import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
+import {statisticsService} from "@/services/statistics-service.ts";
+import {getAuthentication} from "@/lib/auth.ts";
 
 export default function IdentifyPractice() {
+    const auth = getAuthentication();
     const isMobile = useIsMobile();
     const animatedNavigate = useAnimatedNavigation();
 
@@ -110,7 +113,7 @@ export default function IdentifyPractice() {
         setShapePoints(points)
 
         const {xRange, yRange} = calculateRange(points)
-        const newPlotData = get2DShapePlotData(points, isMobile)
+        const newPlotData = get2DShapePlotData(points)
         const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
         setPlotData(newPlotData)
         setPlotLayout(newPlotLayout)
@@ -170,6 +173,18 @@ export default function IdentifyPractice() {
         } catch (error) {
             toast.error('Gagal menambahkan: ' + (error as Error).message);
         }
+    }
+
+    const handleRecordStatistic = async () => {
+        if (auth?.user.role !== 'student') return
+
+        // Record statistic for identify practice attempt
+        await statisticsService.recordStatistic({
+            type: "practice_attempt",
+            data: {
+                code: 'identify',
+            }
+        })
     }
 
     return (
@@ -255,6 +270,7 @@ export default function IdentifyPractice() {
                                         <GeoButton
                                             variant="primary"
                                             onClick={() => {
+                                                handleRecordStatistic()
                                                 handleGenerate()
                                                 setStarted(true)
                                             }}
