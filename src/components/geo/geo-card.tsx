@@ -76,7 +76,7 @@ export default function GeoCard(
         >
             <div className={`h-2 bg-gradient-to-r ${colors.topLine}`}></div>
 
-            <div className="p-1 md:p-8 flex flex-col justify-between flex-1 space-y-4">
+            <div className="p-4 md:p-8 flex flex-col justify-between flex-1 space-y-4">
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-0 flex-1">
