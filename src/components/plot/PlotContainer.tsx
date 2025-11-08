@@ -25,37 +25,13 @@ export default function PlotContainer(
 
     return (
         <div
-            className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-4 flex items-center justify-center">
+            className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-2 md:p-4 flex items-center justify-center">
             {shapePoints.length > 0 ? (
                 <div className="flex flex-col w-full h-full">
-                    <Plot
-                        data={plotData}
-                        layout={plotLayout}
-                        // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
-                        className="h-full md:h-[80vh] w-full"
-                        onAfterPlot={() => {
-                            const now = performance.now();
-
-                            // Check for normal render
-                            if (initialRenderStartRef.current > 0) {
-                                const duration = now - initialRenderStartRef.current;
-                                setInitialRenderTime(duration);
-                                initialRenderStartRef.current = 0;
-                            }
-
-                            // Check for animation frame render
-                            if (animationRenderStartRef.current > 0) {
-                                const duration = now - animationRenderStartRef.current;
-                                setAnimationRenderTime(duration); // Update animation state
-                                animationRenderStartRef.current = 0;
-                            }
-                        }}
-                    />
-
                     {/*TODO: Hide this somewhere*/}
                     {/* Performance Stats */}
                     {(initialRenderTime > 0 || perfStats) && (
-                        <div className="flex flex-col gap-1 mt-2">
+                        <div className="flex flex-col gap-1 mb-2">
                             {initialRenderTime > 0 && (
                                 <div
                                     className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 rounded-lg text-sm font-medium">
@@ -93,6 +69,30 @@ export default function PlotContainer(
                             )}
                         </div>
                     )}
+
+                    <Plot
+                        data={plotData}
+                        layout={plotLayout}
+                        // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
+                        className="h-full md:h-[80vh] w-full"
+                        onAfterPlot={() => {
+                            const now = performance.now();
+
+                            // Check for normal render
+                            if (initialRenderStartRef.current > 0) {
+                                const duration = now - initialRenderStartRef.current;
+                                setInitialRenderTime(duration);
+                                initialRenderStartRef.current = 0;
+                            }
+
+                            // Check for animation frame render
+                            if (animationRenderStartRef.current > 0) {
+                                const duration = now - animationRenderStartRef.current;
+                                setAnimationRenderTime(duration); // Update animation state
+                                animationRenderStartRef.current = 0;
+                            }
+                        }}
+                    />
                 </div>
             ) : (
                 <div className="text-center">

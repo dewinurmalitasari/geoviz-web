@@ -35,6 +35,7 @@ import {
 } from "@/hooks/use-equation-plot.ts";
 import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
 import PlotContainer from "@/components/plot/PlotContainer.tsx";
+import AOS from 'aos';
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -197,6 +198,33 @@ function RouteComponent() {
 
         startAnimation(transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection');
     }
+
+    // Add visualizationType to the dependency to re-initialize when route changes
+    useEffect(() => {
+        // Reset shape points when visualization type changes
+        const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
+        const newShapePoints = PRESET_POINTS[defaultKey] || [];
+        setShapePoints(newShapePoints);
+
+        // Initialize plot with new shape points
+        handlePlotClick(newShapePoints, equations);
+    }, [visualizationType]) // Add visualizationType as dependency
+
+    useEffect(() => {
+        // Force AOS to refresh and animate elements immediately when route changes
+        const timer = setTimeout(() => {
+            AOS.refresh();
+            AOS.refreshHard();
+
+            // Force animate all AOS elements on this page
+            const aosElements = document.querySelectorAll('[data-aos]');
+            aosElements.forEach(el => {
+                el.classList.add('aos-animate');
+            });
+        }, 50); // Small delay to ensure DOM is ready
+
+        return () => clearTimeout(timer);
+    }, [visualizationType]); // Trigger when visualization type changes
 
     const tabs = useVisualizationTabs({
         visualizationType,
