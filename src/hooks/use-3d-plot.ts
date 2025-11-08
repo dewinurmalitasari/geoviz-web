@@ -103,9 +103,9 @@ export function get3DShapePlotLayout(
     return {
         margin: {t: 0, l: 30, r: 30, b: 30},
         scene: {
-            xaxis: {range: xRange, dtick: 1},
-            yaxis: {range: yRange, dtick: 1},
-            zaxis: {range: zRange, dtick: 1},
+            xaxis: {range: xRange},
+            yaxis: {range: yRange},
+            zaxis: {range: zRange},
             camera: {eye: {x: 0, y: -1.5, z: 1}},
             aspectratio: {x: 1, y: 1, z: 1},
         },

@@ -58,7 +58,7 @@ export function usePracticeColumns(): ColumnDef<Practice>[] {
             ),
             cell: ({row}) => (
                 <div className="text-center px-4 py-3 font-semibold text-deep-purple-700 dark:text-deep-purple-300">
-                    {row.original.code}
+                    {row.original.code.translatePracticeType()}
                 </div>
             ),
         },
