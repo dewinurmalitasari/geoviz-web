@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
@@ -94,6 +94,11 @@ export default function ShapePointsInput(
     const getPointLabel = (index: number) => {
         return String.fromCharCode(65 + index); // A, B, C, ...
     };
+
+    useEffect(() => {
+        setPoints(defaultPoints);
+        setSelectedPreset("custom");
+    }, [defaultPoints]);
 
     return (
         <div className={cn("space-y-4", className)}>
