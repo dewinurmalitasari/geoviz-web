@@ -1,16 +1,17 @@
-import {cn} from "@/lib/utils";
-import {Annoyed, CircleHelp, Frown, Smile} from "lucide-react";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Button} from "@/components/ui/button";
-import {useState} from "react";
+import { cn } from "@/lib/utils";
+import { Annoyed, CircleHelp, Frown, Smile } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import {Spinner} from "@/components/ui/spinner.tsx";
 
 interface ReactionSelectProps {
     onSelect: (reaction: 'happy' | 'neutral' | 'sad' | 'confused') => void;
-    defaultValue?: 'happy' | 'neutral' | 'sad' | 'confused';
-    disabled?: boolean;
+    value?: 'happy' | 'neutral' | 'sad' | 'confused';
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
     className?: string;
     headerType?: 'material' | 'practice';
+    isLoading?: boolean;
 }
 
 const reactionOptions = [
@@ -100,20 +101,18 @@ const colorMap = {
 export default function ReactionSelect(
     {
         onSelect,
-        defaultValue,
-        disabled = false,
+        value,
         colorScheme = "purple",
         className,
-        headerType = 'material'
+        headerType = 'material',
+        isLoading = false
     }: ReactionSelectProps) {
     const colors = colorMap[colorScheme];
-    const [selectedReaction, setSelectedReaction] = useState(defaultValue);
     const [open, setOpen] = useState(false);
 
     const handleSelect = (reaction: 'happy' | 'neutral' | 'sad' | 'confused') => {
-        if (disabled) return;
+        if (isLoading) return;
 
-        setSelectedReaction(reaction);
         onSelect(reaction);
         setOpen(false); // Close popover after selection
     };
@@ -124,7 +123,7 @@ export default function ReactionSelect(
     };
 
     const getSelectedReactionData = () => {
-        return reactionOptions.find(option => option.value === selectedReaction);
+        return reactionOptions.find(option => option.value === value);
     };
 
     const selectedData = getSelectedReactionData();
@@ -135,17 +134,17 @@ export default function ReactionSelect(
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
-                        disabled={disabled}
+                        disabled={isLoading}
                         className={cn(
                             "w-full p-4 h-auto rounded-lg border-2 transition-all duration-200",
                             "flex flex-col md:flex-row items-center justify-between gap-3",
                             "bg-white hover:bg-gray-50 hover:scale-103 active:scale-95 cursor-pointer",
                             colors.button,
-                            disabled && "opacity-50 cursor-not-allowed"
+                            isLoading && "opacity-50 cursor-not-allowed"
                         )}
                     >
                         <div className="flex items-center gap-3 w-full md:w-auto">
-                            {selectedReaction ? (
+                            {value ? (
                                 <>
                                     <div className={cn("flex-shrink-0", colors.icon)}>
                                         {selectedData?.icon && (
@@ -163,7 +162,7 @@ export default function ReactionSelect(
                                 </>
                             ) : (
                                 <div className={cn("font-medium text-sm", colors.header)}>
-                                    {getHeaderText()}
+                                    {isLoading ? <Spinner/> : getHeaderText()}
                                 </div>
                             )}
                         </div>
@@ -199,7 +198,7 @@ export default function ReactionSelect(
                     <div className="space-y-1">
                         {reactionOptions.map((option) => {
                             const Icon = option.icon;
-                            const isSelected = selectedReaction === option.value;
+                            const isSelected = value === option.value;
 
                             return (
                                 <div
@@ -208,8 +207,8 @@ export default function ReactionSelect(
                                         "w-full p-3 rounded-lg border-2 transition-all duration-200 cursor-pointer",
                                         "flex items-center gap-3",
                                         isSelected ? colors.selected : "border-transparent bg-transparent",
-                                        !disabled && colors.hover,
-                                        disabled && "opacity-50 cursor-not-allowed"
+                                        !isLoading && colors.hover,
+                                        isLoading && "opacity-50 cursor-not-allowed"
                                     )}
                                     onClick={() => handleSelect(option.value)}
                                 >

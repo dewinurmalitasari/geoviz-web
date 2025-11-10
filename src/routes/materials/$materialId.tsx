@@ -12,6 +12,9 @@ import DeleteMaterialForm from "@/components/form/material/delete-material-form.
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
 import he from "he";
+import ReactionSelect from "@/components/reaction/reaction-select.tsx";
+import {reactionService} from "@/services/reaction-service.ts";
+import type {Reaction} from "@/type.ts";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -19,7 +22,24 @@ export const Route = createFileRoute('/materials/$materialId')({
     loader: async ({params}) => {
         const materialResponse = await materialService.getMaterial(params.materialId);
         const material = materialResponse.material;
-        return {material};
+
+        const auth = getAuthentication();
+        if (auth?.user.role !== 'student') {
+            return {material};
+        }
+
+        let reaction: Reaction | null = null;
+        try {
+            const reactionsResponse = await reactionService.getMaterialReaction(params.materialId);
+            reaction = reactionsResponse.reaction;
+        } catch (error) {
+            if (error instanceof ApiError && error.status === 404) {
+                return {material, reaction: null};
+            }
+            throw error;
+        }
+
+        return {material, reaction};
     },
     errorComponent: ({error}) => {
         if (error instanceof ApiError) {
@@ -48,17 +68,34 @@ function RouteComponent() {
     const auth = getAuthentication();
     const router = useRouter();
     const navigate = useNavigate();
-    const {material} = Route.useLoaderData();
+    const {material, reaction} = Route.useLoaderData();
 
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const [reactionState, setReactionState] = useState<Reaction | null>(reaction || null);
+    const [reactionLoading, setReactionLoading] = useState(false);
 
     // Extract YouTube video IDs from links
     const youtubeVideoIds = material.youtubeLinks?.map(link => {
         const match = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
         return match ? match[1] : null;
     }).filter(Boolean) || [];
+
+    const handleReactionSelect = async (selectedReaction: string) => {
+        setReactionLoading(true);
+        await reactionService.recordReaction({
+            reaction: selectedReaction as 'happy' | 'neutral' | 'sad' | 'confused',
+            type: 'material',
+            materialId: material._id,
+        }).then(response => {
+            setReactionState(response.reaction);
+        }).catch(error => {
+            console.error("Error recording reaction:", error);
+        });
+        setReactionLoading(false);
+    }
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -171,6 +208,14 @@ function RouteComponent() {
                             </div>
                         )}
                     </div>
+                }
+                header={auth?.user.role === 'student' &&
+                    <ReactionSelect
+                        onSelect={handleReactionSelect}
+                        value={reactionState?.reaction}
+                        isLoading={reactionLoading}
+                        headerType="material"
+                    />
                 }
             />
 

@@ -2,13 +2,14 @@ import PageHeader from "@/components/root/page-header.tsx";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
 import {useEffect, useRef, useState} from "react";
 import {
-    type DilatationValue,
     type DetermineValuePracticeAnswer,
+    type DilatationValue,
     type PerformanceStats,
     type PlotlyData,
     type PlotlyLayout,
     type Point,
     type PracticePayload,
+    type Reaction,
     type ReflectionValue,
     type RotationValue,
     ROUTES,
@@ -31,8 +32,19 @@ import {toast} from "sonner";
 import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import {getAuthentication} from "@/lib/auth.ts";
+import ReactionSelect from "@/components/reaction/reaction-select.tsx";
 
-export default function DeterminePractice() {
+interface DeterminePracticeProps {
+    handleReactionSelect: (selectedReaction: string) => void;
+    reactionState: Reaction | null;
+    reactionLoading: boolean;
+}
+
+export default function DeterminePractice({
+        handleReactionSelect,
+        reactionState,
+        reactionLoading
+    }: DeterminePracticeProps) {
     const auth = getAuthentication();
     const isMobile = useIsMobile();
     const animatedNavigate = useAnimatedNavigation();
@@ -271,7 +283,8 @@ export default function DeterminePractice() {
                                             Siap Memulai Latihan?
                                         </h3>
                                         <p className="text-slate-600 max-w-md">
-                                            Pilih jumlah soal yang ingin dikerjakan dan mulai latihan menentukan nilai transformasi geometri.
+                                            Pilih jumlah soal yang ingin dikerjakan dan mulai latihan menentukan nilai
+                                            transformasi geometri.
                                         </p>
                                     </div>
 
@@ -383,6 +396,14 @@ export default function DeterminePractice() {
                             </div>
                         )}
                     </div>
+                }
+                header={(auth?.user.role === 'student' && !started) &&
+                    <ReactionSelect
+                        onSelect={handleReactionSelect}
+                        value={reactionState?.reaction}
+                        isLoading={reactionLoading}
+                        headerType="practice"
+                    />
                 }
             />
         </div>

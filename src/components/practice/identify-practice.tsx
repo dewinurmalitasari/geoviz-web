@@ -8,7 +8,7 @@ import {
     type PlotlyData,
     type PlotlyLayout,
     type Point,
-    type PracticePayload,
+    type PracticePayload, type Reaction,
     type ReflectionValue,
     type RotationValue,
     ROUTES,
@@ -31,8 +31,19 @@ import {toast} from "sonner";
 import {useAnimatedNavigation} from "@/hooks/use-animated-navigation.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import {getAuthentication} from "@/lib/auth.ts";
+import ReactionSelect from "@/components/reaction/reaction-select.tsx";
 
-export default function IdentifyPractice() {
+interface IdentifyPracticeProps {
+    handleReactionSelect: (selectedReaction: string) => void;
+    reactionState: Reaction | null;
+    reactionLoading: boolean;
+}
+
+export default function IdentifyPractice({
+    handleReactionSelect,
+    reactionState,
+    reactionLoading
+}: IdentifyPracticeProps) {
     const auth = getAuthentication();
     const isMobile = useIsMobile();
     const animatedNavigate = useAnimatedNavigation();
@@ -335,6 +346,14 @@ export default function IdentifyPractice() {
                             </div>
                         )}
                     </div>
+                }
+                header={(auth?.user.role === 'student' && !started) &&
+                    <ReactionSelect
+                        onSelect={handleReactionSelect}
+                        value={reactionState?.reaction}
+                        isLoading={reactionLoading}
+                        headerType="practice"
+                    />
                 }
             />
         </div>

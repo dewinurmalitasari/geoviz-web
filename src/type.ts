@@ -333,8 +333,8 @@ export interface Reaction {
     _id: string,
     reaction: 'happy' | 'neutral' | 'sad' | 'confused',
     type: 'material' | 'practice',
-    material?: string, // material ID
-    practice?: string, // practice ID
+    materialId?: string, // material ID
+    practiceCode?: string, // practice Code
     createdAt: string,
     updatedAt: string,
 }
@@ -342,13 +342,13 @@ export interface Reaction {
 export interface ReactionPayload {
     reaction: 'happy' | 'neutral' | 'sad' | 'confused',
     type: 'material' | 'practice',
-    material?: string, // material ID
-    practice?: string, // practice ID
+    materialId?: string, // material ID
+    practiceCode?: string, // practice Code
 }
 
 export interface ReactionResponse {
     message: string,
-    reaction: Reaction,
+    reaction: Reaction | null,
 }
 
 export interface ReactionsResponse {

@@ -24,6 +24,8 @@ export const Route = createFileRoute('/users/$userId')({
             throw notFound()
         }
 
+        // TODO: List of reactions
+
         const userResponse = await userService.getUser(params.userId);
         const practicesResponse = await practicesService.getPractices(params.userId, true);
         // Don't fetch statistics if the user is a student
