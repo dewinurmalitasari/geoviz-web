@@ -30,8 +30,8 @@ export default defineConfig({
         name: 'GeoViz App',
         short_name: 'GeoViz',
         description: 'Aplikasi Pembelajaran Transformasi Geometri',
-        theme_color: '#3c096c',
-        background_color: '#3c096c',
+        theme_color: '#7B2CBF',
+        background_color: '#7B2CBF',
         display: 'standalone',
         start_url: '.',
         icons: [
