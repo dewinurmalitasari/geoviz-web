@@ -95,10 +95,10 @@ function RouteComponent() {
                             data={students?.users ?? []}
                         />
                     }
-                    titleButton={
+                    header={
                         <AddUserForm
                             trigger={
-                                <GeoButton className="w-[100px]" variant="secondary">
+                                <GeoButton className="w-full md:w-fit" variant="secondary">
                                     <Plus/> Tambah
                                 </GeoButton>
                             }
@@ -118,10 +118,10 @@ function RouteComponent() {
                                 data={teachers?.users ?? []}
                             />
                         }
-                        titleButton={
+                        header={
                             <AddUserForm
                                 trigger={
-                                    <GeoButton className="w-[100px]" variant="secondary">
+                                    <GeoButton className="w-full md:w-fit" variant="secondary">
                                         <Plus/> Tambah
                                     </GeoButton>
                                 }

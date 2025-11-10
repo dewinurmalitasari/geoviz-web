@@ -6,6 +6,7 @@ interface GeoCardProps {
     title?: string;
     content?: ReactNode;
     footer?: ReactNode;
+    header?: ReactNode;
     className?: string;
     'data-aos-delay'?: number;
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
@@ -56,6 +57,7 @@ export default function GeoCard(
         title,
         content,
         footer,
+        header,
         className,
         colorScheme = 'purple',
         'data-aos-delay': dataAosDelay
@@ -76,8 +78,8 @@ export default function GeoCard(
 
             <div className="p-4 md:p-8 flex flex-col justify-between flex-1 space-y-4">
                 <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center min-w-0 flex-1">
+                    <div className="flex flex-col md:flex-row justify-between items-center">
+                        <div className="flex items-center min-w-0 flex-1 w-full mb-2 md:mb-0">
                             {icon &&
                                 <div
                                     className={`w-14 h-14 rounded-xl bg-gradient-to-br ${colors.iconBg} flex items-center justify-center mr-4 shrink-0`}>
@@ -96,6 +98,7 @@ export default function GeoCard(
                             }
                         </div>
 
+                        {header && <div className="w-full md:w-fit">{header}</div>}
                     </div>
 
                     {content}
