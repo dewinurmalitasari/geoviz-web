@@ -6,7 +6,6 @@ interface GeoCardProps {
     title?: string;
     content?: ReactNode;
     footer?: ReactNode;
-    titleButton?: ReactNode;
     className?: string;
     'data-aos-delay'?: number;
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
@@ -57,7 +56,6 @@ export default function GeoCard(
         title,
         content,
         footer,
-        titleButton,
         className,
         colorScheme = 'purple',
         'data-aos-delay': dataAosDelay
@@ -98,7 +96,6 @@ export default function GeoCard(
                             }
                         </div>
 
-                        {titleButton && <div>{titleButton}</div>}
                     </div>
 
                     {content}

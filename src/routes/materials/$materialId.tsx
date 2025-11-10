@@ -62,8 +62,18 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
-            <PageHeader title={he.decode(material.title)} description="Detail materi transformasi geometri"
-                        colorScheme="yellow"/>
+            <PageHeader
+                title={he.decode(material.title)}
+                description="Detail materi transformasi geometri"
+                colorScheme="yellow" additionalButtons={auth?.user.role === 'admin' &&
+                <GeoButton
+                    onClick={() => setEditOpen(true)}
+                    variant="secondary"
+                    className="w-full md:w-fit"
+                >
+                    <Pen/> Edit
+                </GeoButton>
+            }/>
 
             <GeoCard
                 icon={<BookOpen/>}
@@ -161,14 +171,6 @@ function RouteComponent() {
                             </div>
                         )}
                     </div>
-                }
-                titleButton={auth?.user.role === 'admin' &&
-                    <GeoButton
-                        onClick={() => setEditOpen(true)}
-                        variant="secondary"
-                    >
-                        <Pen/> Edit
-                    </GeoButton>
                 }
             />
 
