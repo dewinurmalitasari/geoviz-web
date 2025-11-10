@@ -1,6 +1,7 @@
 import Plot from "react-plotly.js";
 import type {PerformanceStats, PlotlyData, PlotlyLayout, Point} from "@/type.ts";
 import {useState} from "react";
+import GeoSwitch from "../geo/geo-switch";
 
 interface PlotContainerProps {
     shapePoints: Point[];
@@ -18,16 +19,28 @@ export default function PlotContainer(
         plotLayout,
         perfStats,
         initialRenderStartRef,
-        animationRenderStartRef
+        animationRenderStartRef,
     }: PlotContainerProps) {
     const [animationRenderTime, setAnimationRenderTime] = useState<number>(0);
     const [initialRenderTime, setInitialRenderTime] = useState<number>(0);
+    const [fixedAspectRatio, setFixedAspectRatio] = useState<boolean>(false);
 
     return (
         <div
             className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-2 md:p-4 flex items-center justify-center">
             {shapePoints.length > 0 ? (
                 <div className="flex flex-col w-full h-full">
+                    <div className="flex items-center justify-end gap-4 mb-2 border border-deep-purple-300 rounded-lg px-3 py-2 bg-white/70">
+                        <GeoSwitch
+                            id="fixed-aspect-ratio-switch"
+                            label="Kunci interval sumbu menjadi 1"
+                            checked={fixedAspectRatio}
+                            onCheckedChange={setFixedAspectRatio}
+                            colorScheme="purple"
+                            size="md"
+                        />
+                    </div>
+
                     {/*TODO: Hide this somewhere*/}
                     {/* Performance Stats */}
                     {(initialRenderTime > 0 || perfStats) && (
@@ -72,7 +85,34 @@ export default function PlotContainer(
 
                     <Plot
                         data={plotData}
-                        layout={plotLayout}
+                        layout={{
+                            ...plotLayout,
+                            xaxis: {
+                                ...plotLayout.xaxis,
+                                dtick: fixedAspectRatio ? 1 : undefined,
+                            },
+                            yaxis: {
+                                ...plotLayout.yaxis,
+                                dtick: fixedAspectRatio ? 1 : undefined,
+                            },
+                            ...(plotLayout.scene && {
+                                scene: {
+                                    ...plotLayout.scene,
+                                    xaxis: {
+                                        ...plotLayout.scene.xaxis,
+                                        dtick: fixedAspectRatio ? 1 : undefined,
+                                    },
+                                    yaxis: {
+                                        ...plotLayout.scene.yaxis,
+                                        dtick: fixedAspectRatio ? 1 : undefined,
+                                    },
+                                    zaxis: {
+                                        ...plotLayout.scene.zaxis,
+                                        dtick: fixedAspectRatio ? 1 : undefined,
+                                    },
+                                },
+                            }),
+                        }}
                         // config={{responsive: true}} // INFO: Uncomment this line to make the plot responsive, but will make weird bug when on mobile
                         className="h-full md:h-[80vh] w-full"
                         onAfterPlot={() => {

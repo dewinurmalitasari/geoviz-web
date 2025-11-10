@@ -51,16 +51,16 @@ export default function FormDialog(
                 <DrawerContent>
                     <GeoDrawerHeader icon={icon ?? defaultIcon} title={title}/>
                     {content}
-                    <DrawerFooter className="pt-2">
+                    <DrawerFooter className="pt-2 h-fit">
                         <DrawerClose asChild>
-                            <GeoButton variant="outline">Batal</GeoButton>
+                            <GeoButton variant="outline" className="h-fit">Batal</GeoButton>
                         </DrawerClose>
                         {isEdit && onDelete && (
-                            <GeoButton variant="destructive" onClick={onDelete}>
+                            <GeoButton variant="destructive" onClick={onDelete} className="h-fit">
                                 <Trash/> Hapus
                             </GeoButton>
                         )}
-                        <GeoButton variant="primary" onClick={onSubmit} isLoading={isProcessing}>
+                        <GeoButton variant="primary" onClick={onSubmit} isLoading={isProcessing} className="h-fit">
                             {isEdit ? <><Pen/> Simpan</> : <><Plus/> Tambah</>}
                         </GeoButton>
                     </DrawerFooter>

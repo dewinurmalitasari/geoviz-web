@@ -201,14 +201,31 @@ function RouteComponent() {
 
     // Add visualizationType to the dependency to re-initialize when route changes
     useEffect(() => {
-        // Reset shape points when visualization type changes
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         const newShapePoints = PRESET_POINTS[defaultKey] || [];
         setShapePoints(newShapePoints);
 
-        // Initialize plot with new shape points
+        // Reset transformation values
+        setTranslationValue({
+            translateX: 3,
+            translateY: 3,
+            translateZ: 3
+        });
+        setDilatationValue({scaleFactor: 4});
+        setRotationValue({angle: 90, axis: 'radio_x_axis'});
+        setReflectionAxis({
+            axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
+            k: 0
+        });
+
+        // Reset equations for equation visualization
+        setEquations({
+            type: 'explicit',
+            equations: ['x^2']
+        });
+
         handlePlotClick(newShapePoints, equations);
-    }, [visualizationType]) // Add visualizationType as dependency
+    }, [visualizationType])
 
     useEffect(() => {
         // Force AOS to refresh and animate elements immediately when route changes
@@ -216,7 +233,6 @@ function RouteComponent() {
             AOS.refresh();
             AOS.refreshHard();
 
-            // Force animate all AOS elements on this page
             const aosElements = document.querySelectorAll('[data-aos]');
             aosElements.forEach(el => {
                 el.classList.add('aos-animate');
@@ -224,7 +240,7 @@ function RouteComponent() {
         }, 50); // Small delay to ensure DOM is ready
 
         return () => clearTimeout(timer);
-    }, [visualizationType]); // Trigger when visualization type changes
+    }, [visualizationType]);
 
     const tabs = useVisualizationTabs({
         visualizationType,

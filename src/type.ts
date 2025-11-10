@@ -321,6 +321,3 @@ export interface MaterialPayload {
     youtubeLinks?: string[],
     imageLinks?: string[],
 }
-
-// TODO:
-//  - tracking users sessions, material access, practice attempts

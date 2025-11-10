@@ -18,7 +18,7 @@ export function get2DShapePlotData(
         x: closedX,
         y: closedY,
         mode: 'lines',
-        type: 'scattergl',
+        type: 'scatter',
         line: {color: color, width: 3},
         name: 'Shape',
         showlegend: false
@@ -29,7 +29,7 @@ export function get2DShapePlotData(
         x: xValues,
         y: yValues,
         mode: 'markers',
-        type: 'scattergl',
+        type: 'scatter',
         marker: {color: color, size: 10},
         name: 'Points',
         showlegend: false
@@ -44,7 +44,7 @@ export function get2DShapePlotData(
             return y > midY ? y + 0.4 : y - 0.4;
         }),
         mode: 'text',
-        type: 'scattergl',
+        type: 'scatter',
         text: points.map((_, i) => String.fromCharCode(65 + i)), // A, B, C, etc.
         textfont: { size: 14, color: 'black' },
         showlegend: false,
@@ -61,12 +61,10 @@ export function get2DShapePlotLayout(
         margin: {t: 0, l: 30, r: 30, b: 30},
         dragmode: 'pan',
         xaxis: {
-            range: xRange,
-            dtick: xRange[1] > 20 ? 5 : 1,
+            range: xRange
         },
         yaxis: {
             range: yRange,
-            dtick: yRange[1] > 20 ? 5 : 1,
             scaleanchor: 'x'
         }
     };
