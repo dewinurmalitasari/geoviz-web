@@ -140,6 +140,12 @@ export const API_ENDPOINTS = {
         withId: (_id: string) => `${API_BASE_URL}/statistics/user/${_id}`,
         summaryWithId: (_id: string) => `${API_BASE_URL}/statistics/summary/user/${_id}`,
         progressWithId: (_id: string) => `${API_BASE_URL}/statistics/progress/user/${_id}`,
+    },
+    reactions: {
+        base: `${API_BASE_URL}/reactions`,
+        withUserId: (_id: string) => `${API_BASE_URL}/reactions/user/${_id}`,
+        withMaterialId: (_id: string) => `${API_BASE_URL}/reactions/material/${_id}`,
+        withPracticeId: (_id: string) => `${API_BASE_URL}/reactions/practice/${_id}`,
     }
 } as const;
 
@@ -320,4 +326,32 @@ export interface MaterialPayload {
     example?: string,
     youtubeLinks?: string[],
     imageLinks?: string[],
+}
+
+// Reaction Types
+export interface Reaction {
+    _id: string,
+    reaction: 'happy' | 'neutral' | 'sad' | 'confused',
+    type: 'material' | 'practice',
+    material?: string, // material ID
+    practice?: string, // practice ID
+    createdAt: string,
+    updatedAt: string,
+}
+
+export interface ReactionPayload {
+    reaction: 'happy' | 'neutral' | 'sad' | 'confused',
+    type: 'material' | 'practice',
+    material?: string, // material ID
+    practice?: string, // practice ID
+}
+
+export interface ReactionResponse {
+    message: string,
+    reaction: Reaction,
+}
+
+export interface ReactionsResponse {
+    message: string,
+    reactions: Reaction[],
 }
