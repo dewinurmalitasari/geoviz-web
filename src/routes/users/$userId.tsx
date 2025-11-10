@@ -8,11 +8,12 @@ import {getAuthentication} from "@/lib/auth.ts";
 import {practicesService} from "@/services/practices-service.ts";
 import {statisticsService} from "@/services/statistics-service.ts";
 import GeoCard from "@/components/geo/geo-card.tsx";
-import {BookOpenCheck, ChartColumn} from "lucide-react";
+import {BookOpenCheck, ChartColumn, Smile} from "lucide-react";
 import {DataTable} from "@/components/table/data-table.tsx";
-import {usePracticeColumns, useStatisticsColumns} from "@/components/table/users/$userId.tsx";
+import {usePracticeColumns, useReactionsColumns, useStatisticsColumns} from "@/components/table/users/$userId.tsx";
 import UserSummary from "@/components/user/user-summary.tsx";
 import he from "he";
+import {reactionService} from "@/services/reaction-service.ts";
 
 export const Route = createFileRoute('/users/$userId')({
     component: RouteComponent,
@@ -24,19 +25,28 @@ export const Route = createFileRoute('/users/$userId')({
             throw notFound()
         }
 
-        // TODO: List of reactions
-
         const userResponse = await userService.getUser(params.userId);
         const practicesResponse = await practicesService.getPractices(params.userId, true);
-        // Don't fetch statistics if the user is a student
+
+        // Don't fetch statistics and reactions if the authenticated user is a student
         if (!isStudent) {
             const statisticsResponse = await statisticsService.getStatistics(params.userId);
             const statisticsSummaryResponse = await statisticsService.getStatisticsSummary(params.userId);
+            const reactionsResponse = await reactionService.getUserReactions(params.userId);
 
-            return {userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse};
+            return {
+                userResponse,
+                practicesResponse,
+                statisticsResponse,
+                statisticsSummaryResponse,
+                reactionsResponse
+            };
         }
 
-        return {userResponse, practicesResponse};
+        return {
+            userResponse,
+            practicesResponse
+        };
     },
     errorComponent: ({error}) => {
         if (error instanceof ApiError) {
@@ -71,11 +81,12 @@ export const Route = createFileRoute('/users/$userId')({
 
 function RouteComponent() {
     const isStudent = getAuthentication()?.user.role === 'student';
-    const {userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse} = Route.useLoaderData();
+    const {userResponse, practicesResponse, statisticsResponse, statisticsSummaryResponse, reactionsResponse} = Route.useLoaderData();
 
     // Column definitions
     const practicesResponseColumns = usePracticeColumns();
     const statisticsColumns = useStatisticsColumns();
+    const reactionsColumns = useReactionsColumns();
 
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
@@ -98,6 +109,20 @@ function RouteComponent() {
                             <DataTable
                                 columns={statisticsColumns}
                                 data={statisticsResponse.statistics ?? []}
+                            />
+                        }
+                        className="flex-1"
+                    />
+                }
+
+                {reactionsResponse && reactionsResponse.reactions.length > 0 &&
+                    <GeoCard
+                        icon={<Smile />}
+                        title="Reaksi Siswa"
+                        content={
+                            <DataTable
+                                columns={reactionsColumns}
+                                data={reactionsResponse.reactions ?? []}
                             />
                         }
                         className="flex-1"

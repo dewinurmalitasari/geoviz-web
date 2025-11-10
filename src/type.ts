@@ -334,6 +334,7 @@ export interface Reaction {
     reaction: 'happy' | 'neutral' | 'sad' | 'confused',
     type: 'material' | 'practice',
     materialId?: string, // material ID
+    materialTitle?: string,
     practiceCode?: string, // practice Code
     createdAt: string,
     updatedAt: string,
