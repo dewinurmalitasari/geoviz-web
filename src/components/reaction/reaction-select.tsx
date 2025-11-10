@@ -1,6 +1,7 @@
-// reaction-select.tsx
 import {cn} from "@/lib/utils";
-import {Annoyed, ChevronDown, CircleHelp, Frown, Smile} from "lucide-react";
+import {Annoyed, CircleHelp, Frown, Smile} from "lucide-react";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {Button} from "@/components/ui/button";
 import {useState} from "react";
 
 interface ReactionSelectProps {
@@ -42,51 +43,57 @@ const reactionOptions = [
 const colorMap = {
     purple: {
         selected: "border-deep-purple-500 bg-deep-purple-50 shadow-md",
-        hover: "hover:border-deep-purple-300",
+        hover: "hover:border-deep-purple-300 hover:bg-deep-purple-25",
         icon: "text-deep-purple-600",
         text: "text-deep-purple-700",
         header: "text-deep-purple-800",
-        button: "text-deep-purple-600 hover:bg-deep-purple-50"
+        button: "text-deep-purple-700 hover:bg-deep-purple-50 border-deep-purple-200",
+        popover: "border-deep-purple-200"
     },
     blue: {
         selected: "border-blue-500 bg-blue-50 shadow-md",
-        hover: "hover:border-blue-300",
+        hover: "hover:border-blue-300 hover:bg-blue-25",
         icon: "text-blue-600",
         text: "text-blue-700",
         header: "text-blue-800",
-        button: "text-blue-600 hover:bg-blue-50"
+        button: "text-blue-700 hover:bg-blue-50 border-blue-200",
+        popover: "border-blue-200"
     },
     orange: {
         selected: "border-orange-500 bg-orange-50 shadow-md",
-        hover: "hover:border-orange-300",
+        hover: "hover:border-orange-300 hover:bg-orange-25",
         icon: "text-orange-600",
         text: "text-orange-700",
         header: "text-orange-800",
-        button: "text-orange-600 hover:bg-orange-50"
+        button: "text-orange-700 hover:bg-orange-50 border-orange-200",
+        popover: "border-orange-200"
     },
     teal: {
         selected: "border-teal-500 bg-teal-50 shadow-md",
-        hover: "hover:border-teal-300",
+        hover: "hover:border-teal-300 hover:bg-teal-25",
         icon: "text-teal-600",
         text: "text-teal-700",
         header: "text-teal-800",
-        button: "text-teal-600 hover:bg-teal-50"
+        button: "text-teal-700 hover:bg-teal-50 border-teal-200",
+        popover: "border-teal-200"
     },
     yellow: {
         selected: "border-yellow-500 bg-yellow-50 shadow-md",
-        hover: "hover:border-yellow-300",
+        hover: "hover:border-yellow-300 hover:bg-yellow-25",
         icon: "text-yellow-600",
         text: "text-yellow-700",
         header: "text-yellow-800",
-        button: "text-yellow-600 hover:bg-yellow-50"
+        button: "text-yellow-700 hover:bg-yellow-50 border-yellow-200",
+        popover: "border-yellow-200"
     },
     maroon: {
         selected: "border-rose-500 bg-rose-50 shadow-md",
-        hover: "hover:border-rose-300",
+        hover: "hover:border-rose-300 hover:bg-rose-25",
         icon: "text-rose-600",
         text: "text-rose-700",
         header: "text-rose-800",
-        button: "text-rose-600 hover:bg-rose-50"
+        button: "text-rose-700 hover:bg-rose-50 border-rose-200",
+        popover: "border-rose-200"
     },
 };
 
@@ -101,20 +108,14 @@ export default function ReactionSelect(
     }: ReactionSelectProps) {
     const colors = colorMap[colorScheme];
     const [selectedReaction, setSelectedReaction] = useState(defaultValue);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleSelect = (reaction: 'happy' | 'neutral' | 'sad' | 'confused') => {
         if (disabled) return;
 
         setSelectedReaction(reaction);
         onSelect(reaction);
-        // Auto-collapse after selection (optional)
-        // setIsExpanded(false);
-    };
-
-    const toggleExpand = () => {
-        if (disabled) return;
-        setIsExpanded(!isExpanded);
+        setOpen(false); // Close popover after selection
     };
 
     const getHeaderText = () => {
@@ -126,107 +127,126 @@ export default function ReactionSelect(
         return reactionOptions.find(option => option.value === selectedReaction);
     };
 
+    const selectedData = getSelectedReactionData();
+
     return (
         <div className={cn("w-full", className)}>
-            {/* Header Button */}
-            <button
-                onClick={toggleExpand}
-                disabled={disabled}
-                className={cn(
-                    "w-full p-4 rounded-lg border-2 transition-all duration-200",
-                    "flex flex-col md:flex-row items-center justify-between gap-3",
-                    "bg-white border-gray-200",
-                    colors.button,
-                    !disabled && "hover:shadow-md cursor-pointer",
-                    disabled && "opacity-50 cursor-not-allowed"
-                )}
-            >
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    {selectedReaction ? (
-                        <>
-                            <div className={cn("flex-shrink-0", colors.icon)}>
-                                {(() => {
-                                    const SelectedIcon = getSelectedReactionData()?.icon;
-                                    return SelectedIcon ? <SelectedIcon className="w-5 h-5"/> : null;
-                                })()}
-                            </div>
-                            <div className="text-left flex-1 md:flex-none">
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        disabled={disabled}
+                        className={cn(
+                            "w-full p-4 h-auto rounded-lg border-2 transition-all duration-200",
+                            "flex flex-col md:flex-row items-center justify-between gap-3",
+                            "bg-white hover:bg-gray-50 hover:scale-103 active:scale-95 cursor-pointer",
+                            colors.button,
+                            disabled && "opacity-50 cursor-not-allowed"
+                        )}
+                    >
+                        <div className="flex items-center gap-3 w-full md:w-auto">
+                            {selectedReaction ? (
+                                <>
+                                    <div className={cn("flex-shrink-0", colors.icon)}>
+                                        {selectedData?.icon && (
+                                            <selectedData.icon className="w-5 h-5"/>
+                                        )}
+                                    </div>
+                                    <div className="text-left flex-1 md:flex-none">
+                                        <div className={cn("font-medium text-sm", colors.header)}>
+                                            {selectedData?.label}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            {getHeaderText()}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
                                 <div className={cn("font-medium text-sm", colors.header)}>
-                                    {getSelectedReactionData()?.label}
-                                </div>
-                                <div className="text-xs text-gray-500">
                                     {getHeaderText()}
                                 </div>
-                            </div>
-                        </>
-                    ) : (
-                        <div className={cn("font-medium", colors.header)}>
-                            {getHeaderText()}
+                            )}
                         </div>
-                    )}
-                </div>
 
-                <ChevronDown
-                    className={cn(
-                        "w-4 h-4 transition-transform duration-200 flex-shrink-0",
-                        isExpanded && "rotate-180",
-                        colors.icon
-                    )}
-                />
-            </button>
-
-            {/* Expandable Content */}
-            {isExpanded && (
-                <div className="mt-2 space-y-2 animate-in fade-in-50 duration-200">
-                    {reactionOptions.map((option) => {
-                        const Icon = option.icon;
-                        const isSelected = selectedReaction === option.value;
-
-                        return (
-                            <div
-                                key={option.value}
-                                className={cn(
-                                    "w-full p-3 rounded-lg border-2 transition-all duration-200 cursor-pointer",
-                                    "flex items-center gap-3",
-                                    isSelected ? colors.selected : "border-gray-200 bg-white",
-                                    !disabled && !isSelected && colors.hover,
-                                    disabled && "opacity-50 cursor-not-allowed"
-                                )}
-                                onClick={() => handleSelect(option.value)}
+                        <div className={cn(
+                            "w-5 h-5 flex items-center justify-center transition-transform duration-200",
+                            open && "rotate-180",
+                            colors.icon
+                        )}>
+                            <svg
+                                width="15"
+                                height="15"
+                                viewBox="0 0 15 15"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
                             >
-                                <div className={cn(
-                                    "flex-shrink-0",
-                                    isSelected ? colors.icon : "text-gray-400"
-                                )}>
-                                    <Icon className="w-5 h-5"/>
-                                </div>
+                                <path
+                                    d="M4 6H11L7.5 10.5L4 6Z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                        </div>
+                    </Button>
+                </PopoverTrigger>
 
-                                <div className="flex-1 min-w-0">
-                                    <div className={cn(
-                                        "font-medium text-sm",
-                                        isSelected ? colors.text : "text-gray-700"
-                                    )}>
-                                        {option.label}
-                                    </div>
-                                    <div className={cn(
-                                        "text-xs",
-                                        isSelected ? "text-gray-600" : "text-gray-500"
-                                    )}>
-                                        {option.description}
-                                    </div>
-                                </div>
+                <PopoverContent
+                    className={cn(
+                        "w-64 p-2 bg-white rounded-lg shadow-lg border-2",
+                        colors.popover
+                    )}
+                    align="start"
+                >
+                    <div className="space-y-1">
+                        {reactionOptions.map((option) => {
+                            const Icon = option.icon;
+                            const isSelected = selectedReaction === option.value;
 
-                                {isSelected && (
+                            return (
+                                <div
+                                    key={option.value}
+                                    className={cn(
+                                        "w-full p-3 rounded-lg border-2 transition-all duration-200 cursor-pointer",
+                                        "flex items-center gap-3",
+                                        isSelected ? colors.selected : "border-transparent bg-transparent",
+                                        !disabled && colors.hover,
+                                        disabled && "opacity-50 cursor-not-allowed"
+                                    )}
+                                    onClick={() => handleSelect(option.value)}
+                                >
                                     <div className={cn(
-                                        "w-2 h-2 rounded-full flex-shrink-0",
-                                        colors.icon.replace("text-", "bg-")
-                                    )}/>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
+                                        "flex-shrink-0",
+                                        isSelected ? colors.icon : "text-gray-400"
+                                    )}>
+                                        <Icon className="w-5 h-5"/>
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                        <div className={cn(
+                                            "font-medium text-sm",
+                                            isSelected ? colors.text : "text-gray-700"
+                                        )}>
+                                            {option.label}
+                                        </div>
+                                        <div className={cn(
+                                            "text-xs",
+                                            isSelected ? "text-gray-600" : "text-gray-500"
+                                        )}>
+                                            {option.description}
+                                        </div>
+                                    </div>
+
+                                    {isSelected && (
+                                        <div className={cn(
+                                            "w-2 h-2 rounded-full flex-shrink-0",
+                                            colors.icon.replace("text-", "bg-")
+                                        )}/>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </PopoverContent>
+            </Popover>
         </div>
     );
 }
