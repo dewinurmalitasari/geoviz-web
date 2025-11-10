@@ -108,7 +108,7 @@ export default function MaterialDialog(
             onDelete={onDeleteClick}
             trigger={trigger}
         >
-            <ScrollArea className="h-[50vh] md:h-[60vh] pr-2">
+            <ScrollArea className="h-[45vh] md:h-[60vh] pr-2">
                 <div className="space-y-4 p-1">
                     <GeoInput
                         id="title"

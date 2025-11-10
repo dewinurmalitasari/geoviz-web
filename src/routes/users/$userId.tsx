@@ -115,7 +115,7 @@ function RouteComponent() {
                     />
                 }
 
-                {reactionsResponse && reactionsResponse.reactions.length > 0 &&
+                {reactionsResponse &&
                     <GeoCard
                         icon={<Smile />}
                         title="Reaksi Siswa"
