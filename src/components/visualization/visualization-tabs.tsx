@@ -4,10 +4,11 @@ import {
     type ReflectionValue,
     type RotationValue,
     type Transformation,
-    TRANSFORMATION_TYPES, type TranslationValue,
+    TRANSFORMATION_TYPES,
+    type TranslationValue,
     VISUALIZATION_TYPES
 } from "@/type.ts";
-import {FlipHorizontal, Move, Plus, RotateCw, ZoomIn} from "lucide-react";
+import {FlipHorizontal, Move, Plus, Replace, RotateCw, ZoomIn} from "lucide-react";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
@@ -133,21 +134,36 @@ export function useVisualizationTabs(
                             )}
                         </div>
 
-                        <GeoButton
-                            variant="primary"
-                            onClick={() => {
-                                setTransformations((prevTransformations) => [
-                                    ...prevTransformations,
-                                    {
+                        <div className="w-full md:w-fit flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
+                            <GeoButton
+                                variant="secondary"
+                                onClick={() => {
+                                    setTransformations(() => [{
                                         type: TRANSFORMATION_TYPES.TRANSLATION,
                                         value: translationValue,
-                                    },
-                                ]);
-                            }}
-                            className="w-full md:w-fit"
-                        >
-                            <Plus/> Tambah Transformasi
-                        </GeoButton>
+                                    }]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Replace/> Timpa Transformasi
+                            </GeoButton>
+
+                            <GeoButton
+                                variant="primary"
+                                onClick={() => {
+                                    setTransformations((prevTransformations) => [
+                                        ...prevTransformations,
+                                        {
+                                            type: TRANSFORMATION_TYPES.TRANSLATION,
+                                            value: translationValue,
+                                        },
+                                    ]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Plus/> Tambah Transformasi
+                            </GeoButton>
+                        </div>
                     </div>
                 </div>
             )
@@ -177,21 +193,36 @@ export function useVisualizationTabs(
                             type="number"
                         />
 
-                        <GeoButton
-                            variant="primary"
-                            onClick={() => {
-                                setTransformations((prevTransformations) => [
-                                    ...prevTransformations,
-                                    {
+                        <div className="w-full md:w-fit flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
+                            <GeoButton
+                                variant="secondary"
+                                onClick={() => {
+                                    setTransformations(() => [{
                                         type: TRANSFORMATION_TYPES.DILATATION,
                                         value: dilatationValue,
-                                    },
-                                ]);
-                            }}
-                            className="w-full md:w-fit"
-                        >
-                            <Plus/> Tambah Transformasi
-                        </GeoButton>
+                                    }]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Replace/> Timpa Transformasi
+                            </GeoButton>
+
+                            <GeoButton
+                                variant="primary"
+                                onClick={() => {
+                                    setTransformations((prevTransformations) => [
+                                        ...prevTransformations,
+                                        {
+                                            type: TRANSFORMATION_TYPES.DILATATION,
+                                            value: dilatationValue,
+                                        },
+                                    ]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Plus/> Tambah Transformasi
+                            </GeoButton>
+                        </div>
                     </div>
                 </div>
             )
@@ -240,21 +271,36 @@ export function useVisualizationTabs(
                             />
                         )}
 
-                        <GeoButton
-                            variant="primary"
-                            onClick={() => {
-                                setTransformations((prevTransformations) => [
-                                    ...prevTransformations,
-                                    {
+                        <div className="w-full md:w-fit flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
+                            <GeoButton
+                                variant="secondary"
+                                onClick={() => {
+                                    setTransformations(() => [{
                                         type: TRANSFORMATION_TYPES.ROTATION,
                                         value: rotationValue,
-                                    },
-                                ]);
-                            }}
-                            className="w-full md:w-fit"
-                        >
-                            <Plus/> Tambah Transformasi
-                        </GeoButton>
+                                    }]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Replace/> Timpa Transformasi
+                            </GeoButton>
+
+                            <GeoButton
+                                variant="primary"
+                                onClick={() => {
+                                    setTransformations((prevTransformations) => [
+                                        ...prevTransformations,
+                                        {
+                                            type: TRANSFORMATION_TYPES.ROTATION,
+                                            value: rotationValue,
+                                        },
+                                    ]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Plus/> Tambah Transformasi
+                            </GeoButton>
+                        </div>
                     </div>
                 </div>
             )
@@ -299,21 +345,36 @@ export function useVisualizationTabs(
                             />
                         )}
 
-                        <GeoButton
-                            variant="primary"
-                            onClick={() => {
-                                setTransformations((prevTransformations) => [
-                                    ...prevTransformations,
-                                    {
+                        <div className="w-full md:w-fit flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
+                            <GeoButton
+                                variant="secondary"
+                                onClick={() => {
+                                    setTransformations(() => [{
                                         type: TRANSFORMATION_TYPES.REFLECTION,
                                         value: reflectionValue,
-                                    },
-                                ]);
-                            }}
-                            className="w-full md:w-fit"
-                        >
-                            <Plus/> Tambah Transformasi
-                        </GeoButton>
+                                    }]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Replace/> Timpa Transformasi
+                            </GeoButton>
+
+                            <GeoButton
+                                variant="primary"
+                                onClick={() => {
+                                    setTransformations((prevTransformations) => [
+                                        ...prevTransformations,
+                                        {
+                                            type: TRANSFORMATION_TYPES.REFLECTION,
+                                            value: reflectionValue,
+                                        },
+                                    ]);
+                                }}
+                                className="w-full md:w-fit"
+                            >
+                                <Plus/> Tambah Transformasi
+                            </GeoButton>
+                        </div>
                     </div>
                 </div>
             )

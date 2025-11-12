@@ -339,7 +339,7 @@ function RouteComponent() {
                             {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
                                 <div className="flex flex-col space-y-4">
                                     <div
-                                        className="flex flex-col-reverse gap-y-2 md:flex-row md:space-y-0 md:space-x-4 items-center justify-center">
+                                        className="flex flex-col-reverse gap-y-2 md:flex-row md:space-y-0 md:space-x-2 items-center justify-center">
                                         <TransformationListPopover
                                             transformations={transformations}
                                             onTransformationsChange={setTransformations}
@@ -351,10 +351,11 @@ function RouteComponent() {
                                         <GeoButton
                                             variant="secondary"
                                             onClick={handleStepTransformation}
+                                            isLoading={transformationLoading}
                                             disabled={transformationLoading || currentStep >= transformations.length}
-                                            className="flex-1 mt-2 md:mt-0"
+                                            className="flex-1"
                                         >
-                                            <StepForward className="w-4 h-4 mr-2"/>
+                                            <StepForward/>
                                             Langkah {currentStep} / {transformations.length}
                                         </GeoButton>
 
@@ -400,7 +401,10 @@ function RouteComponent() {
                             {/* Shape Points Input */}
                             {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
                                 <ShapePointsInput
-                                    onPointsChange={(points) => setShapePoints(points)}
+                                    onPointsChange={(points) => {
+                                        setShapePoints(points)
+                                        setStepShapePoints(points)
+                                    }}
                                     dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
                                     maxPoints={12}
                                     minPoints={3}
