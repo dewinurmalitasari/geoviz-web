@@ -21,7 +21,7 @@ declare global {
 
         translatePracticeType(): string;
 
-        translateTransformationValue(): string; // TODO
+        translateTransformationValue(): string;
     }
 }
 

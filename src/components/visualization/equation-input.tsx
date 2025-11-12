@@ -24,7 +24,6 @@ interface EquationInputProps {
     colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
 }
 
-// TODO: Add button for adding like exponential, logarithmic, symbols, etc.
 export default function EquationInput(
     {
         equationState,

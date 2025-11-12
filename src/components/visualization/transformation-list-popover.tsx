@@ -223,7 +223,7 @@ export default function TransformationListPopover(
 
                 <PopoverContent
                     className={cn(
-                        "p-4 bg-white rounded-lg shadow-lg border-2", // TODO: Width
+                        "p-4 bg-white rounded-lg shadow-lg border-2",
                         colors.popover
                     )}
                     align="start"

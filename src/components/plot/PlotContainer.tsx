@@ -41,7 +41,6 @@ export default function PlotContainer(
                         />
                     </div>
 
-                    {/*TODO: Hide this somewhere*/}
                     {/* Performance Stats */}
                     {(initialRenderTime > 0 || perfStats) && (
                         <div className="flex flex-col gap-1 mb-2">
