@@ -369,10 +369,11 @@ function RouteComponent() {
                                             variant="primary"
                                             onClick={handleStartVisualization}
                                             isLoading={transformationLoading}
-                                            disabled={transformationLoading}
+                                            disabled={transformationLoading || transformations.length === 0}
                                             className="flex-1"
                                         >
-                                            {currentStep >= transformations.length ? (
+
+                                            {(currentStep >= transformations.length && transformations.length > 0) ? (
                                                 <><RotateCcw/> Kembalikan</>
                                             ) : (
                                                 <><Play/> Mulai Visualisasi</>
