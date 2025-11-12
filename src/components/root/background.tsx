@@ -5,20 +5,20 @@ interface BackgroundProps {
 }
 
 export default function Background({ colorScheme = DEFAULT_COLOR_SCHEME }: BackgroundProps) {
-    const getColorClasses = (baseColor: string, opacity: string = '') => {
+    const getColorClasses = (baseColor: string) => {
         switch (colorScheme) {
             case 'blue':
-                return `bg-blue-${baseColor}${opacity}`;
+                return `bg-blue-${baseColor}`;
             case 'orange':
-                return `bg-orange-${baseColor}${opacity}`;
+                return `bg-orange-${baseColor}`;
             case 'teal':
-                return `bg-teal-${baseColor}${opacity}`;
+                return `bg-teal-${baseColor}`;
             case 'yellow':
-                return `bg-yellow-${baseColor}${opacity}`;
+                return `bg-yellow-${baseColor}`;
             case 'maroon':
-                return `bg-rose-${baseColor}${opacity}`;
+                return `bg-rose-${baseColor}`;
             default:
-                return `bg-purple-${baseColor}${opacity}`;
+                return `bg-purple-${baseColor}`;
         }
     };
 
