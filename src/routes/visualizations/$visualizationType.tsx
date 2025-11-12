@@ -3,7 +3,7 @@ import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
-import {Play, SquareKanban} from "lucide-react";
+import {Play, RotateCcw, SquareKanban, StepForward} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
 import {
     type DilatationValue,
@@ -95,6 +95,8 @@ function RouteComponent() {
         }
     }])
     const [transformationLoading, setTransformationLoading] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [stepShapePoints, setStepShapePoints] = useState<Point[]>(shapePoints);
 
     const [plotData, setPlotData] = useState<PlotlyData>([])
     const [plotLayout, setPlotLayout] = useState<PlotlyLayout>({})
@@ -185,6 +187,7 @@ function RouteComponent() {
     const executeTransformation = async (index: number, currentPoints: Point[]) => {
         if (index >= transformations.length) {
             setTransformationLoading(false);
+            setCurrentStep(0); // Reset step counter when all transformations are complete
             return;
         }
 
@@ -197,18 +200,19 @@ function RouteComponent() {
             {
                 translationValue: transformation.type === TRANSFORMATION_TYPES.TRANSLATION
                     ? transformationValue as TranslationValue
-                    : { translateX: 0, translateY: 0, translateZ: 0 },
+                    : {translateX: 0, translateY: 0, translateZ: 0},
                 dilatationValue: transformation.type === TRANSFORMATION_TYPES.DILATATION
                     ? transformationValue as DilatationValue
-                    : { scaleFactor: 1 },
+                    : {scaleFactor: 1},
                 rotationValue: transformation.type === TRANSFORMATION_TYPES.ROTATION
                     ? transformationValue as RotationValue
-                    : { angle: 0 },
+                    : {angle: 0},
                 reflectionAxis: transformation.type === TRANSFORMATION_TYPES.REFLECTION
                     ? transformationValue as ReflectionValue
-                    : { axis: 'x-axis' },
+                    : {axis: 'x-axis'},
             },
             async (transformedPoints) => {
+                setCurrentStep(index + 1); // Update current step
                 await new Promise(resolve => setTimeout(resolve, 500));
                 executeTransformation(index + 1, transformedPoints);
             },
@@ -219,10 +223,48 @@ function RouteComponent() {
     const handleStartVisualization = async () => {
         if (transformations.length === 0) return;
 
+        // Reset the step shape points to the original
+        setStepShapePoints(shapePoints);
+
         setTransformationLoading(true);
+        setCurrentStep(0); // Reset step counter
 
         // Start with the first transformation
         await executeTransformation(0, shapePoints);
+    };
+
+    const handleStepTransformation = async () => {
+        if (transformations.length === 0 || currentStep >= transformations.length) return;
+
+        setTransformationLoading(true);
+
+        const transformation = transformations[currentStep];
+        const transformationValue = transformation.value;
+
+        startAnimation(
+            transformation.type as 'translation' | 'dilatation' | 'rotation' | 'reflection',
+            stepShapePoints,
+            {
+                translationValue: transformation.type === TRANSFORMATION_TYPES.TRANSLATION
+                    ? transformationValue as TranslationValue
+                    : {translateX: 0, translateY: 0, translateZ: 0},
+                dilatationValue: transformation.type === TRANSFORMATION_TYPES.DILATATION
+                    ? transformationValue as DilatationValue
+                    : {scaleFactor: 1},
+                rotationValue: transformation.type === TRANSFORMATION_TYPES.ROTATION
+                    ? transformationValue as RotationValue
+                    : {angle: 0},
+                reflectionAxis: transformation.type === TRANSFORMATION_TYPES.REFLECTION
+                    ? transformationValue as ReflectionValue
+                    : {axis: 'x-axis'},
+            },
+            async (transformedPoints) => {
+                setCurrentStep(prev => prev + 1); // Move to next step
+                setTransformationLoading(false);
+                setStepShapePoints(transformedPoints);
+            },
+            shapePoints
+        );
     };
 
     // Add visualizationType to the dependency to re-initialize when route changes
@@ -230,6 +272,7 @@ function RouteComponent() {
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         const newShapePoints = PRESET_POINTS[defaultKey] || [];
         setShapePoints(newShapePoints);
+        setCurrentStep(0);
 
         // Reset transformation values
         setTransformations([{
@@ -302,19 +345,32 @@ function RouteComponent() {
                                             onTransformationsChange={setTransformations}
                                             colorScheme="purple"
                                             isLoading={transformationLoading}
-                                            className="flex-4"
+                                            className="flex-3"
                                         />
+
+                                        <GeoButton
+                                            variant="secondary"
+                                            onClick={handleStepTransformation}
+                                            disabled={transformationLoading || currentStep >= transformations.length}
+                                            className="flex-1 mt-2 md:mt-0"
+                                        >
+                                            <StepForward className="w-4 h-4 mr-2"/>
+                                            Langkah {currentStep} / {transformations.length}
+                                        </GeoButton>
 
                                         <GeoButton
                                             variant="primary"
                                             onClick={handleStartVisualization}
                                             isLoading={transformationLoading}
+                                            disabled={transformationLoading}
                                             className="flex-1"
                                         >
-                                            <Play/> Mulai Visualisasi
+                                            {currentStep >= transformations.length ? (
+                                                <><RotateCcw/> Ulangi Visualisasi</>
+                                            ) : (
+                                                <><Play/> Mulai Visualisasi</>
+                                            )}
                                         </GeoButton>
-
-                                        {/*TODO: Add a button to proceed step manually*/}
                                     </div>
 
                                     <Separator className="text-deep-purple-500"/>
