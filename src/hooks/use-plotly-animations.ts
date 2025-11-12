@@ -159,7 +159,7 @@ export function usePlotlyAnimation(
             xRange,
             yRange,
             zRange
-        } = calculateRange(allPoints, transformedPoints, isMobile ? (transformationType === 'dilatation' ? 0.2 : 0.5) : 1);
+        } = calculateRange(allPoints, transformedPoints, isMobile ? (transformationType === 'dilatation' ? 0.2 : 0.5) : 0.8);
 
         let newLayout: PlotlyLayout;
 
@@ -252,7 +252,7 @@ export function usePlotlyAnimation(
 
         // 4. Start Animation
         const startTime = performance.now();
-        const duration = 2000;
+        const duration = 1500;
 
         lastFrameTimeRef.current = performance.now();
         lastStatUpdateTimeRef.current = 0;

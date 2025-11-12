@@ -189,23 +189,26 @@ function RouteComponent() {
         }
 
         const transformation = transformations[index];
-        const transformationValues = {
-            translationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.TRANSLATION)?.value as TranslationValue || {
-                translateX: 0,
-                translateY: 0,
-                translateZ: 0
-            },
-            dilatationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.DILATATION)?.value as DilatationValue || {scaleFactor: 1},
-            rotationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.ROTATION)?.value as RotationValue || {angle: 0},
-            reflectionAxis: transformations.find(t => t.type === TRANSFORMATION_TYPES.REFLECTION)?.value as ReflectionValue || {axis: 'x-axis'},
-        };
+        const transformationValue = transformation.value;
 
         startAnimation(
             transformation.type as 'translation' | 'dilatation' | 'rotation' | 'reflection',
             currentPoints,
-            transformationValues,
+            {
+                translationValue: transformation.type === TRANSFORMATION_TYPES.TRANSLATION
+                    ? transformationValue as TranslationValue
+                    : { translateX: 0, translateY: 0, translateZ: 0 },
+                dilatationValue: transformation.type === TRANSFORMATION_TYPES.DILATATION
+                    ? transformationValue as DilatationValue
+                    : { scaleFactor: 1 },
+                rotationValue: transformation.type === TRANSFORMATION_TYPES.ROTATION
+                    ? transformationValue as RotationValue
+                    : { angle: 0 },
+                reflectionAxis: transformation.type === TRANSFORMATION_TYPES.REFLECTION
+                    ? transformationValue as ReflectionValue
+                    : { axis: 'x-axis' },
+            },
             async (transformedPoints) => {
-                // Add a delay before proceeding to the next transformation
                 await new Promise(resolve => setTimeout(resolve, 500));
                 executeTransformation(index + 1, transformedPoints);
             },
