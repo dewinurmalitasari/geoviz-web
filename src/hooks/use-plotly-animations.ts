@@ -252,7 +252,7 @@ export function usePlotlyAnimation(
 
         // 4. Start Animation
         const startTime = performance.now();
-        const duration = transformationType === TRANSFORMATION_TYPES.ROTATION ? 1500 : 1000;
+        const duration = 2000;
 
         lastFrameTimeRef.current = performance.now();
         lastStatUpdateTimeRef.current = 0;
