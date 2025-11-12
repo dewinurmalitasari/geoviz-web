@@ -224,7 +224,12 @@ function RouteComponent() {
         if (transformations.length === 0) return;
 
         // Reset the step shape points to the original
-        setStepShapePoints(shapePoints);
+        if (currentStep >= transformations.length) {
+            setStepShapePoints(shapePoints);
+            setCurrentStep(0);
+            handlePlotClick(shapePoints, equations);
+            return;
+        }
 
         setTransformationLoading(true);
         setCurrentStep(0); // Reset step counter
@@ -368,7 +373,7 @@ function RouteComponent() {
                                             className="flex-1"
                                         >
                                             {currentStep >= transformations.length ? (
-                                                <><RotateCcw/> Ulangi Visualisasi</>
+                                                <><RotateCcw/> Kembalikan</>
                                             ) : (
                                                 <><Play/> Mulai Visualisasi</>
                                             )}

@@ -154,7 +154,7 @@ export function usePlotlyAnimation(
         }
 
         // 2. Calculate new layout to fit both shapes (only once, before animation)
-        const allPoints = [...shapePoints, ...transformedPoints];
+        const allPoints = [...originalPoints, ...transformedPoints];
         const {
             xRange,
             yRange,
