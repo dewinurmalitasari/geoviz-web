@@ -49,7 +49,7 @@ export function useVisualizationTabs(
     });
 
     const [rotationValue, setRotationValue] = useState<RotationValue>({
-        angle: 0,
+        angle: 90,
         ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
     });
 

@@ -6,13 +6,14 @@ import ShapePointsInput from "@/components/visualization/shape-points-input.tsx"
 import {Play, SquareKanban} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
 import {
+    type DilatationValue,
     type PerformanceStats,
     type PlotlyData,
     type PlotlyLayout,
     type Point,
-    type Point3D,
+    type Point3D, type ReflectionValue, type RotationValue,
     type Transformation,
-    TRANSFORMATION_TYPES,
+    TRANSFORMATION_TYPES, type TranslationValue,
     VISUALIZATION_TYPES
 } from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
@@ -35,6 +36,7 @@ import PlotContainer from "@/components/plot/PlotContainer.tsx";
 import AOS from 'aos';
 import TransformationListPopover from "@/components/visualization/transformation-list-popover.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
+import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -98,25 +100,16 @@ function RouteComponent() {
     const initialRenderStartRef = useRef(0);
     const animationRenderStartRef = useRef(0);
 
-    // TODO: Change to accept shape, tupe and value as arguments in startAnimation
-    // const {startAnimation} = usePlotlyAnimation({
-    //     shapePoints,
-    //     visualizationType,
-    //     isMobile,
-    //     transformationValues: {
-    //         translationValue,
-    //         dilatationValue,
-    //         rotationValue,
-    //         reflectionAxis
-    //     },
-    //     setPlotData,
-    //     setPlotLayout,
-    //     setDilatationValue,
-    //     onFrameTick: (stats) => {
-    //         setPerfStats(stats);
-    //     },
-    //     renderStartRef: animationRenderStartRef,
-    // });
+    const {startAnimation} = usePlotlyAnimation({
+        visualizationType,
+        isMobile,
+        setPlotData,
+        setPlotLayout,
+        onFrameTick: (stats) => {
+            setPerfStats(stats);
+        },
+        renderStartRef: animationRenderStartRef,
+    });
 
     const handlePlotClick = (points: Point[], equations: EquationState) => {
         if (visualizationType === VISUALIZATION_TYPES.EQUATION) {
@@ -186,12 +179,29 @@ function RouteComponent() {
         handlePlotClick(shapePoints, equations)
     }, []) // Empty dependency array to run only on mount
 
-    const handleStartVisualization = () => {
+    const handleStartVisualization = async () => {
         setTransformationLoading(true);
 
-        console.log(transformations)
+        // TODO: Make this support the multiple transformations in sequence
 
-        // TODO: Make multiple animation
+        // Extract transformation values from your transformations state
+        // You'll need to adapt this based on how your transformations are structured
+        const transformationValues = {
+            translationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.TRANSLATION)?.value as TranslationValue || { translateX: 0, translateY: 0, translateZ: 0 },
+            dilatationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.DILATATION)?.value as DilatationValue || { scaleFactor: 1 },
+            rotationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.ROTATION)?.value as RotationValue || { angle: 0 },
+            reflectionAxis: transformations.find(t => t.type === TRANSFORMATION_TYPES.REFLECTION)?.value as ReflectionValue || { axis: 'x-axis' },
+        };
+
+        // Start animation with the first transformation type (or whichever one you want)
+        const firstTransformation = transformations[0];
+        if (firstTransformation) {
+            startAnimation(
+                firstTransformation.type as 'translation' | 'dilatation' | 'rotation' | 'reflection',
+                shapePoints,
+                transformationValues
+            );
+        }
 
         setTransformationLoading(false);
     }
@@ -266,7 +276,8 @@ function RouteComponent() {
                             {/*Transformation Input and Play*/}
                             {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
                                 <div className="flex flex-col space-y-4">
-                                    <div className="flex flex-col-reverse gap-y-2 md:flex-row md:space-y-0 md:space-x-4 items-center justify-center">
+                                    <div
+                                        className="flex flex-col-reverse gap-y-2 md:flex-row md:space-y-0 md:space-x-4 items-center justify-center">
                                         <TransformationListPopover
                                             transformations={transformations}
                                             onTransformationsChange={setTransformations}

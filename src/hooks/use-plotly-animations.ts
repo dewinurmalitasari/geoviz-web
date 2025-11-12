@@ -22,18 +22,10 @@ import {
 type TransformationType = (typeof TRANSFORMATION_TYPES)[keyof typeof TRANSFORMATION_TYPES];
 
 interface UsePlotlyAnimationProps {
-    shapePoints: Point[];
     visualizationType: string;
     isMobile: boolean;
-    transformationValues: {
-        translationValue: TranslationValue;
-        dilatationValue: DilatationValue;
-        rotationValue: RotationValue;
-        reflectionAxis: ReflectionValue;
-    };
     setPlotData: (data: PlotlyData) => void;
     setPlotLayout: (layout: PlotlyLayout) => void;
-    setDilatationValue: (a: DilatationValue) => void;
     onFrameTick: (stats: PerformanceStats | null) => void;
     renderStartRef: React.MutableRefObject<number>;
     targetFps?: number;
@@ -41,20 +33,17 @@ interface UsePlotlyAnimationProps {
 
 export function usePlotlyAnimation(
     {
-        shapePoints,
         visualizationType,
         isMobile,
-        transformationValues,
         setPlotData,
         setPlotLayout,
-        setDilatationValue,
         onFrameTick,
         renderStartRef,
         targetFps = 30
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
-    const isAnimatingRef = useRef(false); // Track animation state outside React state
+    const isAnimatingRef = useRef(false);
 
     const lastFrameTimeRef = useRef(performance.now());
     const lastStatUpdateTimeRef = useRef(0);
@@ -74,12 +63,22 @@ export function usePlotlyAnimation(
         };
     }, [cancelAnimation]);
 
-    const startAnimation = useCallback((transformationType: TransformationType) => {
+    // Updated startAnimation to accept all necessary parameters
+    const startAnimation = useCallback((
+        transformationType: TransformationType,
+        shapePoints: Point[],
+        transformationValues: {
+            translationValue: TranslationValue;
+            dilatationValue: DilatationValue;
+            rotationValue: RotationValue;
+            reflectionAxis: ReflectionValue;
+        }
+    ) => {
         if (isAnimatingRef.current) {
-            cancelAnimation(); // Cancel any ongoing animation
+            cancelAnimation();
         }
 
-        isAnimatingRef.current = true; // Mark that an animation is starting
+        isAnimatingRef.current = true;
 
         const {translationValue, dilatationValue, rotationValue, reflectionAxis} = transformationValues;
 
@@ -112,7 +111,6 @@ export function usePlotlyAnimation(
                     break;
                 case TRANSFORMATION_TYPES.DILATATION:
                     values = dilatationValue.scaleFactor === 0 ? {...dilatationValue, scaleFactor: 1} : dilatationValue;
-                    if (dilatationValue.scaleFactor === 0) setDilatationValue(values);
                     break;
                 case TRANSFORMATION_TYPES.ROTATION:
                     values = rotationValue;
@@ -139,7 +137,6 @@ export function usePlotlyAnimation(
                     break;
                 case TRANSFORMATION_TYPES.DILATATION:
                     values = dilatationValue.scaleFactor === 0 ? {...dilatationValue, scaleFactor: 1} : dilatationValue;
-                    if (dilatationValue.scaleFactor === 0) setDilatationValue(values);
                     break;
                 case TRANSFORMATION_TYPES.ROTATION:
                     values = rotationValue;
@@ -259,13 +256,12 @@ export function usePlotlyAnimation(
         lastStatUpdateTimeRef.current = 0;
 
         const animate = (timestamp: number) => {
-            if (!isAnimatingRef.current) return; // Early return if animation was cancelled
+            if (!isAnimatingRef.current) return;
 
             const now = performance.now();
             const frameTime = now - lastFrameTimeRef.current;
-            const targetFrameTime = 10 / targetFps; // Aim for slightly higher than target FPS
+            const targetFrameTime = 10 / targetFps;
 
-            // Throttle FPS - skip frame if we're rendering too fast
             if (frameTime < targetFrameTime) {
                 animationFrameRef.current = requestAnimationFrame(animate);
                 return;
@@ -288,7 +284,6 @@ export function usePlotlyAnimation(
                 const intermediateValues = {...values, angle: intermediateAngle};
                 intermediatePoints = transformationFn(shapePoints, 'rotation', intermediateValues);
             } else {
-                // Use precomputed deltas for better performance
                 intermediatePoints = shapePoints.map((point, i) => {
                     const delta = deltas[i];
 
@@ -315,7 +310,6 @@ export function usePlotlyAnimation(
             const calcTime = performance.now() - calcStartTime;
             renderStartRef.current = performance.now();
 
-            // Batch the state update to avoid multiple renders
             setPlotData([...axisTraces, ...originalTraces, ...intermediateTraces]);
 
             if (now - lastStatUpdateTimeRef.current > 100) {
@@ -326,7 +320,6 @@ export function usePlotlyAnimation(
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
             } else {
-                // Final update
                 const finalTraces = plotFn(transformedPoints, transformedColor);
                 setPlotData([...axisTraces, ...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
@@ -337,13 +330,10 @@ export function usePlotlyAnimation(
         animationFrameRef.current = requestAnimationFrame(animate);
 
     }, [
-        shapePoints,
-        transformationValues,
         visualizationType,
         isMobile,
         setPlotData,
         setPlotLayout,
-        setDilatationValue,
         cancelAnimation,
         onFrameTick,
         renderStartRef,
