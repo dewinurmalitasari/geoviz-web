@@ -1,7 +1,7 @@
 import {cn} from "@/lib/utils";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {FlipHorizontal, Move, RotateCw, Trash2, ZoomIn} from "lucide-react";
 import type {DilatationValue, ReflectionValue, RotationValue, Transformation, TranslationValue} from "@/type.ts";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
@@ -136,6 +136,7 @@ export default function TransformationListPopover(
     }: TransformationListPopoverProps) {
     const colors = colorMap[colorScheme];
     const [open, setOpen] = useState(false);
+    const triggerRef = useRef<HTMLButtonElement>(null)
 
     const handleDeleteTransformation = (index: number, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -157,6 +158,7 @@ export default function TransformationListPopover(
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
+                        ref={triggerRef}
                         variant="outline"
                         disabled={isLoading}
                         className={cn(
@@ -221,10 +223,13 @@ export default function TransformationListPopover(
 
                 <PopoverContent
                     className={cn(
-                        "w-[85vw] md:w-[50vw] p-4 bg-white rounded-lg shadow-lg border-2", // TODO: Width
+                        "p-4 bg-white rounded-lg shadow-lg border-2", // TODO: Width
                         colors.popover
                     )}
                     align="start"
+                    style={{
+                        width: triggerRef.current ? `${triggerRef.current.offsetWidth}px` : "auto",
+                    }}
                 >
                     <div className="space-y-3">
                         {/* Header */}
