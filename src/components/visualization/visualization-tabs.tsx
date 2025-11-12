@@ -88,7 +88,7 @@ export function useVisualizationTabs(
 
                     <div
                         className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 w-full">
                             <GeoInput
                                 id="translate-x"
                                 icon="X"
