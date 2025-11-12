@@ -11,11 +11,13 @@ import {
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu.tsx";
 import {cn} from "@/lib/utils";
-import { useAnimatedNavigation } from "@/hooks/use-animated-navigation";
+import {useAnimatedNavigation} from "@/hooks/use-animated-navigation";
+import {colorMap, type ColorScheme, DEFAULT_COLOR_SCHEME} from "@/lib/color-scheme";
 
 interface HeaderProps {
     username?: string;
     role?: string;
+    colorScheme?: ColorScheme;
 }
 
 // Role-based navigation items configuration
@@ -76,12 +78,18 @@ function getVisualizationDescription(type: string): string {
     }
 }
 
-const ListItem = ({title, href, description}: { title: string; href: string; description: string }) => {
+const ListItem = ({title, href, description, colorScheme = DEFAULT_COLOR_SCHEME}: {
+    title: string;
+    href: string;
+    description: string;
+    colorScheme?: ColorScheme;
+}) => {
     const animatedNavigate = useAnimatedNavigation();
+    const colors = colorMap[colorScheme];
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        animatedNavigate({ to: href });
+        animatedNavigate({to: href});
     };
 
     return (
@@ -92,8 +100,8 @@ const ListItem = ({title, href, description}: { title: string; href: string; des
                     onClick={handleClick}
                     className={cn(
                         "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200",
-                        "hover:bg-gradient-to-r hover:from-deep-purple-100 hover:to-purple-100 hover:text-deep-purple-900 hover:shadow-md",
-                        "focus:bg-deep-purple-50 focus:text-deep-purple-900",
+                        `hover:bg-gradient-to-r hover:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} hover:${colors.label} hover:shadow-md`,
+                        `focus:${colors.cardSelected.split(' ')[2]} focus:${colors.text}`,
                         "border border-transparent hover:border-deep-purple-200",
                         "transform hover:scale-105 origin-center",
                         "cursor-pointer"
@@ -109,31 +117,99 @@ const ListItem = ({title, href, description}: { title: string; href: string; des
     );
 };
 
-export default function Header({username = "Pengguna", role = "student"}: HeaderProps) {
+export default function Header({
+                                   username = "Pengguna",
+                                   role = "student",
+                                   colorScheme = DEFAULT_COLOR_SCHEME
+                               }: HeaderProps) {
     const navigationItems = getNavigationItems(role);
     const animatedNavigate = useAnimatedNavigation();
+    const colors = colorMap[colorScheme];
 
     const handleNavigationClick = (href: string) => (e: React.MouseEvent) => {
         e.preventDefault();
-        animatedNavigate({ to: href });
+        animatedNavigate({to: href});
+    };
+
+    const getGradientFromColor = (color: string) => {
+        switch (color) {
+            case 'blue':
+                return 'from-blue-100 via-white to-blue-100';
+            case 'orange':
+                return 'from-orange-100 via-white to-orange-100';
+            case 'teal':
+                return 'from-teal-100 via-white to-teal-100';
+            case 'yellow':
+                return 'from-yellow-100 via-white to-yellow-100';
+            case 'maroon':
+                return 'from-rose-100 via-white to-rose-100';
+            default:
+                return 'from-deep-purple-100 via-white to-deep-purple-100';
+        }
+    };
+
+    const getTextGradient = (color: string) => {
+        switch (color) {
+            case 'blue':
+                return 'from-blue-600 to-blue-800';
+            case 'orange':
+                return 'from-orange-600 to-orange-800';
+            case 'teal':
+                return 'from-teal-600 to-teal-800';
+            case 'yellow':
+                return 'from-yellow-600 to-yellow-800';
+            case 'maroon':
+                return 'from-rose-600 to-rose-800';
+            default:
+                return 'from-deep-purple-600 to-deep-purple-800';
+        }
+    };
+
+    const getRoleBadgeColor = (color: string) => {
+        switch (color) {
+            case 'blue':
+                return 'bg-blue-100 text-blue-800 border-blue-200';
+            case 'orange':
+                return 'bg-orange-100 text-orange-800 border-orange-200';
+            case 'teal':
+                return 'bg-teal-100 text-teal-800 border-teal-200';
+            case 'yellow':
+                return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+            case 'maroon':
+                return 'bg-rose-100 text-rose-800 border-rose-200';
+            default:
+                return 'bg-deep-purple-100 text-deep-purple-800 border-deep-purple-200';
+        }
     };
 
     return (
         <header
-            className="bg-gradient-to-r from-geo-purple-100 via-white to-geo-purple-100 border-b border-deep-purple-400 py-4 px-4 lg:px-8 relative z-50"
+            className={cn(
+                "bg-gradient-to-r border-b py-4 px-4 lg:px-8 relative z-50",
+                getGradientFromColor(colorScheme),
+                colors.border
+            )}
             data-aos="fade-down">
             <div className="container mx-auto">
                 {/* Desktop Layout (lg and above) */}
                 <div className="hidden lg:flex items-center justify-between gap-4">
                     {/* Logo and Title - Keep using regular Link */}
                     <div className="flex items-center gap-8">
-                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-shrink-0" onClick={handleNavigationClick(ROUTES.home)}>
+                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-shrink-0"
+                              onClick={handleNavigationClick(ROUTES.home)}>
                             <div
-                                className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
+                                className={cn(
+                                    "w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg",
+                                    colors.primary.from,
+                                    colors.primary.to
+                                )}>
                                 <img src="favicon.svg" alt="Logo" className="w-6 h-6 md:w-7 md:h-7"/>
                             </div>
                             <div className="min-w-0">
-                                <h1 className="text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
+                                <h1 className={cn(
+                                    "text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+                                    getTextGradient(colorScheme)
+                                )}>
                                     GeoViz
                                 </h1>
                                 <p className="text-gray-600 text-xs md:text-sm truncate lg:block">
@@ -150,9 +226,10 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                         {item.items ? (
                                             <>
                                                 <NavigationMenuTrigger className={cn(
-                                                    "bg-transparent text-deep-purple-700 font-medium relative z-50",
-                                                    "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
-                                                    "data-[state=open]:bg-gradient-to-r data-[state=open]:from-deep-purple-50 data-[state=open]:to-purple-50 data-[state=open]:text-deep-purple-900",
+                                                    "bg-transparent font-medium relative z-50",
+                                                    colors.text,
+                                                    `hover:bg-gradient-to-r hover:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} hover:${colors.label}`,
+                                                    `data-[state=open]:bg-gradient-to-r data-[state=open]:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} data-[state=open]:${colors.label}`,
                                                     "border border-transparent hover:border-deep-purple-200 data-[state=open]:border-deep-purple-200",
                                                     "transition-all duration-200 transform hover:scale-105",
                                                     "shadow-sm hover:shadow-md data-[state=open]:shadow-md cursor-pointer"
@@ -167,6 +244,7 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                                                 title={subItem.title}
                                                                 href={subItem.href}
                                                                 description={subItem.description}
+                                                                colorScheme={colorScheme}
                                                             />
                                                         ))}
                                                     </ul>
@@ -178,9 +256,9 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                                 onClick={handleNavigationClick(item.href!)}
                                                 className={cn(
                                                     "group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-all duration-200",
-                                                    "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
-                                                    "focus:bg-deep-purple-50 focus:text-deep-purple-900",
-                                                    "text-deep-purple-700",
+                                                    `hover:bg-gradient-to-r hover:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} hover:${colors.label}`,
+                                                    `focus:${colors.cardSelected.split(' ')[2]} focus:${colors.text}`,
+                                                    colors.text,
                                                     "border border-transparent hover:border-deep-purple-200",
                                                     "transform hover:scale-105",
                                                     "shadow-sm hover:shadow-md",
@@ -201,11 +279,16 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                         <div className="text-right">
                             <p className="text-gray-500 text-xs md:text-sm font-medium">Halo,</p>
                             <div className="flex items-center gap-2">
-                                <p className="font-bold text-deep-purple-700 text-sm md:text-base bg-gradient-to-r from-deep-purple-600 to-purple-600 bg-clip-text text-transparent">
+                                <p className={cn(
+                                    "font-bold text-sm md:text-base bg-gradient-to-r bg-clip-text text-transparent",
+                                    getTextGradient(colorScheme)
+                                )}>
                                     {he.decode(username)}
                                 </p>
-                                <span
-                                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-100 text-deep-purple-800 border border-deep-purple-200">
+                                <span className={cn(
+                                    "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
+                                    getRoleBadgeColor(colorScheme)
+                                )}>
                                     {role?.translateRole()}
                                 </span>
                             </div>
@@ -221,13 +304,21 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                     {/* Top Row - Logo/Title */}
                     <div className="flex items-start justify-between gap-4">
                         {/* Logo and Title - Keep using regular Link */}
-                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-1" onClick={handleNavigationClick(ROUTES.home)}>
+                        <Link to={ROUTES.home} className="flex items-center gap-3 min-w-0 flex-1"
+                              onClick={handleNavigationClick(ROUTES.home)}>
                             <div
-                                className="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-deep-purple-500 to-deep-purple-700 flex items-center justify-center shadow-lg">
+                                className={cn(
+                                    "w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg",
+                                    colors.primary.from,
+                                    colors.primary.to
+                                )}>
                                 <img src="favicon.svg" alt="Logo" className="w-6 h-6"/>
                             </div>
                             <div className="min-w-0">
-                                <h1 className="text-xl font-bold bg-gradient-to-r from-deep-purple-600 to-deep-purple-800 bg-clip-text text-transparent">
+                                <h1 className={cn(
+                                    "text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+                                    getTextGradient(colorScheme)
+                                )}>
                                     GeoViz
                                 </h1>
                                 <p className="text-gray-600 text-xs truncate">
@@ -245,9 +336,10 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                     {item.items ? (
                                         <>
                                             <NavigationMenuTrigger className={cn(
-                                                "bg-transparent text-deep-purple-700 font-medium text-xs h-8 px-3 relative z-[60]",
-                                                "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
-                                                "data-[state=open]:bg-gradient-to-r data-[state=open]:from-deep-purple-50 data-[state=open]:to-purple-50 data-[state=open]:text-deep-purple-900",
+                                                "bg-transparent font-medium text-xs h-8 px-3 relative z-[60]",
+                                                colors.text,
+                                                `hover:bg-gradient-to-r hover:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} hover:${colors.label}`,
+                                                `data-[state=open]:bg-gradient-to-r data-[state=open]:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} data-[state=open]:${colors.label}`,
                                                 "border border-transparent hover:border-deep-purple-200 data-[state=open]:border-deep-purple-200",
                                                 "transition-all duration-200 transform hover:scale-105",
                                                 "shadow-sm hover:shadow-md data-[state=open]:shadow-md"
@@ -262,6 +354,7 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                                             title={subItem.title}
                                                             href={subItem.href}
                                                             description={subItem.description}
+                                                            colorScheme={colorScheme}
                                                         />
                                                     ))}
                                                 </ul>
@@ -273,9 +366,9 @@ export default function Header({username = "Pengguna", role = "student"}: Header
                                             onClick={handleNavigationClick(item.href!)}
                                             className={cn(
                                                 "group inline-flex h-8 items-center justify-center rounded-md bg-transparent px-3 py-2 text-xs font-medium transition-all duration-200",
-                                                "hover:bg-gradient-to-r hover:from-deep-purple-50 hover:to-purple-50 hover:text-deep-purple-900",
-                                                "focus:bg-deep-purple-50 focus:text-deep-purple-900",
-                                                "text-deep-purple-700",
+                                                `hover:bg-gradient-to-r hover:${colors.iconBg.replace('from-', 'from-').replace('to-', 'to-')} hover:${colors.label}`,
+                                                `focus:${colors.cardSelected.split(' ')[2]} focus:${colors.text}`,
+                                                colors.text,
                                                 "border border-transparent hover:border-deep-purple-200",
                                                 "transform hover:scale-105",
                                                 "shadow-sm hover:shadow-md",
@@ -292,27 +385,37 @@ export default function Header({username = "Pengguna", role = "student"}: Header
 
                     {/* Bottom Row - User Details and Logout Button */}
                     <div
-                        className="flex items-center justify-between gap-3 bg-white rounded-xl p-3 border border-deep-purple-100 shadow-sm relative z-40">
+                        className={cn(
+                            "flex items-center justify-between gap-3 bg-white rounded-xl p-3 border shadow-sm relative z-40",
+                            colors.border
+                        )}>
                         {/* User Details */}
                         <div className="flex items-center gap-3 flex-1">
                             {/* User Avatar */}
                             <div
-                                className="w-10 h-10 rounded-full bg-gradient-to-br from-deep-purple-500 to-purple-600 flex items-center justify-center shadow-md">
-                                <span className="text-white font-bold text-sm">
-                                    {username.charAt(0).toUpperCase()}
-                                </span>
+                                className={cn(
+                                    "w-10 h-10 rounded-full bg-gradient-to-br flex items-center justify-center shadow-md text-white font-bold text-sm",
+                                    colors.primary.from,
+                                    colors.primary.to
+                                )}>
+                                {username.charAt(0).toUpperCase()}
                             </div>
 
                             {/* User Info */}
                             <div className="min-w-0">
                                 <p className="text-gray-500 text-xs font-medium">Halo,</p>
                                 <div className="flex items-center gap-2">
-                                    <p className="font-bold text-deep-purple-700 text-sm truncate max-w-[150px]">
+                                    <p className={cn(
+                                        "font-bold text-sm truncate max-w-[150px]",
+                                        colors.text
+                                    )}>
                                         {he.decode(username)}
                                     </p>
                                 </div>
-                                <span
-                                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-deep-purple-50 text-deep-purple-700 border border-deep-purple-200 shadow-sm mt-1">
+                                <span className={cn(
+                                    "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border shadow-sm mt-1",
+                                    getRoleBadgeColor(colorScheme)
+                                )}>
                                     {role?.translateRole()}
                                 </span>
                             </div>

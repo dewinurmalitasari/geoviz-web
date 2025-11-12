@@ -2,6 +2,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/
 import {Field, FieldDescription, FieldLabel} from "@/components/ui/field";
 import {cn} from "@/lib/utils";
 import type {ReactNode} from "react";
+import { colorMap, DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface GeoSelectProps {
     id: string;
@@ -18,42 +19,9 @@ interface GeoSelectProps {
     description?: string;
     className?: string;
     disabled?: boolean;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
     maxHeight?: string;
 }
-
-const colorMap = {
-    purple: {
-        trigger: "border-deep-purple-300 focus:ring-deep-purple-500 focus:border-deep-purple-500",
-        icon: "text-deep-purple-500",
-        label: "text-deep-purple-800"
-    },
-    blue: {
-        trigger: "border-blue-300 focus:ring-blue-500 focus:border-blue-500",
-        icon: "text-blue-500",
-        label: "text-blue-800"
-    },
-    orange: {
-        trigger: "border-orange-300 focus:ring-orange-500 focus:border-orange-500",
-        icon: "text-orange-500",
-        label: "text-orange-800"
-    },
-    teal: {
-        trigger: "border-teal-300 focus:ring-teal-500 focus:border-teal-500",
-        icon: "text-teal-500",
-        label: "text-teal-800"
-    },
-    yellow: {
-        trigger: "border-yellow-300 focus:ring-yellow-500 focus:border-yellow-500",
-        icon: "text-yellow-500",
-        label: "text-yellow-800"
-    },
-    maroon: {
-        trigger: "border-rose-300 focus:ring-rose-500 focus:border-rose-500",
-        icon: "text-rose-500",
-        label: "text-rose-800"
-    },
-};
 
 export default function GeoSelect(
     {
@@ -67,7 +35,7 @@ export default function GeoSelect(
         description,
         className,
         disabled = false,
-        colorScheme = 'purple',
+        colorScheme = DEFAULT_COLOR_SCHEME,
         maxHeight = "min(400px, 60vh)" // Default max height that adapts to screen size
     }: GeoSelectProps) {
     const colors = colorMap[colorScheme];

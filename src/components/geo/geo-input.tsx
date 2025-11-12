@@ -1,8 +1,12 @@
+// [file name]: geo-input.tsx
 import {Field, FieldDescription, FieldLabel} from "@/components/ui/field.tsx";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group.tsx";
 import {useEffect, useRef, useState} from "react";
 import {Eye, EyeOff} from "lucide-react";
 import {Textarea} from "@/components/ui/textarea.tsx";
+import {cn} from "@/lib/utils";
+import type {ColorScheme} from "@/lib/color-scheme";
+import {colorMap, DEFAULT_COLOR_SCHEME} from "@/lib/color-scheme";
 
 interface GeoInputProps {
     id: string;
@@ -21,6 +25,7 @@ interface GeoInputProps {
     type?: string;
     min?: number;
     disabled?: boolean;
+    colorScheme?: ColorScheme;
 }
 
 export default function GeoInput(
@@ -41,9 +46,11 @@ export default function GeoInput(
         type = "text",
         min,
         disabled = false,
+        colorScheme = DEFAULT_COLOR_SCHEME,
     }: GeoInputProps) {
     const [showPassword, setShowPassword] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const colors = colorMap[colorScheme];
 
     // Auto-expand functionality for textarea
     useEffect(() => {
@@ -85,16 +92,19 @@ export default function GeoInput(
     return (
         <Field className={className}>
             {label &&
-                <FieldLabel htmlFor={id} className="font-bold text-md">
+                <FieldLabel htmlFor={id} className={cn("font-bold text-md", colors.label)}>
                     {label}
                 </FieldLabel>
             }
-            <InputGroup id={id} className="border border-deep-purple-200 rounded-lg">
+            <InputGroup id={id} className={cn("border rounded-lg", colors.trigger.replace('focus:border-', 'border-').split(' ')[0])}>
                 {multiline ? (
                     <Textarea
                         ref={textareaRef}
                         id={id}
-                        className={`${!resizable ? 'resize-none' : 'resize-y'}`}
+                        className={cn(
+                            `${!resizable ? 'resize-none' : 'resize-y'}`,
+                            colors.focus
+                        )}
                         placeholder={`${label}...`}
                         value={value}
                         onChange={onChange}
@@ -114,16 +124,22 @@ export default function GeoInput(
                         onChange={onChange}
                         min={min}
                         disabled={disabled}
+                        className={colors.focus}
                     />
                 )}
 
-                {icon && <InputGroupAddon>{icon}</InputGroupAddon>}
+                {icon && (
+                    <InputGroupAddon className={colors.icon}>
+                        {icon}
+                    </InputGroupAddon>
+                )}
 
                 {isPassword && (
                     <InputGroupButton
                         onClick={() => setShowPassword(!showPassword)}
                         type="button"
                         title={showPassword ? "Hide password" : "Show password"}
+                        className={colors.icon}
                     >
                         {showPassword ? <EyeOff size={16}/> : <Eye size={16}/>}
                     </InputGroupButton>

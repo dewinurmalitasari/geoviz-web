@@ -1,8 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import GeoInput from "@/components/geo/geo-input";
 import GeoSelect from "@/components/geo/geo-select";
-import { cn } from "@/lib/utils";
-import type { TranslationValue, DilatationValue, RotationValue, ReflectionValue } from "@/type";
+import {cn} from "@/lib/utils";
+import type {DilatationValue, ReflectionValue, RotationValue, TranslationValue} from "@/type";
+import { colorMap, DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface DetermineValueInputProps {
     question: string;
@@ -11,53 +12,20 @@ interface DetermineValueInputProps {
     onValueChange: (values: TranslationValue | DilatationValue | RotationValue | ReflectionValue) => void;
     currentValues?: TranslationValue | DilatationValue | RotationValue | ReflectionValue;
     disabled?: boolean;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
     showResult?: boolean;
     isCorrect?: boolean;
 }
 
 const reflection2DOptions = [
-    { value: 'origin', label: 'Titik Pusat (0,0)' },
-    { value: 'x-axis', label: 'Sumbu X' },
-    { value: 'y-axis', label: 'Sumbu Y' },
-    { value: 'line-y-x', label: 'Garis y = x' },
-    { value: 'line-y-neg-x', label: 'Garis y = -x' },
-    { value: 'line-y-k', label: 'Garis y = k' },
-    { value: 'line-x-k', label: 'Garis x = k' },
+    {value: 'origin', label: 'Titik Pusat (0,0)'},
+    {value: 'x-axis', label: 'Sumbu X'},
+    {value: 'y-axis', label: 'Sumbu Y'},
+    {value: 'line-y-x', label: 'Garis y = x'},
+    {value: 'line-y-neg-x', label: 'Garis y = -x'},
+    {value: 'line-y-k', label: 'Garis y = k'},
+    {value: 'line-x-k', label: 'Garis x = k'},
 ];
-
-const colorMap = {
-    purple: {
-        border: "border-deep-purple-200",
-        selected: "border-deep-purple-500 bg-deep-purple-50",
-        text: "text-deep-purple-700"
-    },
-    blue: {
-        border: "border-blue-200",
-        selected: "border-blue-500 bg-blue-50",
-        text: "text-blue-700"
-    },
-    orange: {
-        border: "border-orange-200",
-        selected: "border-orange-500 bg-orange-50",
-        text: "text-orange-700"
-    },
-    teal: {
-        border: "border-teal-200",
-        selected: "border-teal-500 bg-teal-50",
-        text: "text-teal-700"
-    },
-    yellow: {
-        border: "border-yellow-200",
-        selected: "border-yellow-500 bg-yellow-50",
-        text: "text-yellow-700"
-    },
-    maroon: {
-        border: "border-rose-200",
-        selected: "border-rose-500 bg-rose-50",
-        text: "text-rose-700"
-    },
-};
 
 // Helper function to translate transformation types to Indonesian
 const translateTransformationType = (type: string): string => {
@@ -75,21 +43,22 @@ const translateTransformationType = (type: string): string => {
     }
 };
 
-export default function DetermineValueInput({
-                                                question,
-                                                instruction = "Tentukan nilai transformasi:",
-                                                transformationType,
-                                                onValueChange,
-                                                currentValues,
-                                                disabled = false,
-                                                colorScheme = "purple",
-                                                showResult = false,
-                                                isCorrect = false
-                                            }: DetermineValueInputProps) {
+export default function DetermineValueInput(
+    {
+        question,
+        instruction = "Tentukan nilai transformasi:",
+        transformationType,
+        onValueChange,
+        currentValues,
+        disabled = false,
+        colorScheme = DEFAULT_COLOR_SCHEME,
+        showResult = false,
+        isCorrect = false
+    }: DetermineValueInputProps) {
     const colors = colorMap[colorScheme];
 
     const handleValueChange = (field: string, value: any) => {
-        const newValues = { ...currentValues, [field]: value };
+        const newValues = {...currentValues, [field]: value};
         onValueChange(newValues as any);
     };
 
@@ -106,7 +75,7 @@ export default function DetermineValueInput({
     };
 
     const renderTranslationInputs = () => {
-        const values = currentValues as TranslationValue || { translateX: 0, translateY: 0 };
+        const values = currentValues as TranslationValue || {translateX: 0, translateY: 0};
 
         return (
             <div className="space-y-4">
@@ -138,7 +107,7 @@ export default function DetermineValueInput({
     };
 
     const renderDilatationInputs = () => {
-        const values = currentValues as DilatationValue || { scaleFactor: 1 };
+        const values = currentValues as DilatationValue || {scaleFactor: 1};
 
         return (
             <div className="space-y-4">
@@ -159,7 +128,7 @@ export default function DetermineValueInput({
     };
 
     const renderRotationInputs = () => {
-        const values = currentValues as RotationValue || { angle: 0 };
+        const values = currentValues as RotationValue || {angle: 0};
 
         return (
             <div className="space-y-4">
@@ -180,7 +149,7 @@ export default function DetermineValueInput({
     };
 
     const renderReflectionInputs = () => {
-        const values = currentValues as ReflectionValue || { axis: 'x-axis' };
+        const values = currentValues as ReflectionValue || {axis: 'x-axis'};
         const needsKValue = values.axis === 'line-y-k' || values.axis === 'line-x-k';
 
         return (

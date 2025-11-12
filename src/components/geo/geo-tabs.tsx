@@ -1,6 +1,7 @@
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {cn} from "@/lib/utils";
 import type {ReactNode} from "react";
+import { colorMap, DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface GeoTabsProps {
     defaultValue?: string;
@@ -14,51 +15,11 @@ interface GeoTabsProps {
         content: ReactNode;
     }>;
     className?: string;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
     variant?: 'default' | 'pills' | 'underline';
     fullWidth?: boolean;
     orientation?: 'horizontal' | 'vertical';
 }
-
-// TODO: Make this colormap the same across all geo-components
-const colorMap = {
-    purple: {
-        active: "bg-gradient-to-r from-deep-purple-500 to-deep-purple-700 text-white shadow-md",
-        inactive: "text-deep-purple-600 hover:bg-deep-purple-50 border border-deep-purple-200",
-        pills: "text-deep-purple-600 hover:bg-deep-purple-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-deep-purple-500 data-[state=active]:to-deep-purple-700 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-deep-purple-300 data-[state=active]:border-deep-purple-500 text-deep-purple-600"
-    },
-    blue: {
-        active: "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md",
-        inactive: "text-blue-600 hover:bg-blue-50 border border-blue-200",
-        pills: "text-blue-600 hover:bg-blue-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-700 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-blue-300 data-[state=active]:border-blue-500 text-blue-600"
-    },
-    orange: {
-        active: "bg-gradient-to-r from-orange-500 to-orange-700 text-white shadow-md",
-        inactive: "text-orange-600 hover:bg-orange-50 border border-orange-200",
-        pills: "text-orange-600 hover:bg-orange-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-700 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-orange-300 data-[state=active]:border-orange-500 text-orange-600"
-    },
-    teal: {
-        active: "bg-gradient-to-r from-teal-500 to-teal-700 text-white shadow-md",
-        inactive: "text-teal-600 hover:bg-teal-50 border border-teal-200",
-        pills: "text-teal-600 hover:bg-teal-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-700 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-teal-300 data-[state=active]:border-teal-500 text-teal-600"
-    },
-    yellow: {
-        active: "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-md",
-        inactive: "text-yellow-600 hover:bg-yellow-50 border border-yellow-200",
-        pills: "text-yellow-600 hover:bg-yellow-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-yellow-300 data-[state=active]:border-yellow-500 text-yellow-600"
-    },
-    maroon: {
-        active: "bg-gradient-to-r from-rose-600 to-rose-800 text-white shadow-md",
-        inactive: "text-rose-600 hover:bg-rose-50 border border-rose-200",
-        pills: "text-rose-600 hover:bg-rose-100 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-rose-800 data-[state=active]:text-white",
-        underline: "border-b-2 border-transparent hover:border-rose-300 data-[state=active]:border-rose-600 text-rose-600"
-    },
-};
 
 export default function GeoTabs(
     {
@@ -67,7 +28,7 @@ export default function GeoTabs(
         onValueChange,
         tabs,
         className,
-        colorScheme = 'purple',
+        colorScheme = DEFAULT_COLOR_SCHEME,
         variant = 'default',
         fullWidth = false,
         orientation = 'horizontal'

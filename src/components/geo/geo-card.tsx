@@ -1,5 +1,6 @@
 import type {ReactNode} from "react";
 import {cn} from "@/lib/utils.ts";
+import { colorMap, DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface GeoCardProps {
     icon?: ReactNode;
@@ -9,47 +10,8 @@ interface GeoCardProps {
     header?: ReactNode;
     className?: string;
     'data-aos-delay'?: number;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
 }
-
-const colorMap = {
-    purple: {
-        topLine: "from-deep-purple-400 to-deep-purple-600",
-        iconBg: "from-deep-purple-100 to-deep-purple-200",
-        title: "text-deep-purple-800",
-        border: "border-deep-purple-100"
-    },
-    blue: {
-        topLine: "from-blue-400 to-blue-600",
-        iconBg: "from-blue-100 to-blue-200",
-        title: "text-blue-800",
-        border: "border-blue-100"
-    },
-    orange: {
-        topLine: "from-orange-400 to-orange-600",
-        iconBg: "from-orange-100 to-orange-200",
-        title: "text-orange-800",
-        border: "border-orange-100"
-    },
-    teal: {
-        topLine: "from-teal-400 to-teal-600",
-        iconBg: "from-teal-100 to-teal-200",
-        title: "text-teal-800",
-        border: "border-teal-100"
-    },
-    yellow: {
-        topLine: "from-yellow-400 to-yellow-600",
-        iconBg: "from-yellow-100 to-yellow-200",
-        title: "text-yellow-800",
-        border: "border-yellow-100"
-    },
-    maroon: {
-        topLine: "from-rose-600 to-rose-800",
-        iconBg: "from-rose-100 to-rose-200",
-        title: "text-rose-800",
-        border: "border-rose-100"
-    },
-};
 
 export default function GeoCard(
     {
@@ -59,7 +21,7 @@ export default function GeoCard(
         footer,
         header,
         className,
-        colorScheme = 'purple',
+        colorScheme = DEFAULT_COLOR_SCHEME,
         'data-aos-delay': dataAosDelay
     }: GeoCardProps) {
     const colors = colorMap[colorScheme];

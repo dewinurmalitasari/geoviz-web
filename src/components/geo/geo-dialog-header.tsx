@@ -1,22 +1,29 @@
 import {DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx"
 import type {ReactNode} from "react"
+import {cn} from "@/lib/utils";
+import type {ColorScheme} from "@/lib/color-scheme";
+import {colorMap, DEFAULT_COLOR_SCHEME} from "@/lib/color-scheme";
 
 interface GeoDialogHeaderProps {
     icon: ReactNode
     title: string
+    colorScheme?: ColorScheme
 }
 
-export default function GeoDialogHeader({icon, title}: GeoDialogHeaderProps) {
+export default function GeoDialogHeader({icon, title, colorScheme = DEFAULT_COLOR_SCHEME}: GeoDialogHeaderProps) {
+    const colors = colorMap[colorScheme];
+
     return (
         <>
-            <div className="h-2 bg-gradient-to-r from-deep-purple-400 to-deep-purple-600 -mx-6 -mt-6.5 mb-4 rounded-t-lg"/>
+            <div className={cn("h-2 bg-gradient-to-r -mx-6 -mt-6.5 mb-4 rounded-t-lg", colors.topLine)}/>
             <DialogHeader>
                 <div className="flex items-center gap-4">
                     <div
-                        className="w-14 h-14 rounded-xl bg-gradient-to-br from-deep-purple-100 to-deep-purple-200 flex items-center justify-center">
+                        className={cn("w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center", colors.iconBg)}
+                    >
                         {icon}
                     </div>
-                    <DialogTitle className="text-2xl font-bold text-deep-purple-800">
+                    <DialogTitle className={cn("text-2xl font-bold", colors.label)}>
                         {title}
                     </DialogTitle>
                 </div>

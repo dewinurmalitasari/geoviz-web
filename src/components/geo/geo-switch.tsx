@@ -2,6 +2,7 @@ import { Switch } from "@/components/ui/switch";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import { colorMap, DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface GeoSwitchProps {
   id: string;
@@ -12,48 +13,10 @@ interface GeoSwitchProps {
   description?: string;
   className?: string;
   disabled?: boolean;
-  colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+  colorScheme?: ColorScheme;
   size?: 'sm' | 'md' | 'lg';
 }
 
-const colorMap = {
-  purple: {
-    checked: "data-[state=checked]:bg-deep-purple-600",
-    thumb: "data-[state=checked]:bg-deep-purple-100",
-    focus: "focus-visible:ring-deep-purple-500",
-    label: "text-deep-purple-800"
-  },
-  blue: {
-    checked: "data-[state=checked]:bg-blue-600",
-    thumb: "data-[state=checked]:bg-blue-100",
-    focus: "focus-visible:ring-blue-500",
-    label: "text-blue-800"
-  },
-  orange: {
-    checked: "data-[state=checked]:bg-orange-600",
-    thumb: "data-[state=checked]:bg-orange-100",
-    focus: "focus-visible:ring-orange-500",
-    label: "text-orange-800"
-  },
-  teal: {
-    checked: "data-[state=checked]:bg-teal-600",
-    thumb: "data-[state=checked]:bg-teal-100",
-    focus: "focus-visible:ring-teal-500",
-    label: "text-teal-800"
-  },
-  yellow: {
-    checked: "data-[state=checked]:bg-yellow-600",
-    thumb: "data-[state=checked]:bg-yellow-100",
-    focus: "focus-visible:ring-yellow-500",
-    label: "text-yellow-800"
-  },
-  maroon: {
-    checked: "data-[state=checked]:bg-rose-700",
-    thumb: "data-[state=checked]:bg-rose-100",
-    focus: "focus-visible:ring-rose-500",
-    label: "text-rose-800"
-  },
-};
 
 const sizeMap = {
   sm: {
@@ -85,7 +48,7 @@ export default function GeoSwitch({
   description,
   className,
   disabled = false,
-  colorScheme = 'purple',
+  colorScheme = DEFAULT_COLOR_SCHEME,
   size = 'md'
 }: GeoSwitchProps) {
   const colors = colorMap[colorScheme];

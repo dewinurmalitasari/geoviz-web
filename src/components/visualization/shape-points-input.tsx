@@ -6,6 +6,7 @@ import {Minus, Plus, Shapes} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import type {Point, Point3D} from "@/type.ts";
 import {PRESET_POINTS, PRESETS_2D, PRESETS_3D} from "@/lib/shape-preset.ts";
+import { DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface ShapePointsInputProps {
     onPointsChange?: (points: Point[]) => void;
@@ -13,7 +14,7 @@ interface ShapePointsInputProps {
     maxPoints?: number;
     minPoints?: number;
     className?: string;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
     defaultPoints: Point[];
 }
 
@@ -24,7 +25,7 @@ export default function ShapePointsInput(
         maxPoints = 10,
         minPoints = 1,
         className,
-        colorScheme = "purple",
+        colorScheme = DEFAULT_COLOR_SCHEME,
         defaultPoints
     }: ShapePointsInputProps) {
     const [points, setPoints] = useState<Point[]>(defaultPoints);

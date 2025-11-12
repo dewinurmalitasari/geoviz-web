@@ -1,10 +1,9 @@
-// [File: components/visualization/equation-input.tsx]
-
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import { Minus, Plus, Baseline } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import GeoTabs from "@/components/geo/geo-tabs.tsx";
+import { DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 // Define the different equation states
 type ExplicitState = { type: 'explicit', equations: string[] };
@@ -21,7 +20,7 @@ interface EquationInputProps {
     maxEquations?: number; // Max for explicit
     minEquations?: number; // Min for explicit
     className?: string;
-    colorScheme?: 'purple' | 'blue' | 'orange' | 'teal' | 'yellow' | 'maroon';
+    colorScheme?: ColorScheme;
 }
 
 export default function EquationInput(
@@ -31,7 +30,7 @@ export default function EquationInput(
         maxEquations = 5,
         minEquations = 1,
         className,
-        colorScheme = "purple",
+        colorScheme = DEFAULT_COLOR_SCHEME,
     }: EquationInputProps) {
 
     // --- Logic for EXPLICIT (y = f(x)) type ---

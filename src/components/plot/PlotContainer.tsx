@@ -2,6 +2,9 @@ import Plot from "react-plotly.js";
 import type {PerformanceStats, PlotlyData, PlotlyLayout, Point} from "@/type.ts";
 import {useState} from "react";
 import GeoSwitch from "../geo/geo-switch";
+import {cn} from "@/lib/utils";
+import type {ColorScheme} from "@/lib/color-scheme";
+import {colorMap, DEFAULT_COLOR_SCHEME} from "@/lib/color-scheme";
 
 interface PlotContainerProps {
     shapePoints: Point[];
@@ -10,6 +13,7 @@ interface PlotContainerProps {
     perfStats: PerformanceStats
     initialRenderStartRef: React.MutableRefObject<number>;
     animationRenderStartRef: React.MutableRefObject<number>;
+    colorScheme?: ColorScheme;
 }
 
 export default function PlotContainer(
@@ -20,23 +24,26 @@ export default function PlotContainer(
         perfStats,
         initialRenderStartRef,
         animationRenderStartRef,
+        colorScheme = DEFAULT_COLOR_SCHEME,
     }: PlotContainerProps) {
     const [animationRenderTime, setAnimationRenderTime] = useState<number>(0);
     const [initialRenderTime, setInitialRenderTime] = useState<number>(0);
     const [fixedAspectRatio, setFixedAspectRatio] = useState<boolean>(false);
+    const colors = colorMap[colorScheme];
 
     return (
         <div
-            className="flex-5 bg-gradient-to-br from-deep-purple-100 to-deep-purple-200  rounded-xl p-2 md:p-4 flex items-center justify-center">
+            className={cn("flex-5 bg-gradient-to-br rounded-xl p-2 md:p-4 flex items-center justify-center", colors.iconBg)}
+        >
             {shapePoints.length > 0 ? (
                 <div className="flex flex-col w-full h-full">
-                    <div className="flex items-center justify-end gap-4 mb-2 border border-deep-purple-300 rounded-lg px-3 py-2 bg-white/70">
+                    <div className={cn("flex items-center justify-end gap-4 mb-2 border rounded-lg px-3 py-2 bg-white/70", colors.border)}>
                         <GeoSwitch
                             id="fixed-aspect-ratio-switch"
                             label="Kunci interval sumbu menjadi 1"
                             checked={fixedAspectRatio}
                             onCheckedChange={setFixedAspectRatio}
-                            colorScheme="purple"
+                            colorScheme={colorScheme}
                             size="md"
                         />
                     </div>
@@ -55,8 +62,9 @@ export default function PlotContainer(
                             {perfStats && (
                                 <div className="flex flex-wrap gap-2">
                                     <div
-                                        className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-deep-purple-100 to-deep-purple-200 text-deep-purple-800 rounded-lg text-sm font-medium">
-                                        <div className="w-2 h-2 bg-deep-purple-500 rounded-full"></div>
+                                        className={cn("flex items-center gap-2 px-3 py-2 bg-gradient-to-r rounded-lg text-sm font-medium", colors.iconBg, colors.label)}
+                                    >
+                                        <div className={cn("w-2 h-2 rounded-full", colors.checked.replace('data-[state=checked]:', ''))}></div>
                                         <span>FPS: <strong>{perfStats.fps.toFixed(1)}</strong></span>
                                     </div>
 
