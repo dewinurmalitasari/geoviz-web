@@ -39,7 +39,7 @@ export function usePlotlyAnimation(
         setPlotLayout,
         onFrameTick,
         renderStartRef,
-        targetFps = 30
+        targetFps = 30,
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
@@ -72,7 +72,8 @@ export function usePlotlyAnimation(
             dilatationValue: DilatationValue;
             rotationValue: RotationValue;
             reflectionAxis: ReflectionValue;
-        }
+        },
+        onComplete?: (transformedPoints: Point[]) => void
     ) => {
         if (isAnimatingRef.current) {
             cancelAnimation();
@@ -324,6 +325,10 @@ export function usePlotlyAnimation(
                 setPlotData([...axisTraces, ...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
                 isAnimatingRef.current = false;
+
+                if (onComplete) {
+                    onComplete(transformedPoints);
+                }
             }
         };
 

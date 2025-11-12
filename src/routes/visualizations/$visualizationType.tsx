@@ -11,9 +11,12 @@ import {
     type PlotlyData,
     type PlotlyLayout,
     type Point,
-    type Point3D, type ReflectionValue, type RotationValue,
+    type Point3D,
+    type ReflectionValue,
+    type RotationValue,
     type Transformation,
-    TRANSFORMATION_TYPES, type TranslationValue,
+    TRANSFORMATION_TYPES,
+    type TranslationValue,
     VISUALIZATION_TYPES
 } from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
@@ -179,32 +182,48 @@ function RouteComponent() {
         handlePlotClick(shapePoints, equations)
     }, []) // Empty dependency array to run only on mount
 
-    const handleStartVisualization = async () => {
-        setTransformationLoading(true);
-
-        // TODO: Make this support the multiple transformations in sequence
-
-        // Extract transformation values from your transformations state
-        // You'll need to adapt this based on how your transformations are structured
-        const transformationValues = {
-            translationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.TRANSLATION)?.value as TranslationValue || { translateX: 0, translateY: 0, translateZ: 0 },
-            dilatationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.DILATATION)?.value as DilatationValue || { scaleFactor: 1 },
-            rotationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.ROTATION)?.value as RotationValue || { angle: 0 },
-            reflectionAxis: transformations.find(t => t.type === TRANSFORMATION_TYPES.REFLECTION)?.value as ReflectionValue || { axis: 'x-axis' },
-        };
-
-        // Start animation with the first transformation type (or whichever one you want)
-        const firstTransformation = transformations[0];
-        if (firstTransformation) {
-            startAnimation(
-                firstTransformation.type as 'translation' | 'dilatation' | 'rotation' | 'reflection',
-                shapePoints,
-                transformationValues
-            );
+    const executeTransformation = async (index: number, currentPoints: Point[]) => {
+        if (index >= transformations.length) {
+            setTransformationLoading(false);
+            return;
         }
 
-        setTransformationLoading(false);
-    }
+        const transformation = transformations[index];
+        const transformationValues = {
+            translationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.TRANSLATION)?.value as TranslationValue || {
+                translateX: 0,
+                translateY: 0,
+                translateZ: 0
+            },
+            dilatationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.DILATATION)?.value as DilatationValue || {scaleFactor: 1},
+            rotationValue: transformations.find(t => t.type === TRANSFORMATION_TYPES.ROTATION)?.value as RotationValue || {angle: 0},
+            reflectionAxis: transformations.find(t => t.type === TRANSFORMATION_TYPES.REFLECTION)?.value as ReflectionValue || {axis: 'x-axis'},
+        };
+
+        startAnimation(
+            transformation.type as 'translation' | 'dilatation' | 'rotation' | 'reflection',
+            currentPoints,
+            transformationValues,
+            async (transformedPoints) => {
+                // TODO: Make the chain trasnformation not redraw the transformedPoint as original point,
+                //  but make it so that the original blue point is kept while we just move / animate the red point
+                //  and also set the range to cover start and last transformed point
+
+                // Add a delay before proceeding to the next transformation
+                await new Promise(resolve => setTimeout(resolve, 500));
+                executeTransformation(index + 1, transformedPoints);
+            }
+        );
+    };
+
+    const handleStartVisualization = async () => {
+        if (transformations.length === 0) return;
+
+        setTransformationLoading(true);
+
+        // Start with the first transformation
+        await executeTransformation(0, shapePoints);
+    };
 
     // Add visualizationType to the dependency to re-initialize when route changes
     useEffect(() => {

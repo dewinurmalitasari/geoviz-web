@@ -45,7 +45,7 @@ export function useVisualizationTabs(
     });
 
     const [dilatationValue, setDilatationValue] = useState<DilatationValue>({
-        scaleFactor: 1,
+        scaleFactor: 4,
     });
 
     const [rotationValue, setRotationValue] = useState<RotationValue>({
@@ -66,7 +66,7 @@ export function useVisualizationTabs(
         });
         setDilatationValue({scaleFactor: 1});
         setRotationValue({
-            angle: 0,
+            angle: 90,
             ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
         });
         setReflectionValue({
