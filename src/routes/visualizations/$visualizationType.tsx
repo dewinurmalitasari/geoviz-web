@@ -205,14 +205,11 @@ function RouteComponent() {
             currentPoints,
             transformationValues,
             async (transformedPoints) => {
-                // TODO: Make the chain trasnformation not redraw the transformedPoint as original point,
-                //  but make it so that the original blue point is kept while we just move / animate the red point
-                //  and also set the range to cover start and last transformed point
-
                 // Add a delay before proceeding to the next transformation
                 await new Promise(resolve => setTimeout(resolve, 500));
                 executeTransformation(index + 1, transformedPoints);
-            }
+            },
+            shapePoints
         );
     };
 
@@ -313,6 +310,8 @@ function RouteComponent() {
                                         >
                                             <Play/> Mulai Visualisasi
                                         </GeoButton>
+
+                                        {/*TODO: Add a button to proceed step manually*/}
                                     </div>
 
                                     <Separator className="text-deep-purple-500"/>

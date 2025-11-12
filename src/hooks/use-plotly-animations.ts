@@ -73,7 +73,8 @@ export function usePlotlyAnimation(
             rotationValue: RotationValue;
             reflectionAxis: ReflectionValue;
         },
-        onComplete?: (transformedPoints: Point[]) => void
+        onComplete: (transformedPoints: Point[]) => void,
+        originalPoints: Point[]
     ) => {
         if (isAnimatingRef.current) {
             cancelAnimation();
@@ -103,7 +104,7 @@ export function usePlotlyAnimation(
             transformationFn = (points, type, values) =>
                 calculate3DTransformedCoordinates(points as Point3D[], type as any, values);
 
-            originalTraces = plotFn(shapePoints, 'cyan');
+            originalTraces = plotFn(originalPoints, 'cyan');
             transformedColor = 'orange';
 
             switch (transformationType) {
@@ -129,7 +130,7 @@ export function usePlotlyAnimation(
             transformationFn = (points, type, values) =>
                 calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
 
-            originalTraces = plotFn(shapePoints, 'blue');
+            originalTraces = plotFn(originalPoints, 'blue');
             transformedColor = 'red';
 
             switch (transformationType) {

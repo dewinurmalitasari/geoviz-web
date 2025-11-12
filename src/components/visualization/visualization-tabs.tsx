@@ -64,7 +64,7 @@ export function useVisualizationTabs(
             translateY: 3,
             ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {translateZ: 3} : {})
         });
-        setDilatationValue({scaleFactor: 1});
+        setDilatationValue({scaleFactor: 4});
         setRotationValue({
             angle: 90,
             ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
