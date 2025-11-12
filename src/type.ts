@@ -93,6 +93,11 @@ export type PlotlyData = PlotlyTrace[];
 
 export type PlotlyLayout = Record<string, any>;
 
+export interface Transformation {
+    type: 'translation' | 'dilatation' | 'rotation' | 'reflection';
+    value: TranslationValue | DilatationValue | RotationValue | ReflectionValue;
+}
+
 // Performance Stats
 export interface PerformanceStats {
     frameTime: number;

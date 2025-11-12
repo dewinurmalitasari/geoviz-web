@@ -20,6 +20,8 @@ declare global {
         translateTransformationTypeReverse(): string;
 
         translatePracticeType(): string;
+
+        translateTransformationValue(): string; // TODO
     }
 }
 
@@ -107,3 +109,24 @@ String.prototype.translatePracticeType = function () {
             return this.toCapitalized();
     }
 }
+
+String.prototype.translateTransformationValue = function () {
+    const axisMap = {
+        'origin': 'Sumbu Asal',
+        'x-axis': 'Sumbu X',
+        'y-axis': 'Sumbu Y',
+        'line-y-x': 'Garis Y=X',
+        'line-y-neg-x': 'Garis Y=-X',
+        'line-y-k': 'Garis Y=K',
+        'line-x-k': 'Garis X=K',
+        'radio-xy-plane': 'Bidang XY',
+        'radio-yz-plane': 'Bidang YZ',
+        'radio-xz-plane': 'Bidang XZ',
+        'radio_x_axis': 'Sumbu X',
+        'radio_y_axis': 'Sumbu Y',
+        'radio_z_axis': 'Sumbu Z',
+    } as const;
+
+    const key = this.toLowerCase() as keyof typeof axisMap;
+    return axisMap[key] || this.toCapitalized();
+};

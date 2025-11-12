@@ -3,18 +3,16 @@ import PageHeader from "@/components/root/page-header.tsx";
 import GeoCard from "@/components/geo/geo-card.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import ShapePointsInput from "@/components/visualization/shape-points-input.tsx";
-import {SquareKanban} from "lucide-react";
+import {Play, SquareKanban} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
 import {
-    type DilatationValue,
     type PerformanceStats,
     type PlotlyData,
     type PlotlyLayout,
     type Point,
     type Point3D,
-    type ReflectionValue,
-    type RotationValue,
-    type TranslationValue,
+    type Transformation,
+    TRANSFORMATION_TYPES,
     VISUALIZATION_TYPES
 } from "@/type.ts";
 import {ErrorPage} from "@/components/root/error-page.tsx";
@@ -24,7 +22,6 @@ import {calculateRange} from "@/hooks/use-calculate-range.ts";
 import {PRESET_POINTS} from "@/lib/shape-preset.ts";
 import {get3DAxisTraces, get3DShapePlotData, get3DShapePlotLayout} from "@/hooks/use-3d-plot.ts";
 import {useIsMobile} from "@/hooks/use-mobile.ts";
-import {usePlotlyAnimation} from "@/hooks/use-plotly-animations.ts";
 import EquationInput, {type EquationState} from "@/components/visualization/equation-input.tsx";
 import {
     get2DEquationPlotData,
@@ -36,6 +33,8 @@ import {
 import {get2DShapePlotData, get2DShapePlotLayout} from "@/hooks/use-2d-plot.ts";
 import PlotContainer from "@/components/plot/PlotContainer.tsx";
 import AOS from 'aos';
+import TransformationListPopover from "@/components/visualization/transformation-list-popover.tsx";
+import {Separator} from "@/components/ui/separator.tsx";
 
 export const Route = createFileRoute('/visualizations/$visualizationType')({
     beforeLoad: ({params}) => {
@@ -72,6 +71,7 @@ export const Route = createFileRoute('/visualizations/$visualizationType')({
 function RouteComponent() {
     const {visualizationType} = Route.useParams()
     const isMobile = useIsMobile();
+
     const [shapePoints, setShapePoints] = useState<Point[]>(() => {
         const defaultKey = visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "cube" : "square";
         return PRESET_POINTS[defaultKey] || [];
@@ -81,17 +81,15 @@ function RouteComponent() {
         equations: ['x^2']
     });
 
-    const [translationValue, setTranslationValue] = useState<TranslationValue>({
-        translateX: 3,
-        translateY: 3,
-        translateZ: 3
-    })
-    const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 4,})
-    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 90, axis: 'radio_x_axis'})
-    const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({
-        axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
-        k: 0
-    })
+    const [transformations, setTransformations] = useState<Transformation[]>([{
+        type: TRANSFORMATION_TYPES.TRANSLATION,
+        value: {
+            translateX: 3,
+            translateY: 3,
+            ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {translateZ: 3} : {})
+        }
+    }])
+    const [transformationLoading, setTransformationLoading] = useState(false);
 
     const [plotData, setPlotData] = useState<PlotlyData>([])
     const [plotLayout, setPlotLayout] = useState<PlotlyLayout>({})
@@ -100,24 +98,25 @@ function RouteComponent() {
     const initialRenderStartRef = useRef(0);
     const animationRenderStartRef = useRef(0);
 
-    const {startAnimation} = usePlotlyAnimation({
-        shapePoints,
-        visualizationType,
-        isMobile,
-        transformationValues: {
-            translationValue,
-            dilatationValue,
-            rotationValue,
-            reflectionAxis
-        },
-        setPlotData,
-        setPlotLayout,
-        setDilatationValue,
-        onFrameTick: (stats) => {
-            setPerfStats(stats);
-        },
-        renderStartRef: animationRenderStartRef,
-    });
+    // TODO: Change to accept shape, tupe and value as arguments in startAnimation
+    // const {startAnimation} = usePlotlyAnimation({
+    //     shapePoints,
+    //     visualizationType,
+    //     isMobile,
+    //     transformationValues: {
+    //         translationValue,
+    //         dilatationValue,
+    //         rotationValue,
+    //         reflectionAxis
+    //     },
+    //     setPlotData,
+    //     setPlotLayout,
+    //     setDilatationValue,
+    //     onFrameTick: (stats) => {
+    //         setPerfStats(stats);
+    //     },
+    //     renderStartRef: animationRenderStartRef,
+    // });
 
     const handlePlotClick = (points: Point[], equations: EquationState) => {
         if (visualizationType === VISUALIZATION_TYPES.EQUATION) {
@@ -187,16 +186,14 @@ function RouteComponent() {
         handlePlotClick(shapePoints, equations)
     }, []) // Empty dependency array to run only on mount
 
-    const handleStartVisualization = (transformationType: string) => {
-        // Dilatation divide by zero check
-        if (transformationType === 'dilatation' && dilatationValue.scaleFactor === 0) {
-            setDilatationValue(
-                {...dilatationValue, scaleFactor: 1}
-            )
-            dilatationValue.scaleFactor = 1
-        }
+    const handleStartVisualization = () => {
+        setTransformationLoading(true);
 
-        startAnimation(transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection');
+        console.log(transformations)
+
+        // TODO: Make multiple animation
+
+        setTransformationLoading(false);
     }
 
     // Add visualizationType to the dependency to re-initialize when route changes
@@ -206,17 +203,14 @@ function RouteComponent() {
         setShapePoints(newShapePoints);
 
         // Reset transformation values
-        setTranslationValue({
-            translateX: 3,
-            translateY: 3,
-            translateZ: 3
-        });
-        setDilatationValue({scaleFactor: 4});
-        setRotationValue({angle: 90, axis: 'radio_x_axis'});
-        setReflectionAxis({
-            axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
-            k: 0
-        });
+        setTransformations([{
+            type: TRANSFORMATION_TYPES.TRANSLATION,
+            value: {
+                translateX: 3,
+                translateY: 3,
+                ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {translateZ: 3} : {})
+            }
+        }]);
 
         // Reset equations for equation visualization
         setEquations({
@@ -244,16 +238,7 @@ function RouteComponent() {
 
     const tabs = useVisualizationTabs({
         visualizationType,
-        shapePoints,
-        translationValue,
-        setTranslationValue,
-        dilatationValue,
-        setDilatationValue,
-        rotationValue,
-        setRotationValue,
-        reflectionAxis,
-        setReflectionAxis,
-        onStartVisualization: handleStartVisualization
+        setTransformations: setTransformations,
     })
 
     return (
@@ -278,16 +263,38 @@ function RouteComponent() {
                                 animationRenderStartRef={animationRenderStartRef}
                             />
 
-                            {/*TODO: Deal with equation transformation later...*/}
                             {/*Transformation Input and Play*/}
                             {visualizationType !== VISUALIZATION_TYPES.EQUATION &&
-                                <GeoTabs
-                                    defaultValue="translation"
-                                    tabs={tabs}
-                                    variant="pills"
-                                    fullWidth={true}
-                                    className="flex-1"
-                                />
+                                <div className="flex flex-col space-y-4">
+                                    <div className="flex flex-col-reverse gap-y-2 md:flex-row md:space-y-0 md:space-x-4 items-center justify-center">
+                                        <TransformationListPopover
+                                            transformations={transformations}
+                                            onTransformationsChange={setTransformations}
+                                            colorScheme="purple"
+                                            isLoading={transformationLoading}
+                                            className="flex-4"
+                                        />
+
+                                        <GeoButton
+                                            variant="primary"
+                                            onClick={handleStartVisualization}
+                                            isLoading={transformationLoading}
+                                            className="flex-1"
+                                        >
+                                            <Play/> Mulai Visualisasi
+                                        </GeoButton>
+                                    </div>
+
+                                    <Separator className="text-deep-purple-500"/>
+
+                                    <GeoTabs
+                                        defaultValue="translation"
+                                        tabs={tabs}
+                                        variant="pills"
+                                        fullWidth={true}
+                                        className="flex-1"
+                                    />
+                                </div>
                             }
                         </div>
 
@@ -307,7 +314,7 @@ function RouteComponent() {
                                 <ShapePointsInput
                                     onPointsChange={(points) => setShapePoints(points)}
                                     dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
-                                    maxPoints={8}
+                                    maxPoints={12}
                                     minPoints={3}
                                     defaultPoints={shapePoints}
                                     className="p-4 rounded-xl border border-deep-purple-200"

@@ -75,7 +75,7 @@ export default function GeoButton(
     return (
         <Comp
             className={cn(
-                "w-full h-full flex justify-center items-center gap-2 px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer",
+                "w-full h-full flex justify-center items-center gap-2 px-5 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer",
                 getVariantStyle(),
                 className
             )}

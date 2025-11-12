@@ -1,45 +1,26 @@
-import {useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {
     type DilatationValue,
-    type Point,
     type ReflectionValue,
     type RotationValue,
-    TRANSFORMATION_TYPES,
-    type TranslationValue,
+    type Transformation,
+    TRANSFORMATION_TYPES, type TranslationValue,
     VISUALIZATION_TYPES
 } from "@/type.ts";
-import {FlipHorizontal, Move, Play, RotateCw, ZoomIn} from "lucide-react";
+import {FlipHorizontal, Move, Plus, RotateCw, ZoomIn} from "lucide-react";
 import GeoInput from "@/components/geo/geo-input.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import GeoSelect from "@/components/geo/geo-select.tsx";
 
 interface VisualizationTabsProps {
     visualizationType: string;
-    translationValue: TranslationValue;
-    setTranslationValue: (value: TranslationValue) => void;
-    dilatationValue: DilatationValue;
-    setDilatationValue: (value: DilatationValue) => void;
-    rotationValue: RotationValue;
-    setRotationValue: (value: RotationValue) => void;
-    reflectionAxis: ReflectionValue;
-    setReflectionAxis: (value: ReflectionValue) => void;
-    shapePoints: Point[];
-    onStartVisualization: (type: string) => void;
+    setTransformations: (transformations: (prevTransformations: Transformation[]) => Transformation[]) => void;
 }
 
 export function useVisualizationTabs(
     {
         visualizationType,
-        translationValue,
-        setTranslationValue,
-        dilatationValue,
-        setDilatationValue,
-        rotationValue,
-        setRotationValue,
-        reflectionAxis,
-        setReflectionAxis,
-        shapePoints,
-        onStartVisualization
+        setTransformations
     }: VisualizationTabsProps) {
     const reflectionOptions = visualizationType === VISUALIZATION_TYPES.SHAPE_3D
         ? [
@@ -56,6 +37,42 @@ export function useVisualizationTabs(
             {value: 'line-y-k', label: 'Garis Y=K'},
             {value: 'line-x-k', label: 'Garis X=K'},
         ];
+
+    const [translationValue, setTranslationValue] = useState<TranslationValue>({
+        translateX: 3,
+        translateY: 3,
+        ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {translateZ: 3} : {})
+    });
+
+    const [dilatationValue, setDilatationValue] = useState<DilatationValue>({
+        scaleFactor: 1,
+    });
+
+    const [rotationValue, setRotationValue] = useState<RotationValue>({
+        angle: 0,
+        ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
+    });
+
+    const [reflectionValue, setReflectionValue] = useState<ReflectionValue>({
+        axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
+    });
+
+    // Reset transformations to default values when visualizationType changes
+    useEffect(() => {
+        setTranslationValue({
+            translateX: 3,
+            translateY: 3,
+            ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {translateZ: 3} : {})
+        });
+        setDilatationValue({scaleFactor: 1});
+        setRotationValue({
+            angle: 0,
+            ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
+        });
+        setReflectionValue({
+            axis: visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? 'radio-xy-plane' : 'y-axis',
+        });
+    }, [visualizationType]);
 
     return useMemo(() => [
         {
@@ -118,10 +135,18 @@ export function useVisualizationTabs(
 
                         <GeoButton
                             variant="primary"
-                            onClick={() => onStartVisualization(TRANSFORMATION_TYPES.TRANSLATION)}
+                            onClick={() => {
+                                setTransformations((prevTransformations) => [
+                                    ...prevTransformations,
+                                    {
+                                        type: TRANSFORMATION_TYPES.TRANSLATION,
+                                        value: translationValue,
+                                    },
+                                ]);
+                            }}
                             className="w-full md:w-fit"
                         >
-                            <Play/> Mulai Visualisasi
+                            <Plus/> Tambah Transformasi
                         </GeoButton>
                     </div>
                 </div>
@@ -146,7 +171,6 @@ export function useVisualizationTabs(
                             onChange={(e) => {
                                 const value = parseFloat(e.target.value);
                                 setDilatationValue({
-                                    ...dilatationValue,
                                     scaleFactor: isNaN(value) ? 1 : value
                                 });
                             }}
@@ -155,10 +179,18 @@ export function useVisualizationTabs(
 
                         <GeoButton
                             variant="primary"
-                            onClick={() => onStartVisualization(TRANSFORMATION_TYPES.DILATATION)}
+                            onClick={() => {
+                                setTransformations((prevTransformations) => [
+                                    ...prevTransformations,
+                                    {
+                                        type: TRANSFORMATION_TYPES.DILATATION,
+                                        value: dilatationValue,
+                                    },
+                                ]);
+                            }}
                             className="w-full md:w-fit"
                         >
-                            <Play/> Mulai Visualisasi
+                            <Plus/> Tambah Transformasi
                         </GeoButton>
                     </div>
                 </div>
@@ -210,10 +242,18 @@ export function useVisualizationTabs(
 
                         <GeoButton
                             variant="primary"
-                            onClick={() => onStartVisualization(TRANSFORMATION_TYPES.ROTATION)}
+                            onClick={() => {
+                                setTransformations((prevTransformations) => [
+                                    ...prevTransformations,
+                                    {
+                                        type: TRANSFORMATION_TYPES.ROTATION,
+                                        value: rotationValue,
+                                    },
+                                ]);
+                            }}
                             className="w-full md:w-fit"
                         >
-                            <Play/> Mulai Visualisasi
+                            <Plus/> Tambah Transformasi
                         </GeoButton>
                     </div>
                 </div>
@@ -233,25 +273,25 @@ export function useVisualizationTabs(
                         className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
                         <GeoSelect
                             id="axis"
-                            value={reflectionAxis.axis || 'x'}
+                            value={reflectionValue.axis}
                             onValueChange={(value) => {
-                                setReflectionAxis({
-                                    ...reflectionAxis,
+                                setReflectionValue({
+                                    ...reflectionValue,
                                     axis: value as ReflectionValue['axis']
                                 });
                             }}
                             options={reflectionOptions}
                         />
 
-                        {(reflectionAxis.axis === 'line-y-k' || reflectionAxis.axis === 'line-x-k') && (
+                        {(reflectionValue.axis === 'line-y-k' || reflectionValue.axis === 'line-x-k') && (
                             <GeoInput
                                 id="k-value"
                                 icon="K"
-                                value={reflectionAxis?.k || 0}
+                                value={reflectionValue.k || 0}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
-                                    setReflectionAxis({
-                                        ...reflectionAxis,
+                                    setReflectionValue({
+                                        ...reflectionValue,
                                         k: isNaN(value) ? 0 : value
                                     });
                                 }}
@@ -261,14 +301,22 @@ export function useVisualizationTabs(
 
                         <GeoButton
                             variant="primary"
-                            onClick={() => onStartVisualization(TRANSFORMATION_TYPES.REFLECTION)}
+                            onClick={() => {
+                                setTransformations((prevTransformations) => [
+                                    ...prevTransformations,
+                                    {
+                                        type: TRANSFORMATION_TYPES.REFLECTION,
+                                        value: reflectionValue,
+                                    },
+                                ]);
+                            }}
                             className="w-full md:w-fit"
                         >
-                            <Play/> Mulai Visualisasi
+                            <Plus/> Tambah Transformasi
                         </GeoButton>
                     </div>
                 </div>
             )
         }
-    ], [visualizationType, translationValue, dilatationValue, rotationValue, reflectionAxis, shapePoints])
+    ], [visualizationType, setTransformations, reflectionOptions, translationValue, dilatationValue, rotationValue, reflectionValue]);
 }
