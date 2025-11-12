@@ -1,25 +1,47 @@
-import {  DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
+import { DEFAULT_COLOR_SCHEME, type ColorScheme } from "@/lib/color-scheme";
 
 interface BackgroundProps {
     colorScheme?: ColorScheme;
 }
 
 export default function Background({ colorScheme = DEFAULT_COLOR_SCHEME }: BackgroundProps) {
-    const getColorClasses = (baseColor: string) => {
-        switch (colorScheme) {
-            case 'blue':
-                return `bg-blue-${baseColor}`;
-            case 'orange':
-                return `bg-orange-${baseColor}`;
-            case 'teal':
-                return `bg-teal-${baseColor}`;
-            case 'yellow':
-                return `bg-yellow-${baseColor}`;
-            case 'maroon':
-                return `bg-rose-${baseColor}`;
-            default:
-                return `bg-purple-${baseColor}`;
-        }
+    const getColorClasses = (baseColor: '300' | '400' | '500' | '600') => {
+        const colorMap = {
+            '300': {
+                blue: 'bg-blue-300',
+                orange: 'bg-orange-300',
+                teal: 'bg-teal-300',
+                yellow: 'bg-yellow-300',
+                maroon: 'bg-rose-300',
+                purple: 'bg-purple-300'
+            },
+            '400': {
+                blue: 'bg-blue-400',
+                orange: 'bg-orange-400',
+                teal: 'bg-teal-400',
+                yellow: 'bg-yellow-400',
+                maroon: 'bg-rose-400',
+                purple: 'bg-purple-400'
+            },
+            '500': {
+                blue: 'bg-blue-500',
+                orange: 'bg-orange-500',
+                teal: 'bg-teal-500',
+                yellow: 'bg-yellow-500',
+                maroon: 'bg-rose-500',
+                purple: 'bg-purple-500'
+            },
+            '600': {
+                blue: 'bg-blue-600',
+                orange: 'bg-orange-600',
+                teal: 'bg-teal-600',
+                yellow: 'bg-yellow-600',
+                maroon: 'bg-rose-600',
+                purple: 'bg-purple-600'
+            }
+        };
+
+        return colorMap[baseColor]?.[colorScheme] || colorMap[baseColor]?.purple || '';
     };
 
     return (
