@@ -64,18 +64,10 @@ export default function IdentifyPractice({
 
     const visualizationType = VISUALIZATION_TYPES.SHAPE_2D
     const {startAnimation} = usePlotlyAnimation({
-        shapePoints,
         visualizationType,
         isMobile,
-        transformationValues: {
-            translationValue,
-            dilatationValue,
-            rotationValue,
-            reflectionAxis
-        },
         setPlotData,
         setPlotLayout,
-        setDilatationValue,
         onFrameTick: (stats) => {
             setPerfStats(stats);
         },
@@ -95,11 +87,20 @@ export default function IdentifyPractice({
 
     useEffect(() => {
         if (started && transformationType && shapePoints.length > 0 && shouldAnimate) {
-            startAnimation(transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection')
-            setShouldAnimate(false)
+            startAnimation(
+                transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection',
+                shapePoints,
+                {
+                    translationValue,
+                    dilatationValue,
+                    rotationValue,
+                    reflectionAxis,
+                },
+                () => setShouldAnimate(false),
+                shapePoints
+            );
         }
-    }, [transformationType, shapePoints, started, shouldAnimate])
-
+    }, [transformationType, shapePoints, started, shouldAnimate]);
 
     const handleGenerate = () => {
         const type = generateTransformationType()
@@ -299,7 +300,7 @@ export default function IdentifyPractice({
                             <div className="flex flex-col space-y-4 flex-1">
                                 <GeoButton
                                     variant="secondary"
-                                    onClick={() => startAnimation(transformationType as 'translation' | 'dilatation' | 'rotation' | 'reflection')}
+                                    onClick={() => setShouldAnimate(true)}
                                     className="h-fit"
                                 >
                                     <RotateCcw/> Ulangi Animasi
