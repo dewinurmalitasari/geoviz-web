@@ -273,6 +273,7 @@ function RouteComponent() {
         const newShapePoints = PRESET_POINTS[defaultKey] || [];
         setShapePoints(newShapePoints);
         setCurrentStep(0);
+        setPerfStats(null);
 
         // Reset transformation values
         setTransformations([{
