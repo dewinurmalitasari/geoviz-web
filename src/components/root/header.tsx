@@ -117,11 +117,12 @@ const ListItem = ({title, href, description, colorScheme = DEFAULT_COLOR_SCHEME}
     );
 };
 
-export default function Header({
-                                   username = "Pengguna",
-                                   role = "student",
-                                   colorScheme = DEFAULT_COLOR_SCHEME
-                               }: HeaderProps) {
+export default function Header(
+    {
+        username = "Pengguna",
+        role = "student",
+        colorScheme = DEFAULT_COLOR_SCHEME
+    }: HeaderProps) {
     const navigationItems = getNavigationItems(role);
     const animatedNavigate = useAnimatedNavigation();
     const colors = colorMap[colorScheme];
@@ -144,7 +145,7 @@ export default function Header({
             case 'maroon':
                 return 'from-rose-100 via-white to-rose-100';
             default:
-                return 'from-deep-purple-100 via-white to-deep-purple-100';
+                return 'from-geo-purple-100 via-white to-geo-purple-100';
         }
     };
 
@@ -161,7 +162,7 @@ export default function Header({
             case 'maroon':
                 return 'from-rose-600 to-rose-800';
             default:
-                return 'from-deep-purple-600 to-deep-purple-800';
+                return 'from-geo-purple-600 to-geo-purple-800';
         }
     };
 
@@ -178,7 +179,7 @@ export default function Header({
             case 'maroon':
                 return 'bg-rose-100 text-rose-800 border-rose-200';
             default:
-                return 'bg-deep-purple-100 text-deep-purple-800 border-deep-purple-200';
+                return 'bg-geo-purple-100 text-geo-purple-800 border-deep-purple-200';
         }
     };
 
