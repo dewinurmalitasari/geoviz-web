@@ -48,7 +48,7 @@ export function useGeneratePracticeTypeAndValue() {
         // Specific angles: 90, 180, 270, -90, -180, -270
         const possibleAngles = [90, 180, 270, -90, -180, -270];
         const randomIndex = Math.floor(Math.random() * possibleAngles.length);
-        return {angle: possibleAngles[randomIndex]};
+        return {angle: possibleAngles[randomIndex], center: {x: 0, y: 0} };
     };
 
     const generateReflectionValue = (): ReflectionValue => {
