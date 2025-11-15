@@ -41,10 +41,10 @@ interface DeterminePracticeProps {
 }
 
 export default function DeterminePractice({
-        handleReactionSelect,
-        reactionState,
-        reactionLoading
-    }: DeterminePracticeProps) {
+                                              handleReactionSelect,
+                                              reactionState,
+                                              reactionLoading
+                                          }: DeterminePracticeProps) {
     const auth = getAuthentication();
     const isMobile = useIsMobile();
     const animatedNavigate = useAnimatedNavigation();
@@ -124,7 +124,13 @@ export default function DeterminePractice({
                 break
             case TRANSFORMATION_TYPES.REFLECTION:
                 setReflectionAxis(value as ReflectionValue)
-                setUserValues({axis: 'origin', k: 0})
+                // Only include k if the axis type needs it
+                const reflectionValue = value as ReflectionValue;
+                if (reflectionValue.axis === 'line-y-k' || reflectionValue.axis === 'line-x-k') {
+                    setUserValues({axis: 'origin', k: 0})
+                } else {
+                    setUserValues({axis: 'origin'})
+                }
                 break
         }
 
