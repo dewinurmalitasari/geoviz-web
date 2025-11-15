@@ -84,7 +84,7 @@ export default function PageHeader(
                             <h1 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${colors.textFrom} ${colors.textTo} bg-clip-text text-transparent`}>
                                 {title}
                             </h1>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-lg text-gray-600 mt-1">
                                 {description}
                             </p>
                         </div>

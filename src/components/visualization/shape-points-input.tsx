@@ -97,8 +97,17 @@ export default function ShapePointsInput(
     };
 
     useEffect(() => {
+        const matchedPreset = Object.entries(PRESET_POINTS).find(
+            ([, points]) => JSON.stringify(points) === JSON.stringify(defaultPoints)
+        );
+
+        if (matchedPreset) {
+            setSelectedPreset(matchedPreset[0]); // Set to the matching preset key
+        } else {
+            setSelectedPreset("custom"); // Default to custom if no match is found
+        }
+
         setPoints(defaultPoints);
-        setSelectedPreset("custom");
     }, [defaultPoints]);
 
     return (
@@ -124,9 +133,9 @@ export default function ShapePointsInput(
                 {points.map((point, index) => (
                     <div
                         key={index}
-                        className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                        className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
                     >
-                        <span className="font-semibold text-gray-700 dark:text-gray-300">
+                        <span className="font-semibold text-gray-700 dark:text-gray-300 text-sm">
                             {getPointLabel(index)}
                         </span>
 
@@ -135,7 +144,7 @@ export default function ShapePointsInput(
                                 id={`point-${index}-x`}
                                 value={point.x}
                                 onChange={(e) => updatePoint(index, "x", e.target.value)}
-                                icon={<span className="text-xs font-bold">X</span>}
+                                icon={<span className="text-xs font-bold">X =</span>}
                                 className="flex-1"
                                 type="number"
                             />
@@ -144,7 +153,7 @@ export default function ShapePointsInput(
                                 id={`point-${index}-y`}
                                 value={point.y}
                                 onChange={(e) => updatePoint(index, "y", e.target.value)}
-                                icon={<span className="text-xs font-bold">Y</span>}
+                                icon={<span className="text-xs font-bold">Y =</span>}
                                 className="flex-1"
                                 type="number"
                             />
@@ -154,7 +163,7 @@ export default function ShapePointsInput(
                                     id={`point-${index}-z`}
                                     value={(point as Point3D).z}
                                     onChange={(e) => updatePoint(index, "z", e.target.value)}
-                                    icon={<span className="text-xs font-bold">Z</span>}
+                                    icon={<span className="text-xs font-bold">Z =</span>}
                                     className="flex-1"
                                     type="number"
                                 />

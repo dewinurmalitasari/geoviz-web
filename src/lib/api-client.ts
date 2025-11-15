@@ -45,7 +45,7 @@ class ApiClient {
             clearAuthentication();
 
             if (!window.location.pathname.includes('/login')) {
-                window.location.href = '/login';
+                window.location.href = '/geoviz/#/login';
             }
         }
 

@@ -160,6 +160,12 @@ code {
     }
 }
 
+@layer base {
+    html {
+        @apply text-[110%]; /* bumps the base font size */
+    }
+}
+
 /*INFO: Uncomment for background shape animation*/
 /*@keyframes float {*/
 /*    0%, 100% {*/

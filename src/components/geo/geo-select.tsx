@@ -56,7 +56,7 @@ export default function GeoSelect(
                     id={id}
                     className={cn(
                         "w-full px-4 py-3 rounded-lg border bg-white shadow-sm transition-all duration-200",
-                        "hover:shadow-md focus:ring-2 focus:ring-opacity-20",
+                        "hover:shadow-md focus:ring-2 focus:ring-opacity-20 cursor-pointer",
                         colors.trigger,
                         disabled && "opacity-50 cursor-not-allowed"
                     )}

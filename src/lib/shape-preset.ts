@@ -20,6 +20,8 @@ export const PRESETS_3D = {
     "cube": "Kubus",
     "pyramid": "Piramida",
     "prism": "Prisma Segitiga",
+    "tetrahedron": "Tetrahedron",
+    "dodecahedron": "Dodekahedron"
 } as const;
 
 // Preset point values
@@ -123,6 +125,14 @@ export const PRESET_POINTS: Record<string, Point[]> = {
         {x: 3, y: 3, z: 3},  // Base corner 3
         {x: 1, y: 3, z: 3}   // Base corner 4
     ],
+    "octahedron": [
+        {x: 2, y: 1, z: 2},  // Top
+        {x: 1, y: 2, z: 1},  // Front left
+        {x: 3, y: 2, z: 1},  // Front right
+        {x: 3, y: 2, z: 3},  // Back right
+        {x: 1, y: 2, z: 3},  // Back left
+        {x: 2, y: 3, z: 2}   // Bottom
+    ],
     "prism": [
         {x: 1, y: 1, z: 1},
         {x: 3, y: 1, z: 1},
@@ -130,6 +140,12 @@ export const PRESET_POINTS: Record<string, Point[]> = {
         {x: 1, y: 3, z: 1},
         {x: 3, y: 3, z: 1},
         {x: 2, y: 3, z: 3}
+    ],
+    "tetrahedron": [
+        {x: 2, y: 1, z: 2},  // Top
+        {x: 1, y: 3, z: 1},  // Base corner 1
+        {x: 3, y: 3, z: 1},  // Base corner 2
+        {x: 2, y: 3, z: 3}   // Base corner 3
     ],
     "plane": [
         {x: 1, y: 1, z: 1},

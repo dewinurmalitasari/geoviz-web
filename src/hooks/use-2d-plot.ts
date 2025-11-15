@@ -4,8 +4,6 @@ export function get2DShapePlotData(
     points: Point2D[],
     color = 'blue',
 ) {
-    if (points.length < 2) return [];
-
     const xValues = points.map(point => point.x);
     const yValues = points.map(point => point.y);
 

@@ -402,7 +402,7 @@ function RouteComponent() {
                                 onClick={() => handlePlotClick(shapePoints, equations)}
                                 className="h-fit"
                             >
-                                <SquareKanban/> Plot Titik
+                                <SquareKanban/> Plot {visualizationType === VISUALIZATION_TYPES.EQUATION ? "Persamaan" : "Titik"}
                             </GeoButton>
 
                             {/* Shape Points Input */}
@@ -414,7 +414,7 @@ function RouteComponent() {
                                     }}
                                     dimension={visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? "3d" : "2d"}
                                     maxPoints={12}
-                                    minPoints={3}
+                                    minPoints={1}
                                     defaultPoints={shapePoints}
                                     className="p-4 rounded-xl border border-deep-purple-200"
                                 />

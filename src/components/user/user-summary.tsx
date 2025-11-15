@@ -12,7 +12,7 @@ interface UserSummaryProps {
 export default function UserSummary({summary, className}: UserSummaryProps) {
     const statsCards = [
         {
-            title: "Total Kunjungan",
+            title: "Kunjungan",
             value: summary.totalVisits,
             icon: <Clock className="w-5 h-5"/>,
             gradient: "from-blue-500 to-cyan-500",
@@ -33,14 +33,14 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
             bgGradient: "from-green-100 to-emerald-100"
         },
         {
-            title: "Latihan Dikerjakan",
+            title: "Latihan",
             value: `${summary.totalPracticesCompleted}/${summary.totalPracticesAvailable}`,
             icon: <Target className="w-5 h-5"/>,
             gradient: "from-orange-500 to-red-500",
             bgGradient: "from-orange-100 to-red-100"
         },
         {
-            title: "Tingkat Penyelesaian",
+            title: "Penyelesaian",
             value: summary.totalPracticeAttempts > 0
                 ? `${Math.min(100, Math.round((summary.totalPracticesCompleted / summary.totalPracticeAttempts) * 100))}%`
                 : "0%",
@@ -115,7 +115,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                     {stat.icon}
                                 </div>
                             </div>
-                            <h3 className="text-sm font-medium text-gray-600 mb-1">{stat.title}</h3>
+                            <h3 className="text-lg font-medium text-gray-600 mb-1">{stat.title}</h3>
                             <p className={cn(
                                 "text-2xl font-bold",
                                 index === 3 || index === 4 ?
@@ -177,7 +177,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                             {practiceStats.slice(0, summary.totalPracticesAvailable).map((practice) => (
                                 <div key={practice.name} className="space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-sm font-medium text-gray-700 capitalize">
+                                        <span className="font-medium text-gray-700 capitalize">
                                             {practice.name.replace(/_/g, ' ')}
                                         </span>
                                         <span className={cn(
@@ -188,7 +188,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                             {practice.completionRate.toFixed(0)}%
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                                    <div className="flex items-center gap-3 text-sm text-gray-500">
                                         <span>Dikerjakan: {practice.attempted}</span>
                                         <span>Diselesaikan: {practice.completed}</span>
                                     </div>
@@ -250,7 +250,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                     </span>
                                 </div>
                             </div>
-                            <p className="mt-2 text-sm font-medium text-gray-600">Progress Materi</p>
+                            <p className="mt-2 font-medium text-gray-600">Progress Materi</p>
                         </div>
 
                         <div className="text-center">
@@ -287,7 +287,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                     </span>
                                 </div>
                             </div>
-                            <p className="mt-2 text-sm font-medium text-gray-600">Progress Latihan</p>
+                            <p className="mt-2 font-medium text-gray-600">Progress Latihan</p>
                         </div>
 
                         <div className="text-center">
@@ -327,7 +327,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                     </span>
                                 </div>
                             </div>
-                            <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Penyelesaian</p>
+                            <p className="mt-2 font-medium text-gray-600">Tingkat Penyelesaian</p>
                         </div>
 
                         <div className="text-center">
@@ -364,7 +364,7 @@ export default function UserSummary({summary, className}: UserSummaryProps) {
                                     </span>
                                 </div>
                             </div>
-                            <p className="mt-2 text-sm font-medium text-gray-600">Tingkat Keterlibatan</p>
+                            <p className="mt-2 font-medium text-gray-600">Tingkat Keterlibatan</p>
                         </div>
                     </div>
                 }

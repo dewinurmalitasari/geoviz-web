@@ -4,8 +4,6 @@ export function get3DShapePlotData(
     points: Point3D[],
     color = 'cyan'
 ) {
-    if (points.length < 3) return [];
-
     const xValues = points.map(point => point.x);
     const yValues = points.map(point => point.y);
     const zValues = points.map(point => point.z);

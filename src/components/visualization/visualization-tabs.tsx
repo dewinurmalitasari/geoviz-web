@@ -91,7 +91,7 @@ export function useVisualizationTabs(
                         <div className="flex items-center space-x-4 w-full">
                             <GeoInput
                                 id="translate-x"
-                                icon="X"
+                                icon="X ="
                                 value={translationValue.translateX}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
@@ -105,7 +105,7 @@ export function useVisualizationTabs(
 
                             <GeoInput
                                 id="translate-y"
-                                icon="Y"
+                                icon="Y ="
                                 value={translationValue.translateY}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
@@ -120,7 +120,7 @@ export function useVisualizationTabs(
                             {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
                                 <GeoInput
                                     id="translate-z"
-                                    icon="Z"
+                                    icon="Z ="
                                     value={translationValue?.translateZ || 0}
                                     onChange={(e) => {
                                         const value = parseFloat(e.target.value);
