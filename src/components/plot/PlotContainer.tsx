@@ -42,10 +42,10 @@ export default function PlotContainer(
             {shapePoints.length > 0 ? (
                 <div className="flex flex-col w-full h-full">
                     <div className={cn("flex flex-col md:flex-row items-center justify-end gap-4 mb-2 border rounded-lg px-3 py-2 bg-white/70", colors.border)}>
-                        <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
                             <GeoSwitch
                                 id="fixed-aspect-ratio-switch"
-                                label="Kunci interval sumbu menjadi 1"
+                                label="Kunci sumbu menjadi 1"
                                 checked={fixedAspectRatio}
                                 onCheckedChange={setFixedAspectRatio}
                                 colorScheme={colorScheme}
