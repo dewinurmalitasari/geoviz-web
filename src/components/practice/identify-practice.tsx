@@ -52,7 +52,7 @@ export default function IdentifyPractice({
     const [transformationType, setTransformationType] = useState<string>('')
     const [translationValue, setTranslationValue] = useState<TranslationValue>({translateX: 0, translateY: 0})
     const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 1})
-    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 0})
+    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 0, center: {x: 0, y: 0}})
     const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({axis: 'origin', k: 0})
 
     const [plotData, setPlotData] = useState<PlotlyData>([])

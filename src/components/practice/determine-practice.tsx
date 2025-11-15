@@ -53,7 +53,7 @@ export default function DeterminePractice({
     const [transformationType, setTransformationType] = useState<string>('')
     const [translationValue, setTranslationValue] = useState<TranslationValue>({translateX: 0, translateY: 0})
     const [dilatationValue, setDilatationValue] = useState<DilatationValue>({scaleFactor: 0})
-    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 0})
+    const [rotationValue, setRotationValue] = useState<RotationValue>({angle: 0, center: {x: 0, y: 0}})
     const [reflectionAxis, setReflectionAxis] = useState<ReflectionValue>({axis: 'origin', k: 0})
 
     const [plotData, setPlotData] = useState<PlotlyData>([])
@@ -120,7 +120,7 @@ export default function DeterminePractice({
                 break
             case TRANSFORMATION_TYPES.ROTATION:
                 setRotationValue(value as RotationValue)
-                setUserValues({angle: 0})
+                setUserValues({angle: 0, center: {x: 0, y: 0}})
                 break
             case TRANSFORMATION_TYPES.REFLECTION:
                 setReflectionAxis(value as ReflectionValue)
