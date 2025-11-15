@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {
-    type DilatationValue,
+    type DilatationValue, type Point3D,
     type ReflectionValue,
     type RotationValue,
     type Transformation,
@@ -51,6 +51,7 @@ export function useVisualizationTabs(
 
     const [rotationValue, setRotationValue] = useState<RotationValue>({
         angle: 90,
+        center: {x: 0, y: 0, ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {z: 0} : {})},
         ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
     });
 
@@ -68,6 +69,7 @@ export function useVisualizationTabs(
         setDilatationValue({scaleFactor: 4});
         setRotationValue({
             angle: 90,
+            center: {x: 0, y: 0, ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {z: 0} : {})},
             ...(visualizationType === VISUALIZATION_TYPES.SHAPE_3D ? {axis: 'radio_x_axis'} : {})
         });
         setReflectionValue({
@@ -237,41 +239,106 @@ export function useVisualizationTabs(
                         Masukkan Nilai Rotasi
                     </h3>
 
-                    <div
-                        className="flex items-center justify-between md:space-x-4 space-x-0 md:flex-row flex-col md:space-y-0 space-y-2">
-                        <GeoInput
-                            id="angle"
-                            icon="Sudut"
-                            value={rotationValue.angle}
-                            onChange={(e) => {
-                                const value = parseFloat(e.target.value);
-                                setRotationValue({
-                                    ...rotationValue,
-                                    angle: isNaN(value) ? 0 : value
-                                });
-                            }}
-                            type="number"
-                        />
-
-                        {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
-                            <GeoSelect
-                                id="rotation-axis"
-                                value={rotationValue.axis || 'radio_x_axis'}
-                                onValueChange={(value) => {
+                    <div className="space-y-4">
+                        {/* Angle Input */}
+                        <div className="flex items-center space-x-4">
+                            <GeoInput
+                                id="angle"
+                                icon="Sudut"
+                                value={rotationValue.angle}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
                                     setRotationValue({
                                         ...rotationValue,
-                                        axis: value as RotationValue['axis']
+                                        angle: isNaN(value) ? 0 : value
                                     });
                                 }}
-                                options={[
-                                    {value: 'radio_x_axis', label: 'Sumbu X'},
-                                    {value: 'radio_y_axis', label: 'Sumbu Y'},
-                                    {value: 'radio_z_axis', label: 'Sumbu Z'},
-                                ]}
+                                type="number"
                             />
+                        </div>
+
+                        {/* Center Inputs */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Pusat Rotasi</label>
+                            <div className="flex items-center space-x-4">
+                                <GeoInput
+                                    id="center-x"
+                                    icon="X ="
+                                    value={rotationValue.center.x}
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setRotationValue({
+                                            ...rotationValue,
+                                            center: {
+                                                ...rotationValue.center,
+                                                x: isNaN(value) ? 0 : value
+                                            }
+                                        });
+                                    }}
+                                    type="number"
+                                />
+
+                                <GeoInput
+                                    id="center-y"
+                                    icon="Y ="
+                                    value={rotationValue.center.y}
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setRotationValue({
+                                            ...rotationValue,
+                                            center: {
+                                                ...rotationValue.center,
+                                                y: isNaN(value) ? 0 : value
+                                            }
+                                        });
+                                    }}
+                                    type="number"
+                                />
+
+                                {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
+                                    <GeoInput
+                                        id="center-z"
+                                        icon="Z ="
+                                        value={(rotationValue.center as Point3D).z || 0}
+                                        onChange={(e) => {
+                                            const value = parseFloat(e.target.value);
+                                            setRotationValue({
+                                                ...rotationValue,
+                                                center: {
+                                                    ...rotationValue.center,
+                                                    z: isNaN(value) ? 0 : value
+                                                }
+                                            });
+                                        }}
+                                        type="number"
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                        {/* 3D Axis Selection */}
+                        {visualizationType === VISUALIZATION_TYPES.SHAPE_3D && (
+                            <div className="flex items-center space-x-4">
+                                <GeoSelect
+                                    id="rotation-axis"
+                                    value={rotationValue.axis || 'radio_x_axis'}
+                                    onValueChange={(value) => {
+                                        setRotationValue({
+                                            ...rotationValue,
+                                            axis: value as RotationValue['axis']
+                                        });
+                                    }}
+                                    options={[
+                                        {value: 'radio_x_axis', label: 'Sumbu X'},
+                                        {value: 'radio_y_axis', label: 'Sumbu Y'},
+                                        {value: 'radio_z_axis', label: 'Sumbu Z'},
+                                    ]}
+                                />
+                            </div>
                         )}
 
-                        <div className="w-full md:w-fit flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
+                        {/* Action Buttons */}
+                        <div className="w-full flex flex-col md:flex-row space-x-2 md:space-y-0 space-y-2">
                             <GeoButton
                                 variant="secondary"
                                 onClick={() => {
@@ -280,7 +347,7 @@ export function useVisualizationTabs(
                                         value: rotationValue,
                                     }]);
                                 }}
-                                className="w-full md:w-fit"
+                                className="w-full flex-1"
                             >
                                 <Replace/> Timpa Transformasi
                             </GeoButton>
@@ -296,7 +363,7 @@ export function useVisualizationTabs(
                                         },
                                     ]);
                                 }}
-                                className="w-full md:w-fit"
+                                className="w-full flex-1"
                             >
                                 <Plus/> Tambah Transformasi
                             </GeoButton>

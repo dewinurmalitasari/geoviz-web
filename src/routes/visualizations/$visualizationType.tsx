@@ -217,7 +217,7 @@ function RouteComponent() {
                     : {scaleFactor: 1},
                 rotationValue: transformation.type === TRANSFORMATION_TYPES.ROTATION
                     ? transformationValue as RotationValue
-                    : {angle: 0},
+                    : {angle: 0, center: {x: 0, y: 0}},
                 reflectionAxis: transformation.type === TRANSFORMATION_TYPES.REFLECTION
                     ? transformationValue as ReflectionValue
                     : {axis: 'x-axis'},
@@ -270,7 +270,7 @@ function RouteComponent() {
                     : {scaleFactor: 1},
                 rotationValue: transformation.type === TRANSFORMATION_TYPES.ROTATION
                     ? transformationValue as RotationValue
-                    : {angle: 0},
+                    : {angle: 0, center: {x: 0, y: 0, z: 0}},
                 reflectionAxis: transformation.type === TRANSFORMATION_TYPES.REFLECTION
                     ? transformationValue as ReflectionValue
                     : {axis: 'x-axis'},

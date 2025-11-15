@@ -68,6 +68,7 @@ export interface DilatationValue {
 
 export interface RotationValue {
     angle: number; // in degrees
+    center: Point2D | Point3D;
     axis?: 'radio_x_axis' | 'radio_y_axis' | 'radio_z_axis'; // used for 3D rotation
 }
 
@@ -361,3 +362,5 @@ export interface ReactionsResponse {
     message: string,
     reactions: Reaction[],
 }
+
+// TODO: Equation editor

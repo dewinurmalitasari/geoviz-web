@@ -32,10 +32,23 @@ export function calculate2DTransformedCoordinates(
             const rotationValues = values as RotationValue;
             const degree = rotationValues.angle;
             const radian = degree * (Math.PI / 180);
-            return points.map(point => ({
-                x: point.x * Math.cos(radian) - point.y * Math.sin(radian),
-                y: point.x * Math.sin(radian) + point.y * Math.cos(radian)
-            }));
+            const center = rotationValues.center as Point2D;
+
+            return points.map(point => {
+                // Translate point to origin
+                const translatedX = point.x - center.x;
+                const translatedY = point.y - center.y;
+
+                // Rotate around origin
+                const rotatedX = translatedX * Math.cos(radian) - translatedY * Math.sin(radian);
+                const rotatedY = translatedX * Math.sin(radian) + translatedY * Math.cos(radian);
+
+                // Translate back to original center
+                return {
+                    x: rotatedX + center.x,
+                    y: rotatedY + center.y
+                };
+            });
 
         case TRANSFORMATION_TYPES.REFLECTION:
             const reflectionValues = values as ReflectionValue;
@@ -99,31 +112,47 @@ export function calculate3DTransformedCoordinates(
             const degree = rotationValues.angle;
             const radian = degree * (Math.PI / 180);
             const axis = rotationValues.axis!;
+            const center = rotationValues.center as Point3D;
+
             return points.map(point => {
+                // Translate point to origin
+                const translatedX = point.x - center.x;
+                const translatedY = point.y - center.y;
+                const translatedZ = point.z - center.z;
+
                 const cosTheta = Math.cos(radian);
                 const sinTheta = Math.sin(radian);
+
+                let rotatedX, rotatedY, rotatedZ;
+
                 switch (axis) {
                     case 'radio_x_axis':
-                        return {
-                            x: point.x,
-                            y: point.y * cosTheta - point.z * sinTheta,
-                            z: point.y * sinTheta + point.z * cosTheta
-                        };
+                        rotatedX = translatedX;
+                        rotatedY = translatedY * cosTheta - translatedZ * sinTheta;
+                        rotatedZ = translatedY * sinTheta + translatedZ * cosTheta;
+                        break;
                     case 'radio_y_axis':
-                        return {
-                            x: point.x * cosTheta + point.z * sinTheta,
-                            y: point.y,
-                            z: -point.x * sinTheta + point.z * cosTheta
-                        };
+                        rotatedX = translatedX * cosTheta + translatedZ * sinTheta;
+                        rotatedY = translatedY;
+                        rotatedZ = -translatedX * sinTheta + translatedZ * cosTheta;
+                        break;
                     case 'radio_z_axis':
-                        return {
-                            x: point.x * cosTheta - point.y * sinTheta,
-                            y: point.x * sinTheta + point.y * cosTheta,
-                            z: point.z
-                        };
+                        rotatedX = translatedX * cosTheta - translatedY * sinTheta;
+                        rotatedY = translatedX * sinTheta + translatedY * cosTheta;
+                        rotatedZ = translatedZ;
+                        break;
                     default:
-                        return point;
+                        rotatedX = translatedX;
+                        rotatedY = translatedY;
+                        rotatedZ = translatedZ;
                 }
+
+                // Translate back to original center
+                return {
+                    x: rotatedX + center.x,
+                    y: rotatedY + center.y,
+                    z: rotatedZ + center.z
+                };
             });
 
         case TRANSFORMATION_TYPES.REFLECTION:

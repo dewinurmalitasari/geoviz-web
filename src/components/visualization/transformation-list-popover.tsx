@@ -108,10 +108,19 @@ function formatTransformationValue(transformation: Transformation): string {
 
         case 'rotation':
             const rotation = value as RotationValue;
-            if ('axis' in rotation && rotation.axis) {
-                return `Sudut: ${rotation.angle}°, Sumbu: ${rotation.axis.translateTransformationValue()}`;
+            const center = rotation.center;
+
+            // For 2D rotation
+            if (!('axis' in rotation) || !rotation.axis) {
+                return `Sudut: ${rotation.angle}°, Pusat: (${center.x}, ${center.y})`;
             }
-            return `Sudut: ${rotation.angle}°`;
+
+            // For 3D rotation
+            if ('z' in center) {
+                return `Sudut: ${rotation.angle}°, Sumbu: ${rotation.axis.translateTransformationValue()}, Pusat: (${center.x}, ${center.y}, ${center.z})`;
+            }
+
+            return `Sudut: ${rotation.angle}°, Sumbu: ${rotation.axis.translateTransformationValue()}, Pusat: (${center.x}, ${center.y})`;
 
         case 'reflection':
             const reflection = value as ReflectionValue;
