@@ -18,7 +18,6 @@ import {
     calculate3DTransformedCoordinates
 } from '@/hooks/use-calculate-transformation.ts';
 
-
 type TransformationType = (typeof TRANSFORMATION_TYPES)[keyof typeof TRANSFORMATION_TYPES];
 
 interface UsePlotlyAnimationProps {
@@ -29,7 +28,7 @@ interface UsePlotlyAnimationProps {
     onFrameTick: (stats: PerformanceStats | null) => void;
     renderStartRef: React.MutableRefObject<number>;
     targetFps?: number;
-    showCoordinates?: boolean; // Add this
+    showCoordinates?: boolean;
 }
 
 export function usePlotlyAnimation(
@@ -41,7 +40,7 @@ export function usePlotlyAnimation(
         onFrameTick,
         renderStartRef,
         targetFps = 30,
-        showCoordinates = false, // Add default value
+        showCoordinates = false,
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
@@ -65,7 +64,6 @@ export function usePlotlyAnimation(
         };
     }, [cancelAnimation]);
 
-    // Updated startAnimation to accept showCoordinates parameter
     const startAnimation = useCallback((
         transformationType: TransformationType,
         shapePoints: Point[],
@@ -77,7 +75,7 @@ export function usePlotlyAnimation(
         },
         onComplete: (transformedPoints: Point[]) => void,
         originalPoints: Point[],
-        showCoords: boolean = false // Add this parameter
+        showCoords: boolean = false
     ) => {
         if (isAnimatingRef.current) {
             cancelAnimation();
@@ -94,7 +92,7 @@ export function usePlotlyAnimation(
         let originalTraces: PlotlyData;
         let transformedColor: string;
 
-        let plotFn: (points: Point[], color: string, showCoords?: boolean) => PlotlyData; // Update function signature
+        let plotFn: (points: Point[], color: string, showCoords?: boolean) => PlotlyData;
         let transformationFn: (
             points: Point[],
             type: TransformationType,
@@ -103,11 +101,11 @@ export function usePlotlyAnimation(
 
         // 1. Set up variables based on 2D or 3D
         if (is3D) {
-            plotFn = (points, color, showCoords) => get3DShapePlotData(points as Point3D[], color, showCoords); // Pass showCoords
+            plotFn = (points, color, showCoords) => get3DShapePlotData(points as Point3D[], color, showCoords);
             transformationFn = (points, type, values) =>
                 calculate3DTransformedCoordinates(points as Point3D[], type as any, values);
 
-            originalTraces = plotFn(originalPoints, 'cyan', showCoords); // Pass showCoords
+            originalTraces = plotFn(originalPoints, 'cyan', showCoords);
             transformedColor = 'orange';
 
             switch (transformationType) {
@@ -129,11 +127,11 @@ export function usePlotlyAnimation(
             }
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         } else {
-            plotFn = (points, color, showCoords) => get2DShapePlotData(points as Point2D[], color, showCoords); // Pass showCoords
+            plotFn = (points, color, showCoords) => get2DShapePlotData(points as Point2D[], color, showCoords);
             transformationFn = (points, type, values) =>
                 calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
 
-            originalTraces = plotFn(originalPoints, 'blue', showCoords); // Pass showCoords
+            originalTraces = plotFn(originalPoints, 'blue', showCoords);
             transformedColor = 'red';
 
             switch (transformationType) {
@@ -283,12 +281,87 @@ export function usePlotlyAnimation(
             let intermediatePoints: Point[];
 
             if (transformationType === TRANSFORMATION_TYPES.ROTATION) {
+                // For rotation, use the original logic (no sequential transformation)
                 const startAngle = 0;
                 const endAngle = (values as RotationValue).angle;
                 const intermediateAngle = startAngle + (endAngle - startAngle) * t;
                 const intermediateValues = {...values, angle: intermediateAngle};
                 intermediatePoints = transformationFn(shapePoints, 'rotation', intermediateValues);
+            } else if (transformationType === TRANSFORMATION_TYPES.TRANSLATION) {
+                if (is3D) {
+                    // 3D sequential translation: x → y → z
+                    const xDuration = 0.33; // First third for x movement
+                    const yDuration = 0.33; // Second third for y movement
+                    const zDuration = 0.34; // Final third for z movement
+
+                    if (t < xDuration) {
+                        // X movement phase - only move in x direction
+                        const xT = t / xDuration;
+                        intermediatePoints = shapePoints.map((point, i) => {
+                            const delta = deltas[i] as Point3D;
+                            const point3D = point as Point3D;
+                            return {
+                                x: point3D.x + delta.x * xT,
+                                y: point3D.y, // No y movement yet
+                                z: point3D.z, // No z movement yet
+                            } as Point3D;
+                        });
+                    } else if (t < xDuration + yDuration) {
+                        // Y movement phase - x is complete, now move in y direction
+                        const yT = (t - xDuration) / yDuration;
+                        intermediatePoints = shapePoints.map((point, i) => {
+                            const delta = deltas[i] as Point3D;
+                            const point3D = point as Point3D;
+                            return {
+                                x: point3D.x + delta.x, // X movement complete
+                                y: point3D.y + delta.y * yT,
+                                z: point3D.z, // No z movement yet
+                            } as Point3D;
+                        });
+                    } else {
+                        // Z movement phase - x and y are complete, now move in z direction
+                        const zT = (t - xDuration - yDuration) / zDuration;
+                        intermediatePoints = shapePoints.map((point, i) => {
+                            const delta = deltas[i] as Point3D;
+                            const point3D = point as Point3D;
+                            return {
+                                x: point3D.x + delta.x, // X movement complete
+                                y: point3D.y + delta.y, // Y movement complete
+                                z: point3D.z + delta.z * zT,
+                            } as Point3D;
+                        });
+                    }
+                } else {
+                    // 2D sequential translation: x → y
+                    const xDuration = 0.5; // First half for x movement
+                    const yDuration = 0.5; // Second half for y movement
+
+                    if (t < xDuration) {
+                        // X movement phase - only move in x direction
+                        const xT = t / xDuration;
+                        intermediatePoints = shapePoints.map((point, i) => {
+                            const delta = deltas[i] as Point2D;
+                            const point2D = point as Point2D;
+                            return {
+                                x: point2D.x + delta.x * xT,
+                                y: point2D.y, // No y movement yet
+                            } as Point2D;
+                        });
+                    } else {
+                        // Y movement phase - x is complete, now move in y direction
+                        const yT = (t - xDuration) / yDuration;
+                        intermediatePoints = shapePoints.map((point, i) => {
+                            const delta = deltas[i] as Point2D;
+                            const point2D = point as Point2D;
+                            return {
+                                x: point2D.x + delta.x, // X movement complete
+                                y: point2D.y + delta.y * yT,
+                            } as Point2D;
+                        });
+                    }
+                }
             } else {
+                // For other transformation types (dilatation, reflection), use original logic
                 intermediatePoints = shapePoints.map((point, i) => {
                     const delta = deltas[i];
 
@@ -311,7 +384,7 @@ export function usePlotlyAnimation(
                 });
             }
 
-            const intermediateTraces = plotFn(intermediatePoints, transformedColor, showCoords); // Pass showCoords
+            const intermediateTraces = plotFn(intermediatePoints, transformedColor, showCoords);
             const calcTime = performance.now() - calcStartTime;
             renderStartRef.current = performance.now();
 
@@ -325,7 +398,7 @@ export function usePlotlyAnimation(
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
             } else {
-                const finalTraces = plotFn(transformedPoints, transformedColor, showCoords); // Pass showCoords
+                const finalTraces = plotFn(transformedPoints, transformedColor, showCoords);
                 setPlotData([...axisTraces, ...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
                 isAnimatingRef.current = false;
@@ -347,7 +420,7 @@ export function usePlotlyAnimation(
         onFrameTick,
         renderStartRef,
         targetFps,
-        showCoordinates // Add to dependencies
+        showCoordinates
     ]);
 
     return {startAnimation, cancelAnimation};
