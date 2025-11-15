@@ -14,6 +14,8 @@ interface PlotContainerProps {
     initialRenderStartRef: React.MutableRefObject<number>;
     animationRenderStartRef: React.MutableRefObject<number>;
     colorScheme?: ColorScheme;
+    showCoordinates?: boolean;
+    onShowCoordinatesChange?: (show: boolean) => void;
 }
 
 export default function PlotContainer(
@@ -25,6 +27,8 @@ export default function PlotContainer(
         initialRenderStartRef,
         animationRenderStartRef,
         colorScheme = DEFAULT_COLOR_SCHEME,
+        showCoordinates = false,
+        onShowCoordinatesChange,
     }: PlotContainerProps) {
     const [animationRenderTime, setAnimationRenderTime] = useState<number>(0);
     const [initialRenderTime, setInitialRenderTime] = useState<number>(0);
@@ -37,15 +41,25 @@ export default function PlotContainer(
         >
             {shapePoints.length > 0 ? (
                 <div className="flex flex-col w-full h-full">
-                    <div className={cn("flex items-center justify-end gap-4 mb-2 border rounded-lg px-3 py-2 bg-white/70", colors.border)}>
-                        <GeoSwitch
-                            id="fixed-aspect-ratio-switch"
-                            label="Kunci interval sumbu menjadi 1"
-                            checked={fixedAspectRatio}
-                            onCheckedChange={setFixedAspectRatio}
-                            colorScheme={colorScheme}
-                            size="md"
-                        />
+                    <div className={cn("flex flex-col md:flex-row items-center justify-end gap-4 mb-2 border rounded-lg px-3 py-2 bg-white/70", colors.border)}>
+                        <div className="flex items-center justify-between gap-4 w-full">
+                            <GeoSwitch
+                                id="fixed-aspect-ratio-switch"
+                                label="Kunci interval sumbu menjadi 1"
+                                checked={fixedAspectRatio}
+                                onCheckedChange={setFixedAspectRatio}
+                                colorScheme={colorScheme}
+                                size="md"
+                            />
+                            <GeoSwitch
+                                id="show-coordinates-switch"
+                                label="Tampilkan koordinat titik"
+                                checked={showCoordinates}
+                                onCheckedChange={onShowCoordinatesChange!}
+                                colorScheme={colorScheme}
+                                size="md"
+                            />
+                        </div>
                     </div>
 
                     {/* Performance Stats */}

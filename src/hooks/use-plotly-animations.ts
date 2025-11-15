@@ -29,6 +29,7 @@ interface UsePlotlyAnimationProps {
     onFrameTick: (stats: PerformanceStats | null) => void;
     renderStartRef: React.MutableRefObject<number>;
     targetFps?: number;
+    showCoordinates?: boolean; // Add this
 }
 
 export function usePlotlyAnimation(
@@ -40,6 +41,7 @@ export function usePlotlyAnimation(
         onFrameTick,
         renderStartRef,
         targetFps = 30,
+        showCoordinates = false, // Add default value
     }: UsePlotlyAnimationProps) {
 
     const animationFrameRef = useRef<number | null>(null);
@@ -63,7 +65,7 @@ export function usePlotlyAnimation(
         };
     }, [cancelAnimation]);
 
-    // Updated startAnimation to accept all necessary parameters
+    // Updated startAnimation to accept showCoordinates parameter
     const startAnimation = useCallback((
         transformationType: TransformationType,
         shapePoints: Point[],
@@ -74,7 +76,8 @@ export function usePlotlyAnimation(
             reflectionAxis: ReflectionValue;
         },
         onComplete: (transformedPoints: Point[]) => void,
-        originalPoints: Point[]
+        originalPoints: Point[],
+        showCoords: boolean = false // Add this parameter
     ) => {
         if (isAnimatingRef.current) {
             cancelAnimation();
@@ -91,7 +94,7 @@ export function usePlotlyAnimation(
         let originalTraces: PlotlyData;
         let transformedColor: string;
 
-        let plotFn: (points: Point[], color: string) => PlotlyData;
+        let plotFn: (points: Point[], color: string, showCoords?: boolean) => PlotlyData; // Update function signature
         let transformationFn: (
             points: Point[],
             type: TransformationType,
@@ -100,11 +103,11 @@ export function usePlotlyAnimation(
 
         // 1. Set up variables based on 2D or 3D
         if (is3D) {
-            plotFn = (points, color) => get3DShapePlotData(points as Point3D[], color);
+            plotFn = (points, color, showCoords) => get3DShapePlotData(points as Point3D[], color, showCoords); // Pass showCoords
             transformationFn = (points, type, values) =>
                 calculate3DTransformedCoordinates(points as Point3D[], type as any, values);
 
-            originalTraces = plotFn(originalPoints, 'cyan');
+            originalTraces = plotFn(originalPoints, 'cyan', showCoords); // Pass showCoords
             transformedColor = 'orange';
 
             switch (transformationType) {
@@ -126,11 +129,11 @@ export function usePlotlyAnimation(
             }
             transformedPoints = transformationFn(shapePoints, transformationType, values);
         } else {
-            plotFn = (points, color) => get2DShapePlotData(points as Point2D[], color);
+            plotFn = (points, color, showCoords) => get2DShapePlotData(points as Point2D[], color, showCoords); // Pass showCoords
             transformationFn = (points, type, values) =>
                 calculate2DTransformedCoordinates(points as Point2D[], type as any, values);
 
-            originalTraces = plotFn(originalPoints, 'blue');
+            originalTraces = plotFn(originalPoints, 'blue', showCoords); // Pass showCoords
             transformedColor = 'red';
 
             switch (transformationType) {
@@ -308,7 +311,7 @@ export function usePlotlyAnimation(
                 });
             }
 
-            const intermediateTraces = plotFn(intermediatePoints, transformedColor);
+            const intermediateTraces = plotFn(intermediatePoints, transformedColor, showCoords); // Pass showCoords
             const calcTime = performance.now() - calcStartTime;
             renderStartRef.current = performance.now();
 
@@ -322,7 +325,7 @@ export function usePlotlyAnimation(
             if (t < 1) {
                 animationFrameRef.current = requestAnimationFrame(animate);
             } else {
-                const finalTraces = plotFn(transformedPoints, transformedColor);
+                const finalTraces = plotFn(transformedPoints, transformedColor, showCoords); // Pass showCoords
                 setPlotData([...axisTraces, ...originalTraces, ...finalTraces]);
                 animationFrameRef.current = null;
                 isAnimatingRef.current = false;
@@ -343,7 +346,8 @@ export function usePlotlyAnimation(
         cancelAnimation,
         onFrameTick,
         renderStartRef,
-        targetFps
+        targetFps,
+        showCoordinates // Add to dependencies
     ]);
 
     return {startAnimation, cancelAnimation};

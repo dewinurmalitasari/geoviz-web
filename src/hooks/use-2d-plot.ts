@@ -3,6 +3,7 @@ import type {Point2D} from "@/type.ts";
 export function get2DShapePlotData(
     points: Point2D[],
     color = 'blue',
+    showCoordinates = false
 ) {
     const xValues = points.map(point => point.x);
     const yValues = points.map(point => point.y);
@@ -43,7 +44,15 @@ export function get2DShapePlotData(
         }),
         mode: 'text',
         type: 'scatter',
-        text: points.map((_, i) => String.fromCharCode(65 + i)), // A, B, C, etc.
+        text: points.map((point, i) => {
+            const label = String.fromCharCode(65 + i);
+            if (showCoordinates) {
+                const roundedX = Math.round(point.x);
+                const roundedY = Math.round(point.y);
+                return `${label} (${roundedX}, ${roundedY})`;
+            }
+            return label;
+        }),
         textfont: { size: 14, color: 'black' },
         showlegend: false,
     };
@@ -59,11 +68,19 @@ export function get2DShapePlotLayout(
         margin: {t: 0, l: 30, r: 30, b: 30},
         dragmode: 'pan',
         xaxis: {
-            range: xRange
+            range: xRange,
+            title: {
+                text: 'Sumbu X',
+                font: {size: 16, color: 'black'}
+            }
         },
         yaxis: {
             range: yRange,
-            scaleanchor: 'x'
+            scaleanchor: 'x',
+            title: {
+                text: 'Sumbu Y',
+                font: {size: 16, color: 'black'}
+            }
         }
     };
 }

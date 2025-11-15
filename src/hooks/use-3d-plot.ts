@@ -2,7 +2,8 @@ import type {Point3D} from "@/type.ts";
 
 export function get3DShapePlotData(
     points: Point3D[],
-    color = 'cyan'
+    color = 'cyan',
+    showCoordinates = false // Add this parameter
 ) {
     const xValues = points.map(point => point.x);
     const yValues = points.map(point => point.y);
@@ -43,7 +44,16 @@ export function get3DShapePlotData(
         showlegend: false
     };
 
-    const labels = points.map((_, i) => String.fromCharCode(65 + i));
+    const labels = points.map((point, i) => {
+        const label = String.fromCharCode(65 + i);
+        if (showCoordinates) {
+            const roundedX = Math.round(point.x);
+            const roundedY = Math.round(point.y);
+            const roundedZ = Math.round(point.z);
+            return `${label} (${roundedX}, ${roundedY}, ${roundedZ})`;
+        }
+        return label;
+    });
 
     const textPositions = points.map((point) => {
         const x = point.x;
@@ -64,12 +74,12 @@ export function get3DShapePlotData(
 
         // Determine horizontal position
         let horizontal = 'center';
-        if (x === maxX) horizontal = 'center'; // Orig right
-        else if (x === minX) horizontal = 'center'; // Orig left
+        if (x === maxX) horizontal = 'center';
+        else if (x === minX) horizontal = 'center';
 
         // For points at extreme Y values, adjust if not already at extremes in X or Z
-        if (y === maxY && horizontal === 'center') horizontal = 'center'; // Orig right
-        if (y === minY && horizontal === 'center') horizontal = 'center'; // Orig left
+        if (y === maxY && horizontal === 'center') horizontal = 'center';
+        if (y === minY && horizontal === 'center') horizontal = 'center';
 
         return `${vertical} ${horizontal}`;
     });
@@ -83,7 +93,7 @@ export function get3DShapePlotData(
         text: labels,
         textposition: textPositions,
         textfont: {
-            size: 16,
+            size: 14,
             color: 'black'
         },
         showlegend: false,

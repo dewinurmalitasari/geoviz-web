@@ -105,6 +105,9 @@ function RouteComponent() {
     const initialRenderStartRef = useRef(0);
     const animationRenderStartRef = useRef(0);
 
+    // Add showCoordinates state
+    const [showCoordinates, setShowCoordinates] = useState<boolean>(false);
+
     const {startAnimation} = usePlotlyAnimation({
         visualizationType,
         isMobile,
@@ -114,9 +117,10 @@ function RouteComponent() {
             setPerfStats(stats);
         },
         renderStartRef: animationRenderStartRef,
+        showCoordinates
     });
 
-    const handlePlotClick = (points: Point[], equations: EquationState) => {
+    const handlePlotClick = (points: Point[], equations: EquationState, showCoords: boolean = false) => {
         if (visualizationType === VISUALIZATION_TYPES.EQUATION) {
             // For equation visualization
             const xRange: [number, number] = [-10, 10];
@@ -159,18 +163,18 @@ function RouteComponent() {
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
         } else if (visualizationType === VISUALIZATION_TYPES.SHAPE_3D) {
-            // For 3D visualization
+            // For 3D visualization - pass showCoords parameter
             const {xRange, yRange, zRange} = calculateRange(points)
-            const newPlotData = get3DShapePlotData(points as Point3D[])
+            const newPlotData = get3DShapePlotData(points as Point3D[], 'cyan', showCoords)
             const newPlotLayout = get3DShapePlotLayout(xRange, yRange, zRange!)
             const axisTrace = get3DAxisTraces(xRange, yRange, zRange!)
 
             setPlotData([...newPlotData, ...axisTrace])
             setPlotLayout(newPlotLayout)
         } else {
-            // For 2D visualization
+            // For 2D visualization - pass showCoords parameter
             const {xRange, yRange} = calculateRange(points)
-            const newPlotData = get2DShapePlotData(points)
+            const newPlotData = get2DShapePlotData(points, 'blue', showCoords)
             const newPlotLayout = get2DShapePlotLayout(xRange, yRange)
             setPlotData(newPlotData)
             setPlotLayout(newPlotLayout)
@@ -181,8 +185,15 @@ function RouteComponent() {
 
     // Initialize plot on component mount
     useEffect(() => {
-        handlePlotClick(shapePoints, equations)
+        handlePlotClick(shapePoints, equations, showCoordinates)
     }, []) // Empty dependency array to run only on mount
+
+    // Add useEffect to update plot when showCoordinates changes
+    useEffect(() => {
+        if (shapePoints.length > 0) {
+            handlePlotClick(shapePoints, equations, showCoordinates);
+        }
+    }, [showCoordinates]);
 
     const executeTransformation = async (index: number, currentPoints: Point[]) => {
         if (index >= transformations.length) {
@@ -216,7 +227,8 @@ function RouteComponent() {
                 await new Promise(resolve => setTimeout(resolve, 500));
                 executeTransformation(index + 1, transformedPoints);
             },
-            shapePoints
+            shapePoints,
+            showCoordinates
         );
     };
 
@@ -227,7 +239,7 @@ function RouteComponent() {
         if (currentStep >= transformations.length) {
             setStepShapePoints(shapePoints);
             setCurrentStep(0);
-            handlePlotClick(shapePoints, equations);
+            handlePlotClick(shapePoints, equations, showCoordinates);
             return;
         }
 
@@ -268,7 +280,8 @@ function RouteComponent() {
                 setTransformationLoading(false);
                 setStepShapePoints(transformedPoints);
             },
-            shapePoints
+            shapePoints,
+            showCoordinates
         );
     };
 
@@ -296,7 +309,7 @@ function RouteComponent() {
             equations: ['x^2']
         });
 
-        handlePlotClick(newShapePoints, equations);
+        handlePlotClick(newShapePoints, equations, showCoordinates);
     }, [visualizationType])
 
     useEffect(() => {
@@ -339,6 +352,8 @@ function RouteComponent() {
                                 perfStats={perfStats!!}
                                 initialRenderStartRef={initialRenderStartRef}
                                 animationRenderStartRef={animationRenderStartRef}
+                                showCoordinates={showCoordinates} // Pass the state
+                                onShowCoordinatesChange={setShowCoordinates} // Pass the setter
                             />
 
                             {/*Transformation Input and Play*/}
@@ -399,7 +414,7 @@ function RouteComponent() {
                         <div className="flex flex-col space-y-4 flex-1">
                             <GeoButton
                                 variant="secondary"
-                                onClick={() => handlePlotClick(shapePoints, equations)}
+                                onClick={() => handlePlotClick(shapePoints, equations, showCoordinates)}
                                 className="h-fit"
                             >
                                 <SquareKanban/> Plot {visualizationType === VISUALIZATION_TYPES.EQUATION ? "Persamaan" : "Titik"}
