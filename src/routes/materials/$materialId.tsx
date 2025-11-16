@@ -14,8 +14,8 @@ import {getAuthentication} from "@/lib/auth.ts";
 import ReactionSelect from "@/components/reaction/reaction-select.tsx";
 import {reactionService} from "@/services/reaction-service.ts";
 import type {Reaction} from "@/type.ts";
-import {BlockMath} from 'react-katex';
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
+import KaTeXRenderer from "@/components/math/katex-renderer.tsx";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -163,9 +163,7 @@ function RouteComponent() {
                                 </div>
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                                     <ScrollArea>
-                                        <BlockMath>
-                                            {material.formula}
-                                        </BlockMath>
+                                        <KaTeXRenderer rawFormula={material.formula}/>
 
                                         <ScrollBar orientation="horizontal"/>
                                     </ScrollArea>
