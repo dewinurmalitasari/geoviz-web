@@ -108,7 +108,7 @@ export default function MaterialDialog(
             trigger={trigger}
         >
             <ScrollArea className="h-[45vh] md:h-[60vh] pr-2">
-                <div className="space-y-4 p-1 min-w-0 max-w-[90vw] md:max-w-[60vw]">
+                <div className="space-y-4 p-1 min-w-0 max-w-[90vw] md:max-w-[39rem]">
                     <GeoInput
                         id="title"
                         label="Judul"
