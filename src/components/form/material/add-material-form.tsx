@@ -3,7 +3,6 @@ import {useState} from "react";
 import type {MaterialPayload} from "@/type.ts";
 import {toast} from "sonner";
 import {materialService} from "@/services/material-service.ts";
-import he from "he";
 
 interface AddMaterialFormProps {
     trigger: React.ReactNode;
@@ -32,16 +31,16 @@ export default function AddMaterialForm({trigger, onSuccess}: AddMaterialFormPro
         try {
             const sanitizedValues = {
                 ...values,
-                title: he.encode(values.title),
-                description: he.encode(values.description),
-                formula: he.encode(values.formula),
-                example: he.encode(values.example),
-                youtubeLinks: values.youtubeLinks!.map(link => he.encode(link)),
-                imageLinks: values.imageLinks!.map(link => he.encode(link)),
+                title: values.title,
+                description: values.description,
+                formula: values.formula,
+                example: values.example,
+                youtubeLinks: values.youtubeLinks!.map(link => link),
+                imageLinks: values.imageLinks!.map(link => link),
             };
             const data = await materialService.createMaterial(sanitizedValues);
 
-            toast.success(`Materi "${he.decode(data.material.title)}" berhasil ditambahkan!`);
+            toast.success(`Materi "${data.material.title}" berhasil ditambahkan!`);
             setValues({
                 title: '',
                 description: '',

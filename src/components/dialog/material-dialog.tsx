@@ -5,7 +5,7 @@ import FormDialog from "@/components/dialog/form-dialog.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {cn} from "@/lib/utils.ts";
-import he from "he";
+import GeoMathField from "@/components/geo/geo-mathfield.tsx";
 
 interface MaterialDialogProps {
     open?: boolean;
@@ -37,7 +37,6 @@ export default function MaterialDialog(
         maxYoutubeLinks = 4,
         maxImageLinks = 10
     }: MaterialDialogProps) {
-
     // YouTube Links handlers
     const addYoutubeLink = () => {
         const currentLinks = values.youtubeLinks || [];
@@ -102,7 +101,7 @@ export default function MaterialDialog(
             onOpenChange={onOpenChange}
             isProcessing={isProcessing}
             isEdit={isEdit}
-            title={isEdit ? `Edit ${he.decode(toEditTitle!)}` : 'Tambah Materi'}
+            title={isEdit ? `Edit ${toEditTitle!}` : 'Tambah Materi'}
             icon={<FileText/>}
             onSubmit={onClick}
             onDelete={onDeleteClick}
@@ -113,7 +112,7 @@ export default function MaterialDialog(
                     <GeoInput
                         id="title"
                         label="Judul"
-                        value={he.decode(values.title ?? '')}
+                        value={values.title ?? ''}
                         onChange={(e) => setValues({...values, title: e.target.value})}
                         icon={<Type/>}
                     />
@@ -121,27 +120,25 @@ export default function MaterialDialog(
                     <GeoInput
                         id="description"
                         label="Deskripsi"
-                        value={he.decode(values.description ?? '')}
+                        value={values.description ?? ''}
                         onChange={(e) => setValues({...values, description: e.target.value})}
                         multiline
                         minRows={3}
                         maxRows={15}
                     />
 
-                    <GeoInput
+                    {/*TODO: Check he support*/}
+                    <GeoMathField
                         id="formula"
                         label="Rumus"
-                        value={he.decode(values.formula ?? '')}
-                        onChange={(e) => setValues({...values, formula: e.target.value})}
-                        multiline
-                        minRows={3}
-                        maxRows={15}
+                        value={values.formula!}
+                        onChange={(value) => setValues({...values, formula: value})}
                     />
 
                     <GeoInput
                         id="example"
                         label="Contoh"
-                        value={he.decode(values.example ?? '')}
+                        value={values.example ?? ''}
                         onChange={(e) => setValues({...values, example: e.target.value})}
                         multiline
                         minRows={3}
@@ -164,7 +161,7 @@ export default function MaterialDialog(
                                     <GeoInput
                                         id={`youtube-${index}`}
                                         label={`Video ${index + 1}`}
-                                        value={he.decode(link)}
+                                        value={link}
                                         onChange={(e) => handleYoutubeLinkChange(index, e.target.value)}
                                         icon={<Link className="w-4 h-4 text-gray-500"/>}
                                         className="flex-1"
@@ -210,7 +207,7 @@ export default function MaterialDialog(
                                     <GeoInput
                                         id={`image-${index}`}
                                         label={`Gambar ${index + 1}`}
-                                        value={he.decode(link)}
+                                        value={link}
                                         onChange={(e) => handleImageLinkChange(index, e.target.value)}
                                         icon={<Link className="w-4 h-4 text-gray-500"/>}
                                         className="flex-1"

@@ -48,7 +48,9 @@ export default function FormDialog(
         return (
             <Drawer open={open} onOpenChange={onOpenChange}>
                 <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent onInteractOutside={(e) => {
+                    e.preventDefault();
+                }}>
                     <GeoDrawerHeader icon={icon ?? defaultIcon} title={title}/>
                     {content}
                     <DrawerFooter className="pt-2 h-fit">
@@ -72,7 +74,9 @@ export default function FormDialog(
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent className="!max-w-2xl">
+            <DialogContent className="!max-w-2xl" onInteractOutside={(e) => {
+                e.preventDefault();
+            }}>
                 <GeoDialogHeader icon={icon ?? defaultIcon} title={title}/>
                 {content}
                 <DialogFooter>

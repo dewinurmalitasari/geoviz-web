@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import AOS from 'aos';
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
+import 'katex/dist/katex.min.css';
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'

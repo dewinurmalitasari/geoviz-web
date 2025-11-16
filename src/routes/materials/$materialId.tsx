@@ -11,10 +11,10 @@ import EditMaterialForm from "@/components/form/material/edit-material-form.tsx"
 import DeleteMaterialForm from "@/components/form/material/delete-material-form.tsx";
 import GeoButton from "@/components/geo/geo-button.tsx";
 import {getAuthentication} from "@/lib/auth.ts";
-import he from "he";
 import ReactionSelect from "@/components/reaction/reaction-select.tsx";
 import {reactionService} from "@/services/reaction-service.ts";
 import type {Reaction} from "@/type.ts";
+import {BlockMath} from 'react-katex';
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -100,7 +100,7 @@ function RouteComponent() {
     return (
         <div className="flex flex-col flex-grow px-4 md:px-16 space-y-4">
             <PageHeader
-                title={he.decode(material.title)}
+                title={material.title}
                 description="Detail materi transformasi geometri"
                 colorScheme="yellow" additionalButtons={auth?.user.role === 'admin' &&
                 <GeoButton
@@ -114,7 +114,7 @@ function RouteComponent() {
 
             <GeoCard
                 icon={<BookOpen/>}
-                title={he.decode(material.title)}
+                title={material.title}
                 content={
                     <div className="space-y-6">
                         {/* YouTube Videos Section */}
@@ -149,7 +149,7 @@ function RouteComponent() {
                                 <h3 className="text-lg font-semibold text-deep-purple-700">Deskripsi</h3>
                             </div>
                             <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border-l-4 border-deep-purple-300 whitespace-pre-line">
-                                {he.decode(material.description)}
+                                {material.description}
                             </p>
                         </div>
 
@@ -160,10 +160,10 @@ function RouteComponent() {
                                     <Calculator className="w-5 h-5 text-green-600"/>
                                     <h3 className="text-lg font-semibold text-deep-purple-700">Rumus</h3>
                                 </div>
-                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                                    <p className="font-mono text-lg text-gray-800 text-center font-medium whitespace-pre-line">
-                                        {he.decode(material.formula)}
-                                    </p>
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                                    <BlockMath>
+                                        {material.formula}
+                                    </BlockMath>
                                 </div>
                             </div>
                         )}
@@ -177,7 +177,7 @@ function RouteComponent() {
                                 </div>
                                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                                     <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {he.decode(material.example)}
+                                        {material.example}
                                     </p>
                                 </div>
                             </div>

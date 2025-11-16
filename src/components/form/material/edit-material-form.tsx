@@ -1,9 +1,8 @@
-import MaterialDialog from "@/components/dialog/material-dialog.tsx";
 import {useEffect, useState} from "react";
 import type {Material, MaterialPayload} from "@/type.ts";
 import {toast} from "sonner";
 import {materialService} from "@/services/material-service.ts";
-import he from "he";
+import MaterialDialog from "@/components/dialog/material-dialog.tsx";
 
 interface EditMaterialFormProps {
     open: boolean;
@@ -46,16 +45,16 @@ export default function EditMaterialForm({open, setOpen, material, onSuccess, on
         try {
             const sanitizedValues = {
                 ...values,
-                title: he.encode(values.title),
-                description: he.encode(values.description),
-                formula: he.encode(values.formula),
-                example: he.encode(values.example),
-                youtubeLinks: values.youtubeLinks!.map(link => he.encode(link)),
-                imageLinks: values.imageLinks!.map(link => he.encode(link)),
+                title: values.title,
+                description: values.description,
+                formula: values.formula,
+                example: values.example,
+                youtubeLinks: values.youtubeLinks!.map(link => link),
+                imageLinks: values.imageLinks!.map(link => link),
             };
             const data = await materialService.updateMaterial(material._id, sanitizedValues);
 
-            toast.success(`Materi "${he.decode(data.material.title)}" berhasil diperbarui!`);
+            toast.success(`Materi "${data.material.title}" berhasil diperbarui!`);
             onSuccess();
             setOpen(false);
         } catch (error) {
