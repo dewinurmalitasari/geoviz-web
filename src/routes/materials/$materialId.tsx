@@ -15,6 +15,7 @@ import ReactionSelect from "@/components/reaction/reaction-select.tsx";
 import {reactionService} from "@/services/reaction-service.ts";
 import type {Reaction} from "@/type.ts";
 import {BlockMath} from 'react-katex';
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 
 export const Route = createFileRoute('/materials/$materialId')({
     component: RouteComponent,
@@ -161,9 +162,13 @@ function RouteComponent() {
                                     <h3 className="text-lg font-semibold text-deep-purple-700">Rumus</h3>
                                 </div>
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                                    <BlockMath>
-                                        {material.formula}
-                                    </BlockMath>
+                                    <ScrollArea>
+                                        <BlockMath>
+                                            {material.formula}
+                                        </BlockMath>
+
+                                        <ScrollBar orientation="horizontal"/>
+                                    </ScrollArea>
                                 </div>
                             </div>
                         )}

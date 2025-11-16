@@ -3,7 +3,7 @@ import {forwardRef, useEffect, useRef} from 'react';
 import {colorMap, type ColorScheme, DEFAULT_COLOR_SCHEME} from "@/lib/color-scheme.ts";
 import {Field, FieldLabel} from "@/components/ui/field.tsx";
 import {cn} from "@/lib/utils.ts";
-import {ScrollArea} from "@/components/ui/scroll-area.tsx";
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 
 // Extend the global JSX namespace
 declare global {
@@ -58,25 +58,29 @@ const GeoMathField = forwardRef<MathfieldElement, GeoMathFieldProps>((
                 </FieldLabel>
             )}
 
-            <ScrollArea className={cn("border rounded-lg max-h-40 overflow-y-auto", colors.trigger.replace('focus:border-', 'border-').split(' ')[0])}>
-                {/*// @ts-ignore*/}
-                <math-field
-                    ref={mathfieldRef}
-                    id={id}
-                    class={cn(
-                        "border rounded-md p-2 w-full min-h-[40px]",
-                        "focus:outline-none focus:ring-2 focus:ring-blue-500",
-                        colors.border,
-                    )}
-                    onInput={(evt: CustomEvent) => {
-                        const mf = evt.target as MathfieldElement;
-                        onChange(mf.value);
-                    }}
-                    onChange={(evt: CustomEvent) => {
-                        const mf = evt.target as MathfieldElement;
-                        onChange(mf.value);
-                    }}
-                />
+            <ScrollArea className="overflow-x-scroll">
+                <ScrollArea
+                    className={cn("border rounded-lg max-h-40 overflow-y-auto", colors.trigger.replace('focus:border-', 'border-').split(' ')[0])}>
+                    {/*// @ts-ignore*/}
+                    <math-field
+                        ref={mathfieldRef}
+                        id={id}
+                        class={cn(
+                            "border rounded-md p-2 w-full min-h-[40px]",
+                            "focus:outline-none focus:ring-2 focus:ring-blue-500",
+                            colors.border,
+                        )}
+                        onInput={(evt: CustomEvent) => {
+                            const mf = evt.target as MathfieldElement;
+                            onChange(mf.value);
+                        }}
+                        onChange={(evt: CustomEvent) => {
+                            const mf = evt.target as MathfieldElement;
+                            onChange(mf.value);
+                        }}
+                    />
+                </ScrollArea>
+                <ScrollBar orientation="horizontal"/>
             </ScrollArea>
         </Field>
     );
