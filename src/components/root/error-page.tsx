@@ -20,7 +20,7 @@ export function ErrorPage({useTemplate = false, status, statusText, title, messa
     const navigate = useNavigate();
 
     const error = (
-        <div className="flex justify-center">
+        <div className="flex justify-center mx-4 md:mx-0">
             <div className="max-w-xl w-full">
                 <GeoCard
                     icon={<AlertCircle className="w-8 h-8 text-deep-purple-600" strokeWidth={2.5}/>}
